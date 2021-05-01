@@ -1,4 +1,4 @@
-package BaiTapThucHanh;
+package QuanLyKhachSan;
 
 public class TaiKhoan {
     private String userName;
