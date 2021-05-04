@@ -1,4 +1,4 @@
-package QuanLyKhachSan;
+package entity;
 
 public class LoaiPhong {
     private String maLoaiPhong;

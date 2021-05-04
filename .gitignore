@@ -2,3 +2,5 @@
 .project
 .settings/org.eclipse.jdt.core.prefs
 bin
+src/QuanLyKhachSan/main.java
+.gitignore

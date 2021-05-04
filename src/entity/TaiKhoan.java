@@ -1,4 +1,4 @@
-package QuanLyKhachSan;
+package entity;
 
 public class TaiKhoan {
     private String userName;

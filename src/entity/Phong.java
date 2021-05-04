@@ -1,4 +1,4 @@
-package QuanLyKhachSan;
+package entity;
 
 public class Phong {
     private String maPhong;
@@ -89,5 +89,4 @@ public class Phong {
         return "[maPhong=" + maPhong + ", soGiuong=" + soGiuong + ", sucChua=" + sucChua + ", tinhTrang=" + tinhTrang
                 + ", viTri=" + viTri + "]";
     }
-
 }
