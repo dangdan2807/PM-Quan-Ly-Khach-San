@@ -1,8 +1,7 @@
-
+package application;
 
 import java.awt.*;
 import javax.swing.*;
-import javax.swing.border.*;
 import java.awt.event.*;
 // import application.TrangChu;
 

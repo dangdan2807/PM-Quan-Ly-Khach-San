@@ -1,0 +1,93 @@
+USE master
+GO
+
+CREATE DATABASE KhachSan
+GO
+
+USE KhachSan
+GO
+
+CREATE TABLE LoaiKH
+(
+	-- vn: khách hàng vn || nn: khách hàng nước ngoài
+	MaLoaiKH VARCHAR(50) PRIMARY KEY,
+	tenLoaiKH NVARCHAR(50) DEFAULT N'Chưa cập nhật'
+)
+GO
+
+CREATE TABLE KhachHang
+(
+	MaKH VARCHAR(50) PRIMARY KEY,
+	TenKH NVARCHAR(50) NOT NULL,
+	soLanDatPhong INT CHECK(soLanDatPhong >= 0),
+	cmnd VARCHAR(20),
+	MaLoaiKH VARCHAR(50),
+	ngayHetHan DATETIME,
+
+	FOREIGN KEY (MaLoaiKH) REFERENCES dbo.LoaiKH (MaLoaiKH)
+)
+GO
+
+CREATE TABLE DichVu
+(
+	MaDV VARCHAR(50) PRIMARY KEY,
+	TenDV NVARCHAR(50) NOT NULL,
+	DonGia DECIMAL CHECK(DonGia >= 0)
+)
+GO
+
+
+CREATE TABLE NhanVien
+(
+	MaNV VARCHAR(50) PRIMARY KEY,
+	TenNV NVARCHAR(50),
+)
+GO
+
+CREATE TABLE LoaiPhong
+(
+	MaLoaiPhong VARCHAR(50) PRIMARY KEY,
+	TenLoaiPhong NVARCHAR(50),
+	DonGia DECIMAL CHECK(DonGia >= 0)
+)
+GO
+
+CREATE TABLE Phong
+(
+	MaPhong VARCHAR(50) PRIMARY KEY,
+	MaLoaiPhong VARCHAR(50) REFERENCES LoaiPhong(MaLoaiPhong),
+	SucChua INT CHECK(SucChua > 0),
+	SoGiuong INT CHECK(SoGiuong > 0),
+	ViTri NVARCHAR(50),
+	TinhTrang BIT
+)
+GO
+
+CREATE TABLE HoaDonDV
+(
+	MaHDDV VARCHAR(50) PRIMARY KEY,
+	MaKH VARCHAR(50) REFERENCES KhachHang(MaKH),
+	MaNV VARCHAR(50) REFERENCES NhanVien(MaNV),
+	ngayGioDat DATETIME,
+)
+GO
+
+CREATE TABLE ChiTietDV
+(
+	MaHDDV VARCHAR(50) REFERENCES HoaDonDV(MaHDDV),
+	MaDV VARCHAR(50) REFERENCES DichVu(MaDV),
+	SoLuong INT CHECK(Soluong >= 0)
+)
+GO
+
+CREATE TABLE HoaDonPhong
+(
+	MaHD VARCHAR(50) PRIMARY KEY,
+	MaKH VARCHAR(50) REFERENCES KhachHang(MaKH),
+	MaNV VARCHAR(50) REFERENCES NhanVien(MaNV),
+	NgayGioNhan DATETIME,
+	NgayGioTra DATETIME
+)
+GO
+
+-- drop database KhachSan
