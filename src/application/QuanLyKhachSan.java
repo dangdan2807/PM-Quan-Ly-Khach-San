@@ -129,7 +129,6 @@ public class QuanLyKhachSan extends JFrame implements ActionListener  {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // TODO Auto-generated method stub
         Object obj = e.getSource();
 
         if(obj == menuTrangChu){ // trang chủ
