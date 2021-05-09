@@ -35,8 +35,12 @@ public class LoaiPhong {
         this.donGia = donGia;
     }
 
+    public LoaiPhong(String maLoaiPhong) {
+        this(maLoaiPhong, "Chưa cập nhật", 0.0);
+    }
+
     public LoaiPhong() {
-        this("LP00", "Chưa đặt tên", 0.0);
+        this("LP00", "Chưa cập nhật", 0.0);
     }
 
     @Override
@@ -63,10 +67,4 @@ public class LoaiPhong {
             return false;
         return true;
     }
-
-    @Override
-    public String toString() {
-        return "LoaiPhong [donGia=" + donGia + ", maLoaiPhong=" + maLoaiPhong + ", tenLoaiPhong=" + tenLoaiPhong + "]";
-    }
-
 }

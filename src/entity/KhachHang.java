@@ -1,46 +1,80 @@
-package baiTapCuoiKy;
+package entity;
+
+import java.sql.Date;
 
 public class KhachHang {
 	private String maKH;
 	private String tenKH;
-	private int soLanDatPhong=0;
+	private int soLanDatPhong = 0;
+	private String cmnd;
+	private Date ngayHetHan;
+	private String loaiKH;
+
 	public String getMaKH() {
 		return maKH;
 	}
+
 	public void setMaKH(String maKH) {
 		this.maKH = maKH;
 	}
+
 	public String getTenKH() {
 		return tenKH;
 	}
+
 	public void setTenKH(String tenKH) {
 		this.tenKH = tenKH;
 	}
+
 	public int getSoLanDatPhong() {
 		return soLanDatPhong;
 	}
+
 	public void setSoLanDatPhong(int soLanDatPhong) {
 		this.soLanDatPhong = soLanDatPhong;
 	}
-	public KhachHang(String maKH, String tenKH, int soLanDatPhong) {
-		super();
+
+	public String getCmnd() {
+		return cmnd;
+	}
+
+	public void setCmnd(String cmnd) {
+		this.cmnd = cmnd;
+	}
+
+	public Date getNgayHetHan() {
+		return ngayHetHan;
+	}
+
+	public void setNgayHetHan(Date ngayHetHan) {
+		this.ngayHetHan = ngayHetHan;
+	}
+
+	public String getLoaiKH() {
+		return loaiKH;
+	}
+
+	public void setLoaiKH(String loaiKH) {
+		this.loaiKH = loaiKH;
+	}
+
+	public KhachHang(String maKH, String tenKH, int soLanDatPhong, String cmnd, Date ngayHetHan, String loaiKH) {
 		this.maKH = maKH;
 		this.tenKH = tenKH;
 		this.soLanDatPhong = soLanDatPhong;
+		this.cmnd = cmnd;
+		this.ngayHetHan = ngayHetHan;
+		this.loaiKH = loaiKH;
 	}
+
 	public KhachHang(String maKH) {
-		this(maKH,"",0);
+		this(maKH, "Chưa cập nhật", 0, "Chưa cập nhật", null, "VN");
 	}
-	@Override
-	public String toString() {
-		return String.format("%s %s %d", maKH, tenKH,soLanDatPhong);
+
+	public KhachHang() {
+		this("KH00", "Chưa cập nhật", 0, "Chưa cập nhật", null, "VN");
 	}
-	
-	public boolean isKhachQuen() {
-		if(soLanDatPhong>=10)
-			return true;
-		return false;
-	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -48,6 +82,7 @@ public class KhachHang {
 		result = prime * result + ((maKH == null) ? 0 : maKH.hashCode());
 		return result;
 	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -64,11 +99,6 @@ public class KhachHang {
 			return false;
 		return true;
 	}
-	
-//	public void capNhatSoLanDatPhong(){
-//		if()
-//			soLanDatPhong++;
-//	}
 
 	
 }

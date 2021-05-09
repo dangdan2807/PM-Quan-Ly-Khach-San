@@ -77,10 +77,4 @@ public class HoaDonPhong {
             return false;
         return true;
     }
-
-    @Override
-    public String toString() {
-        return "[maHD=" + maHD + ", ngayGioNhan=" + ngayGioNhan + ", ngayGioTra=" + ngayGioTra + "]";
-    }
-
 }

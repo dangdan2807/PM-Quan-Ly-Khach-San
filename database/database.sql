@@ -7,21 +7,13 @@ GO
 USE KhachSan
 GO
 
-CREATE TABLE LoaiKH
-(
-	-- vn: khách hàng vn || nn: khách hàng nước ngoài
-	MaLoaiKH VARCHAR(50) PRIMARY KEY,
-	tenLoaiKH NVARCHAR(50) DEFAULT N'Chưa cập nhật'
-)
-GO
-
 CREATE TABLE KhachHang
 (
 	MaKH VARCHAR(50) PRIMARY KEY,
 	TenKH NVARCHAR(50) NOT NULL,
 	soLanDatPhong INT CHECK(soLanDatPhong >= 0),
 	cmnd VARCHAR(20),
-	MaLoaiKH VARCHAR(50),
+	MaLoaiKH NVARCHAR(100),
 	ngayHetHan DATETIME,
 
 	FOREIGN KEY (MaLoaiKH) REFERENCES dbo.LoaiKH (MaLoaiKH)
@@ -35,7 +27,6 @@ CREATE TABLE DichVu
 	DonGia DECIMAL CHECK(DonGia >= 0)
 )
 GO
-
 
 CREATE TABLE NhanVien
 (

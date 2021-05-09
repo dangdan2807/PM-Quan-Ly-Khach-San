@@ -25,8 +25,12 @@ public class NhanVien {
         this.tenNV = tenNV;
     }
 
+    public NhanVien(String maNV) {
+        this(maNV, "Chưa cập nhật");
+    }
+
     public NhanVien() {
-        this("NV0", "Chưa điền tên");
+        this("NV0", "Chưa cập nhật");
     }
 
     @Override
@@ -52,10 +56,5 @@ public class NhanVien {
         } else if (!maNV.equals(other.maNV))
             return false;
         return true;
-    }
-
-    @Override
-    public String toString() {
-        return "[maNV=" + maNV + ", tenNV=" + tenNV + "]";
     }
 }

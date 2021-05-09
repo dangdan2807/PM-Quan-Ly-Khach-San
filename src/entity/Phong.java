@@ -55,8 +55,12 @@ public class Phong {
         this.tinhTrang = tinhTrang;
     }
 
+    public Phong(String maPhong) {
+        this(maPhong, 1, 1, "chưa cập nhật", false);
+    }
+
     public Phong() {
-        this("P00", 1, 1, "chưa rõ", false);
+        this("P00", 1, 1, "chưa cập nhật", false);
     }
 
     @Override
@@ -82,11 +86,5 @@ public class Phong {
         } else if (!maPhong.equals(other.maPhong))
             return false;
         return true;
-    }
-
-    @Override
-    public String toString() {
-        return "[maPhong=" + maPhong + ", soGiuong=" + soGiuong + ", sucChua=" + sucChua + ", tinhTrang=" + tinhTrang
-                + ", viTri=" + viTri + "]";
     }
 }
