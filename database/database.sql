@@ -13,10 +13,8 @@ CREATE TABLE KhachHang
 	TenKH NVARCHAR(50) NOT NULL,
 	soLanDatPhong INT CHECK(soLanDatPhong >= 0),
 	cmnd VARCHAR(20),
-	MaLoaiKH NVARCHAR(100),
+	LoaiKH NVARCHAR(100),
 	ngayHetHan DATETIME,
-
-	FOREIGN KEY (MaLoaiKH) REFERENCES dbo.LoaiKH (MaLoaiKH)
 )
 GO
 
