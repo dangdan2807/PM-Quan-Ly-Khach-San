@@ -1,17 +1,19 @@
 package entity;
 
 public class ChiTietDV {
-    private int SoLuong;
+    private int soLuong;
 
     private HoaDonDV maHDDV;
     private DichVu maDV;
 
     public int getSoLuong() {
-        return SoLuong;
+        return soLuong;
     }
 
     public void setSoLuong(int soLuong) {
-        SoLuong = soLuong;
+        if (soLuong <= 0)
+            soLuong = 1;
+        this.soLuong = soLuong;
     }
 
     public HoaDonDV getMaHDDV() {
@@ -31,7 +33,7 @@ public class ChiTietDV {
     }
 
     public ChiTietDV(int soLuong, HoaDonDV maHDDV, DichVu maDV) {
-        SoLuong = soLuong;
+        setSoLuong(soLuong);
         this.maHDDV = maHDDV;
         this.maDV = maDV;
     }

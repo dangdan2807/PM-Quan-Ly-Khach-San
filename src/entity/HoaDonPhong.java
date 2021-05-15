@@ -3,7 +3,7 @@ package entity;
 import java.sql.Date;
 
 public class HoaDonPhong {
-    private String maHD;
+    private int maHD;
     private Date ngayGioNhan;
     private Date ngayGioTra;
 
@@ -11,11 +11,11 @@ public class HoaDonPhong {
     private KhachHang khachHang;
     private NhanVien nhanVien;
 
-    public String getMaHD() {
+    public int getMaHD() {
         return maHD;
     }
 
-    public void setMaHD(String maHD) {
+    public void setMaHD(int maHD) {
         this.maHD = maHD;
     }
 
@@ -59,7 +59,7 @@ public class HoaDonPhong {
         this.nhanVien = nhanVien;
     }
 
-    public HoaDonPhong(String maHD, Date ngayGioNhan, Date ngayGioTra, Phong phong, KhachHang khachHang,
+    public HoaDonPhong(int maHD, Date ngayGioNhan, Date ngayGioTra, Phong phong, KhachHang khachHang,
             NhanVien nhanVien) {
         this.maHD = maHD;
         this.ngayGioNhan = ngayGioNhan;
@@ -73,7 +73,7 @@ public class HoaDonPhong {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((maHD == null) ? 0 : maHD.hashCode());
+        result = prime * result + maHD;
         return result;
     }
 
@@ -86,10 +86,7 @@ public class HoaDonPhong {
         if (getClass() != obj.getClass())
             return false;
         HoaDonPhong other = (HoaDonPhong) obj;
-        if (maHD == null) {
-            if (other.maHD != null)
-                return false;
-        } else if (!maHD.equals(other.maHD))
+        if (maHD != other.maHD)
             return false;
         return true;
     }

@@ -3,18 +3,18 @@ package entity;
 import java.sql.Date;
 
 public class KhachHang {
-	private String maKH;
+	private int maKH;
 	private String tenKH;
 	private int soLanDatPhong = 0;
 	private String cmnd;
 	private Date ngayHetHan;
 	private String loaiKH;
 
-	public String getMaKH() {
+	public int getMaKH() {
 		return maKH;
 	}
 
-	public void setMaKH(String maKH) {
+	public void setMaKH(int maKH) {
 		this.maKH = maKH;
 	}
 
@@ -58,7 +58,7 @@ public class KhachHang {
 		this.loaiKH = loaiKH;
 	}
 
-	public KhachHang(String maKH, String tenKH, int soLanDatPhong, String cmnd, Date ngayHetHan, String loaiKH) {
+	public KhachHang(int maKH, String tenKH, int soLanDatPhong, String cmnd, Date ngayHetHan, String loaiKH) {
 		this.maKH = maKH;
 		this.tenKH = tenKH;
 		this.soLanDatPhong = soLanDatPhong;
@@ -67,19 +67,15 @@ public class KhachHang {
 		this.loaiKH = loaiKH;
 	}
 
-	public KhachHang(String maKH) {
+	public KhachHang(int maKH) {
 		this(maKH, "Chưa cập nhật", 0, "Chưa cập nhật", null, "VN");
-	}
-
-	public KhachHang() {
-		this("KH00", "Chưa cập nhật", 0, "Chưa cập nhật", null, "VN");
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((maKH == null) ? 0 : maKH.hashCode());
+		result = prime * result + maKH;
 		return result;
 	}
 
@@ -92,10 +88,7 @@ public class KhachHang {
 		if (getClass() != obj.getClass())
 			return false;
 		KhachHang other = (KhachHang) obj;
-		if (maKH == null) {
-			if (other.maKH != null)
-				return false;
-		} else if (!maKH.equals(other.maKH))
+		if (maKH != other.maKH)
 			return false;
 		return true;
 	}
