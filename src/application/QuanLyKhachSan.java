@@ -3,63 +3,83 @@ package application;
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
-// import application.TrangChu;
 
 public class QuanLyKhachSan extends JFrame implements ActionListener {
     // thêm các page vô đây cho dễ nhớ
 
-    private String[] nav = new String[] { "Trang chu", "Quan ly hoa don phong", "Quan ly hoa don dich vu",
+    private String[] nav = new String[] {"Trang chu", "Dat phong", "Quan ly hoa don phong", "Quan ly hoa don dich vu",
             "Quan ly phong", "Quan ly dich vu", "Quan ly nhan vien", "Quan ly khach hang" };
     // index ở đây tương ứng với mảng trên
-    private int indx_nav = 0;
+    private int indx_nav = 2;
 
     // khai báo các lớp giao diện ở đây
     private TrangChu pageTrangChu = new TrangChu();
+    private DatPhong pageDatPhong = new DatPhong();
+    private HoaDonPhong pageHDPhong = new HoaDonPhong();
     // private QuanLy pageQuanLy = new QuanLy();
+    
 
     // components
-    private JPanel pMain;
     private JMenuBar menuBar;
-    private JMenu menuTrangChu, menuQLHoaDon, menuQLDichVu, menuQLKhachHang, menuQLNhanVien;
+    private JMenu menuTrangChu, menuDatPhong, menuQLHoaDon, menuQLDichVu, menuQLKhachHang, menuQLNhanVien;
     private JMenuItem itemQLHDPhong, itemQLHDDichVu, itemQLPhong, itemQLDichVu;
+    private JMenuItem itemTrangChu, itemDatPhong, itemQLKhachHang, itemQLNhanVien;
+    private JPanel pnContainer;
 
     public QuanLyKhachSan() {
         setTitle("Quan Ly Khach San");
         setSize(1000, 700);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        // setResizable(false);
+
+        createMenuGUI();
+        pnContainer = new JPanel();
+        pnContainer.setLayout(new BoxLayout(pnContainer, BoxLayout.Y_AXIS));
+        this.add(pnContainer);
         createGUI();
+        
     }
 
     public void createGUI() {
         // xóa hết vẽ lại
-        getContentPane().removeAll();
-        getContentPane().repaint();
-
-        // render menu
-        createMenuGUI();
-
+        pnContainer.removeAll();
+        pnContainer.repaint();
         // hiển thị các page ở đây
         if (indx_nav == 0) {// trang chủ
-            this.add(pageTrangChu.renderGUI(), BorderLayout.CENTER);
+            // System.out.println(pageTrangChu.pMain);
+
+            pnContainer.add(pageTrangChu.pMain, BorderLayout.CENTER);
+            // this.add(pageTrangChu.pMain, BorderLayout.CENTER);
+        }else if(indx_nav == 1){ // trang đặt phòng
+            // System.out.println(pageDatPhong.pMain);
+            pnContainer.add(pageDatPhong.pMain, BorderLayout.CENTER);
+            // this.add(pageDatPhong.pMain, BorderLayout.CENTER);
+        }else if(indx_nav == 2){ // hóa đơn phòng
+            pnContainer.add(pageHDPhong.pMain, BorderLayout.CENTER);
         }
-        // else if(indx_nav == 1){ // trang quản lý hóa đơn phòng
-        // this.add(pageQuanLy.renderGUI(), BorderLayout.CENTER);
-        // }
 
     }
 
     public void createMenuGUI() {
         menuBar = new JMenuBar();
+        // menuBar.setLayout(new BoxLayout(menuBar, BoxLayout.X_AXIS));
         this.setJMenuBar(menuBar);
         // trang chu
         menuTrangChu = new JMenu("Trang chu");
         menuBar.add(menuTrangChu);
+        itemTrangChu = new JMenuItem("Trang chu");
+        menuTrangChu.add(itemTrangChu);
+
+        // trang chu
+        menuDatPhong = new JMenu("Dat phong");
+        menuBar.add(menuDatPhong);
+        itemDatPhong = new JMenuItem("Dat phong");
+        menuDatPhong.add(itemDatPhong);
 
         // quản lý hóa đơn
         menuQLHoaDon = new JMenu("Quan ly Hoa Don");
         menuBar.add(menuQLHoaDon);
-
         itemQLHDPhong = new JMenuItem("Quan ly hoa don phong");
         itemQLHDDichVu = new JMenuItem("Quan ly hoa don dich vu");
         menuQLHoaDon.add(itemQLHDPhong);
@@ -76,29 +96,34 @@ public class QuanLyKhachSan extends JFrame implements ActionListener {
         // quản lý khách hàng
         menuQLKhachHang = new JMenu("Quan ly khach hang");
         menuBar.add(menuQLKhachHang);
+        itemQLKhachHang = new JMenuItem("Quan ly khach hang");
+        menuQLKhachHang.add(itemQLKhachHang);
 
         // quản lý dịch vụ
         menuQLNhanVien = new JMenu("Quan ly nhan vien");
         menuBar.add(menuQLNhanVien);
+        itemQLNhanVien = new JMenuItem("Quan ly nhan vien");
+        menuQLNhanVien.add(itemQLNhanVien);
 
         // thêm sự kiện click
-        menuTrangChu.addActionListener(this);
+        itemTrangChu.addActionListener(this);
+        itemDatPhong.addActionListener(this);
         itemQLHDPhong.addActionListener(this);
         itemQLHDDichVu.addActionListener(this);
         itemQLPhong.addActionListener(this);
         itemQLDichVu.addActionListener(this);
-        menuQLKhachHang.addActionListener(this);
-        menuQLNhanVien.addActionListener(this);
+        itemQLKhachHang.addActionListener(this);
+        itemQLNhanVien.addActionListener(this);
 
     }
 
-    public JLabel space(int width, int height) {
-        JLabel lbSpace = new JLabel();
-        lbSpace.setBorder(BorderFactory.createEmptyBorder(height / 2, width / 2, height / 2, width / 2));
-        return lbSpace;
+    public JLabel space(int w, int h){
+        JLabel space = new JLabel("");
+        space.setBorder(BorderFactory.createEmptyBorder(h/2, w/2, h/2, w/2));
+        return space;
     }
 
-    public void addMenu(JPanel pMenu, JButton btn) {
+    public void addMenu(JPanel pMenu, JButton btn){
         btn.setBackground(Color.lightGray);
         btn.setBorder(BorderFactory.createEmptyBorder());
         pMenu.add(btn);
@@ -113,16 +138,22 @@ public class QuanLyKhachSan extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         Object obj = e.getSource();
-
-        if (obj == menuTrangChu) { // trang chủ
+        System.out.println("chuyen trang");
+        
+        if (obj == itemTrangChu) { // trang chủ
             System.out.println("Trang chu");
             indx_nav = 0;
             createGUI();
 
-        } else if (obj == itemQLHDPhong) {// quản lý hóa đơn phòng
-            System.out.println("Quan ly hoa don phong");
+        }else if(obj == itemDatPhong) {// Đặt phòng
+            System.out.println("Dat phong");
             indx_nav = 1;
             createGUI();
+        }else if(obj == itemQLHDPhong){// hóa đơn phòng
+            System.out.println("Hoa don");
+            indx_nav = 2;
+            createGUI();
+
         }
         // thêm tương tự như phía trên, indx_nav tương ứng với mảng nav trên đầu
     }
