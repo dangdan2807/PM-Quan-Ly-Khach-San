@@ -6,6 +6,9 @@ public class HoaDonDV {
 	private String maHDDV;
 	private Date ngayGioDat;
 
+	private NhanVien nhanVien;
+	private KhachHang khachHang;
+
 	public String getMaHDDV() {
 		return maHDDV;
 	}
@@ -22,17 +25,27 @@ public class HoaDonDV {
 		this.ngayGioDat = ngayGioDat;
 	}
 
-	public HoaDonDV(String maHDDV, Date ngayGioDat) {
+	public NhanVien getNhanVien() {
+		return nhanVien;
+	}
+
+	public void setNhanVien(NhanVien nhanVien) {
+		this.nhanVien = nhanVien;
+	}
+
+	public KhachHang getKhachHang() {
+		return khachHang;
+	}
+
+	public void setKhachHang(KhachHang khachHang) {
+		this.khachHang = khachHang;
+	}
+
+	public HoaDonDV(String maHDDV, Date ngayGioDat, NhanVien nhanVien, KhachHang khachHang) {
 		this.maHDDV = maHDDV;
 		this.ngayGioDat = ngayGioDat;
-	}
-
-	public HoaDonDV(String maHDDV) {
-		this(maHDDV, new Date(System.currentTimeMillis()));
-	}
-
-	public HoaDonDV() {
-		this("", new Date(System.currentTimeMillis()));
+		this.nhanVien = nhanVien;
+		this.khachHang = khachHang;
 	}
 
 	@Override

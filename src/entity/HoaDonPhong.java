@@ -7,6 +7,10 @@ public class HoaDonPhong {
     private Date ngayGioNhan;
     private Date ngayGioTra;
 
+    private Phong phong;
+    private KhachHang khachHang;
+    private NhanVien nhanVien;
+
     public String getMaHD() {
         return maHD;
     }
@@ -31,26 +35,38 @@ public class HoaDonPhong {
         this.ngayGioTra = ngayGioTra;
     }
 
-    public HoaDonPhong(String maHD, Date ngayGioNhan, Date ngayGioTra) {
+    public Phong getPhong() {
+        return phong;
+    }
+
+    public void setPhong(Phong phong) {
+        this.phong = phong;
+    }
+
+    public KhachHang getKhachHang() {
+        return khachHang;
+    }
+
+    public void setKhachHang(KhachHang khachHang) {
+        this.khachHang = khachHang;
+    }
+
+    public NhanVien getNhanVien() {
+        return nhanVien;
+    }
+
+    public void setNhanVien(NhanVien nhanVien) {
+        this.nhanVien = nhanVien;
+    }
+
+    public HoaDonPhong(String maHD, Date ngayGioNhan, Date ngayGioTra, Phong phong, KhachHang khachHang,
+            NhanVien nhanVien) {
         this.maHD = maHD;
         this.ngayGioNhan = ngayGioNhan;
         this.ngayGioTra = ngayGioTra;
-    }
-
-    public HoaDonPhong(String maHD, Date ngayGioNhan) {
-        this.maHD = maHD;
-        this.ngayGioNhan = ngayGioNhan;
-        this.ngayGioTra = null;
-    }
-
-    public HoaDonPhong(String maHD) {
-        this.maHD = maHD;
-        this.ngayGioNhan = new Date(System.currentTimeMillis());
-        this.ngayGioTra = null;
-    }
-
-    public HoaDonPhong() {
-        this("HD00", new Date(System.currentTimeMillis()));
+        this.phong = phong;
+        this.khachHang = khachHang;
+        this.nhanVien = nhanVien;
     }
 
     @Override
@@ -77,4 +93,5 @@ public class HoaDonPhong {
             return false;
         return true;
     }
+
 }
