@@ -7,6 +7,8 @@ public class Phong {
     private String viTri;
     private Boolean tinhTrang;
 
+    private LoaiPhong loaiPhong;
+
     public String getMaPhong() {
         return maPhong;
     }
@@ -47,20 +49,21 @@ public class Phong {
         this.tinhTrang = tinhTrang;
     }
 
-    public Phong(String maPhong, int sucChua, int soGiuong, String viTri, Boolean tinhTrang) {
+    public LoaiPhong getLoaiPhong() {
+        return loaiPhong;
+    }
+
+    public void setLoaiPhong(LoaiPhong loaiPhong) {
+        this.loaiPhong = loaiPhong;
+    }
+
+    public Phong(String maPhong, int sucChua, int soGiuong, String viTri, Boolean tinhTrang, LoaiPhong loaiPhong) {
         this.maPhong = maPhong;
         this.sucChua = sucChua;
         this.soGiuong = soGiuong;
         this.viTri = viTri;
         this.tinhTrang = tinhTrang;
-    }
-
-    public Phong(String maPhong) {
-        this(maPhong, 1, 1, "chưa cập nhật", false);
-    }
-
-    public Phong() {
-        this("P00", 1, 1, "chưa cập nhật", false);
+        this.loaiPhong = loaiPhong;
     }
 
     @Override
@@ -87,4 +90,5 @@ public class Phong {
             return false;
         return true;
     }
+
 }
