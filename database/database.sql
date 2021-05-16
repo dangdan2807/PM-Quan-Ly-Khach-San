@@ -11,10 +11,10 @@ CREATE TABLE KhachHang
 (
 	MaKH int identity PRIMARY KEY,
 	TenKH NVARCHAR(50) NOT NULL,
-	soLanDatPhong INT CHECK(soLanDatPhong >= 0),
 	cmnd VARCHAR(20),
-	LoaiKH NVARCHAR(100),
 	ngayHetHan DATETIME,
+	LoaiKH NVARCHAR(100),
+	soLanDatPhong INT CHECK(soLanDatPhong >= 0)
 )
 GO
 
