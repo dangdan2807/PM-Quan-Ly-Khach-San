@@ -234,11 +234,11 @@ public class QuanLyDichVu extends JFrame implements ActionListener, MouseListene
                         modelTableDV.getDataVector().removeAllElements();
                         ArrayList<DichVu> ds = dvDAO.getListDichVuByName(tenDV);
                         if (ds.size() <= 0) {
-                            showMessage("Không tìm thấy nhân viên", ERROR);
+                            showMessage("Không tìm thấy dịch vụ", ERROR);
                         } else
                             DocDuLieuVaoTable(ds);
                     } catch (Exception e4) {
-                        showMessage("Không tìm thấy nhân viên", ERROR);
+                        showMessage("Không tìm thấy dịch vụ", ERROR);
                     }
                 }
             }
@@ -352,7 +352,8 @@ public class QuanLyDichVu extends JFrame implements ActionListener, MouseListene
     }
 
     private DichVu getSelectedDataTable() {
-        int maDV = Integer.parseInt(txtMaDV.getText().trim());
+        String ma = txtMaDV.getText().trim().equals("") ? "0" : txtMaDV.getText().trim();
+        int maDV = Integer.parseInt(ma);
         String tenDV = txtTenDV.getText().trim();
         Double donGia = Double.parseDouble(txtDonGia.getText().trim());
 

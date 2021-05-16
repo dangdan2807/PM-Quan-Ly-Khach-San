@@ -79,5 +79,3 @@ CREATE TABLE HoaDonPhong
 	NgayGioTra DATETIME
 )
 GO
-
--- drop database KhachSan

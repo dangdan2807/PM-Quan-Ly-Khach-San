@@ -6,7 +6,7 @@ package application;
 import javax.swing.*;
 import java.awt.event.*;
 import java.text.*;
-import java.util.*;
+import java.sql.Date;
 
 public class kDatePicker extends JPanel implements ActionListener {
     private JTextField txt;
@@ -60,11 +60,31 @@ public class kDatePicker extends JPanel implements ActionListener {
         return txt.getText();
     }
 
-    public Date getValueDate() {
-        return f.getDate();
+    public void setValueToDay() {
+        txt.setText(DialogDatePicker.getToDay());
     }
 
-    public int getDate() {
+    public void setValue(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        txt.setText(sdf.format(date));
+    }
+
+    public void setValue(String date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        Date date2 = Date.valueOf(sdf.format(date));
+        sdf = new SimpleDateFormat("dd-MM-yyyy");
+        txt.setText(sdf.format(date2));
+    }
+
+    public Date getFullDate() throws ParseException {
+        String strDate = txt.getText();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        java.util.Date date = sdf.parse(strDate);
+        Date sqlDate = new Date(date.getTime());
+        return sqlDate;
+    }
+
+    public int getDay() {
         SimpleDateFormat sdf = new SimpleDateFormat("dd");
         String date = sdf.format(txt.getText());
         return Integer.parseInt(date);

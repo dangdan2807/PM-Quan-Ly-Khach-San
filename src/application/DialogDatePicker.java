@@ -7,7 +7,8 @@ import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.text.*;
-import java.util.*;
+import java.util.Calendar;
+import java.sql.*;
 
 public class DialogDatePicker extends JDialog implements ActionListener, ChangeListener {
     private int width = 450, heightPn = 210, widthPn = width - 20;
@@ -164,10 +165,16 @@ public class DialogDatePicker extends JDialog implements ActionListener, ChangeL
         Calendar cal = Calendar.getInstance();
         int date = Integer.parseInt(day);
         cal.set(year, month, date);
-        return cal.getTime();
+        return (Date) cal.getTime();
     }
 
     public static String getToDay() {
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        return sdf.format(cal.getTimeInMillis());
+    }
+
+    public static String getToDayFormat() {
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         return sdf.format(cal.getTimeInMillis());

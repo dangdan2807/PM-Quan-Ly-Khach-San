@@ -1,14 +1,14 @@
 package entity;
 
-import java.sql.Date;
+import java.sql.*;
 
 public class KhachHang {
 	private int maKH;
 	private String tenKH;
-	private int soLanDatPhong = 0;
 	private String cmnd;
 	private Date ngayHetHan;
 	private String loaiKH;
+	private int soLanDatPhong = 0;
 
 	public int getMaKH() {
 		return maKH;
@@ -23,6 +23,8 @@ public class KhachHang {
 	}
 
 	public void setTenKH(String tenKH) {
+		if (tenKH.equals(""))
+			tenKH = "Chưa cập nhật";
 		this.tenKH = tenKH;
 	}
 
@@ -31,6 +33,8 @@ public class KhachHang {
 	}
 
 	public void setSoLanDatPhong(int soLanDatPhong) {
+		if (soLanDatPhong <= 0)
+			soLanDatPhong = 0;
 		this.soLanDatPhong = soLanDatPhong;
 	}
 
@@ -39,6 +43,8 @@ public class KhachHang {
 	}
 
 	public void setCmnd(String cmnd) {
+		if (cmnd.equals(""))
+			cmnd = "Chưa cập nhật";
 		this.cmnd = cmnd;
 	}
 
@@ -55,20 +61,27 @@ public class KhachHang {
 	}
 
 	public void setLoaiKH(String loaiKH) {
+		if (!loaiKH.equals("Việt Nam") || !loaiKH.equals("Nước ngoài"))
+			loaiKH = "Việt Nam";
 		this.loaiKH = loaiKH;
 	}
 
-	public KhachHang(int maKH, String tenKH, int soLanDatPhong, String cmnd, Date ngayHetHan, String loaiKH) {
-		this.maKH = maKH;
-		this.tenKH = tenKH;
-		this.soLanDatPhong = soLanDatPhong;
-		this.cmnd = cmnd;
+	public KhachHang(int maKH, String tenKH, String cmnd, Date ngayHetHan, String loaiKH, int soLanDatPhong) {
+		setMaKH(maKH);
+		setTenKH(tenKH);
+		setCmnd(cmnd);
 		this.ngayHetHan = ngayHetHan;
-		this.loaiKH = loaiKH;
+		setLoaiKH(loaiKH);
+		setSoLanDatPhong(soLanDatPhong);
 	}
 
 	public KhachHang(int maKH) {
-		this(maKH, "Chưa cập nhật", 0, "Chưa cập nhật", null, "VN");
+		this(maKH, "Chưa cập nhật", "Chưa cập nhật", null, "VN", 0);
+	}
+
+	public KhachHang(ResultSet rs) throws SQLException {
+		this(rs.getInt("MaKH"), rs.getString("TenKH"), rs.getString("cmnd"), rs.getDate("ngayHetHan"),
+				rs.getString("LoaiKH"), rs.getInt("soLanDatPhong"));
 	}
 
 	@Override
@@ -93,5 +106,4 @@ public class KhachHang {
 		return true;
 	}
 
-	
 }
