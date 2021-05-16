@@ -18,6 +18,10 @@ public class QuanLyKhachHang extends JFrame implements ActionListener {
     private JButton btnTim;
     private JTable tableShowKH;
     private DefaultTableModel modelTable;
+    private JButton btnThem;
+    private JButton btnSua;
+    private JButton btnXoa;
+    private JButton btnLamLai;
 
     public QuanLyKhachHang() {
         setTitle("Quản Lý Khách Hàng");
@@ -45,9 +49,9 @@ public class QuanLyKhachHang extends JFrame implements ActionListener {
         pnMain.add(pnThongTinKH);
         pnThongTinKH.setLayout(null);
 
-        JLabel lbmaKH = new JLabel("Mã khách hàng:");
-        lbmaKH.setBounds(10, 21, 100, 14);
-        pnThongTinKH.add(lbmaKH);
+        JLabel lbMaKH = new JLabel("Mã khách hàng:");
+        lbMaKH.setBounds(10, 21, 100, 14);
+        pnThongTinKH.add(lbMaKH);
 
         txtMaKH = new JTextField();
         txtMaKH.setEditable(false);
@@ -101,19 +105,19 @@ public class QuanLyKhachHang extends JFrame implements ActionListener {
         pnThongTinKH.add(txtSoLanDat);
         txtSoLanDat.setColumns(10);
 
-        JButton btnThem = new JButton("Thêm");
+        btnThem = new JButton("Thêm");
         btnThem.setBounds(10, 178, 98, 26);
         pnThongTinKH.add(btnThem);
 
-        JButton btnSua = new JButton("Sửa");
+        btnSua = new JButton("Sửa");
         btnSua.setBounds(125, 178, 98, 26);
         pnThongTinKH.add(btnSua);
 
-        JButton btnXoa = new JButton("Xóa");
+        btnXoa = new JButton("Xóa");
         btnXoa.setBounds(235, 178, 98, 26);
         pnThongTinKH.add(btnXoa);
 
-        JButton btnLamLai = new JButton("Làm lại");
+        btnLamLai = new JButton("Làm lại");
         btnLamLai.setBounds(12, 216, 98, 26);
         pnThongTinKH.add(btnLamLai);
 
@@ -142,8 +146,14 @@ public class QuanLyKhachHang extends JFrame implements ActionListener {
         pbTableKH.add(pnShowTableKH);
         pnShowTableKH.setLayout(new BorderLayout(0, 0));
 
-        String[] cols = { "Mã KH", "Tên KH",  "CMND", "Ngày hết hạn", "Loại KH", "Số lần đặt phòng"};
-        modelTable = new DefaultTableModel(cols, 0);
+        String[] cols = { "Mã KH", "Tên KH", "CMND", "Ngày hết hạn", "Loại KH", "Số lần đặt phòng" };
+        modelTable = new DefaultTableModel(cols, 0) {
+            // khóa sửa dữ liệu trực tiếp trên table
+            @Override
+            public boolean isCellEditable(int i, int i1) {
+                return false;
+            }
+        };
         tableShowKH = new JTable(modelTable);
         JScrollPane scpShowTableKH = new JScrollPane(tableShowKH, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -157,5 +167,9 @@ public class QuanLyKhachHang extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
+    }
+
+    private boolean validData() {
+        return true;
     }
 }
