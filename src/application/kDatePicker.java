@@ -56,19 +56,23 @@ public class kDatePicker extends JPanel implements ActionListener {
         }
     }
 
+    // lấy giá trị từ textField
     public String getValue() {
         return txt.getText();
     }
 
+    // set giá trị về ngày hiện tại
     public void setValueToDay() {
         txt.setText(DialogDatePicker.getToDay());
     }
 
+    // cập nhật giá trị với input java.sql.Date
     public void setValue(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         txt.setText(sdf.format(date));
     }
 
+    // cập nhật giá trị với input String
     public void setValue(String date) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         Date date2 = Date.valueOf(sdf.format(date));
@@ -76,6 +80,7 @@ public class kDatePicker extends JPanel implements ActionListener {
         txt.setText(sdf.format(date2));
     }
 
+    // lấy ra giá trị ngày dưới dạng java.sql.Date
     public Date getFullDate() throws ParseException {
         String strDate = txt.getText();
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
@@ -84,18 +89,21 @@ public class kDatePicker extends JPanel implements ActionListener {
         return sqlDate;
     }
 
+    // lấy ra ngày
     public int getDay() {
         SimpleDateFormat sdf = new SimpleDateFormat("dd");
         String date = sdf.format(txt.getText());
         return Integer.parseInt(date);
     }
 
+    // lấy ra tháng
     public int getMonth() {
         SimpleDateFormat sdf = new SimpleDateFormat("MM");
         String date = sdf.format(txt.getText());
         return Integer.parseInt(date);
     }
 
+    // lấy ra năm
     public int getYear() {
         SimpleDateFormat sdf = new SimpleDateFormat("yy");
         String date = sdf.format(txt.getText());

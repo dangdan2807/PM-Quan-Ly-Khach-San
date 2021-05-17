@@ -125,6 +125,7 @@ public class DialogDatePicker extends JDialog implements ActionListener, ChangeL
         }
     }
 
+    // thay đổi lịch theo tháng năm
     public void displayDate() {
         for (int x = 7; x < button.length; x++)
             button[x].setText("");
@@ -150,6 +151,7 @@ public class DialogDatePicker extends JDialog implements ActionListener, ChangeL
         }
     }
 
+    // lấy ngày chọn từ lịch
     public String getPickedDate() {
         if (day.equals(""))
             return day;
@@ -159,6 +161,7 @@ public class DialogDatePicker extends JDialog implements ActionListener, ChangeL
         return sdf.format(cal.getTime());
     }
 
+    // lấy ngày chọn từ lịch
     public Date getDate() {
         if (day.equals(""))
             day = "0";
@@ -168,15 +171,11 @@ public class DialogDatePicker extends JDialog implements ActionListener, ChangeL
         return (Date) cal.getTime();
     }
 
+    // lấy ngày hiện tại
     public static String getToDay() {
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         return sdf.format(cal.getTimeInMillis());
     }
 
-    public static String getToDayFormat() {
-        Calendar cal = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-        return sdf.format(cal.getTimeInMillis());
-    }
 }
