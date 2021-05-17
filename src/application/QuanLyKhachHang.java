@@ -14,9 +14,9 @@ import DAO.KhachHangDAO;
 import connectDB.ConnectDB;
 import entity.KhachHang;
 
-public class QuanLyKhachHang extends JFrame implements ActionListener, MouseListener, KeyListener {
+public class QuanLyKhachHang extends JPanel implements ActionListener, MouseListener, KeyListener {
 
-    private JPanel pnMain;
+    public JPanel pnMain;
     private DefaultTableModel modelTable;
     private JTable tableShowKH;
     private kDatePicker dpNgayHetHan;
@@ -33,15 +33,15 @@ public class QuanLyKhachHang extends JFrame implements ActionListener, MouseList
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        setTitle("Quản Lý Khách Hàng");
+        // setTitle("Quản Lý Khách Hàng");
         setSize(1000, 700);
-        setLocationRelativeTo(null);
-        setResizable(false);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        // setLocationRelativeTo(null);
+        // setResizable(false);
+        // setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         pnMain = new JPanel();
         pnMain.setLayout(null);
-        pnMain.setBounds(0, 0, 630, 420);
+        pnMain.setBounds(0, 0, 1000, 700);
 
         JLabel lbTitle = new JLabel("Quản Lý Khách Hàng");
         lbTitle.setHorizontalAlignment(SwingConstants.CENTER);
@@ -49,7 +49,7 @@ public class QuanLyKhachHang extends JFrame implements ActionListener, MouseList
         lbTitle.setBounds(0, 0, 624, 30);
         pnMain.add(lbTitle);
 
-        getContentPane().add(pnMain);
+        this.add(pnMain);
 
         JPanel pnThongTinKH = new JPanel();
         pnThongTinKH.setBorder(
@@ -137,7 +137,7 @@ public class QuanLyKhachHang extends JFrame implements ActionListener, MouseList
         JPanel pbTableKH = new JPanel();
         pbTableKH.setBorder(
                 new TitledBorder(null, "Danh sách khách hàng", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-        pbTableKH.setBounds(360, 41, 622, 618);
+        pbTableKH.setBounds(360, 41, 624, 618);
         pnMain.add(pbTableKH);
         pbTableKH.setLayout(null);
 
@@ -151,11 +151,11 @@ public class QuanLyKhachHang extends JFrame implements ActionListener, MouseList
         txtTim.setColumns(10);
 
         btnTim = new JButton("Tìm");
-        btnTim.setBounds(330, 21, 98, 20);
+        btnTim.setBounds(330, 21, 80, 20);
         pbTableKH.add(btnTim);
 
         JPanel pnShowTableKH = new JPanel();
-        pnShowTableKH.setBounds(12, 49, 598, 569);
+        pnShowTableKH.setBounds(12, 49, 600, 569);
         pbTableKH.add(pnShowTableKH);
         pnShowTableKH.setLayout(new BorderLayout(0, 0));
 

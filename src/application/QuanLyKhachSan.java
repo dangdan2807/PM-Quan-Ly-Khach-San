@@ -7,7 +7,7 @@ import java.awt.event.*;
 public class QuanLyKhachSan extends JFrame implements ActionListener {
     // thêm các page vô đây cho dễ nhớ
 
-    private String[] nav = new String[] {"Trang chu", "Dat phong", "Quan ly hoa don phong", "Quan ly hoa don dich vu",
+    private String[] nav = new String[] { "Trang chu", "Dat phong", "Quan ly hoa don phong", "Quan ly hoa don dich vu",
             "Quan ly phong", "Quan ly dich vu", "Quan ly nhan vien", "Quan ly khach hang" };
     // index ở đây tương ứng với mảng trên
     private int indx_nav = 2;
@@ -16,8 +16,9 @@ public class QuanLyKhachSan extends JFrame implements ActionListener {
     private TrangChu pageTrangChu = new TrangChu();
     private DatPhong pageDatPhong = new DatPhong();
     private HoaDonPhong pageHDPhong = new HoaDonPhong();
+    private QuanLyDichVu pageQLDichVu = new QuanLyDichVu();
+    private QuanLyKhachHang pageQLKhachHang = new QuanLyKhachHang();
     // private QuanLy pageQuanLy = new QuanLy();
-    
 
     // components
     private JMenuBar menuBar;
@@ -38,27 +39,32 @@ public class QuanLyKhachSan extends JFrame implements ActionListener {
         pnContainer.setLayout(new BoxLayout(pnContainer, BoxLayout.Y_AXIS));
         this.add(pnContainer);
         createGUI();
-        
+
     }
 
     public void createGUI() {
         // xóa hết vẽ lại
         pnContainer.removeAll();
-        pnContainer.repaint();
+        pnContainer.invalidate();
         // hiển thị các page ở đây
         if (indx_nav == 0) {// trang chủ
             // System.out.println(pageTrangChu.pMain);
 
             pnContainer.add(pageTrangChu.pMain, BorderLayout.CENTER);
             // this.add(pageTrangChu.pMain, BorderLayout.CENTER);
-        }else if(indx_nav == 1){ // trang đặt phòng
+        } else if (indx_nav == 1) { // trang đặt phòng
             // System.out.println(pageDatPhong.pMain);
             pnContainer.add(pageDatPhong.pMain, BorderLayout.CENTER);
             // this.add(pageDatPhong.pMain, BorderLayout.CENTER);
-        }else if(indx_nav == 2){ // hóa đơn phòng
+        } else if (indx_nav == 2) { // hóa đơn phòng
             pnContainer.add(pageHDPhong.pMain, BorderLayout.CENTER);
+        } else if (indx_nav == 3) { //
+            pnContainer.add(pageQLDichVu.pnMain, BorderLayout.CENTER);
+        } else if (indx_nav == 4) { //
+            pnContainer.add(pageQLKhachHang.pnMain, BorderLayout.CENTER);
         }
 
+        pnContainer.revalidate();
     }
 
     public void createMenuGUI() {
@@ -117,13 +123,13 @@ public class QuanLyKhachSan extends JFrame implements ActionListener {
 
     }
 
-    public JLabel space(int w, int h){
+    public JLabel space(int w, int h) {
         JLabel space = new JLabel("");
-        space.setBorder(BorderFactory.createEmptyBorder(h/2, w/2, h/2, w/2));
+        space.setBorder(BorderFactory.createEmptyBorder(h / 2, w / 2, h / 2, w / 2));
         return space;
     }
 
-    public void addMenu(JPanel pMenu, JButton btn){
+    public void addMenu(JPanel pMenu, JButton btn) {
         btn.setBackground(Color.lightGray);
         btn.setBorder(BorderFactory.createEmptyBorder());
         pMenu.add(btn);
@@ -139,21 +145,28 @@ public class QuanLyKhachSan extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Object obj = e.getSource();
         System.out.println("chuyen trang");
-        
+
         if (obj == itemTrangChu) { // trang chủ
             System.out.println("Trang chu");
             indx_nav = 0;
             createGUI();
 
-        }else if(obj == itemDatPhong) {// Đặt phòng
+        } else if (obj == itemDatPhong) {// Đặt phòng
             System.out.println("Dat phong");
             indx_nav = 1;
             createGUI();
-        }else if(obj == itemQLHDPhong){// hóa đơn phòng
+        } else if (obj == itemQLHDPhong) {// hóa đơn phòng
             System.out.println("Hoa don");
             indx_nav = 2;
             createGUI();
-
+        } else if (obj == itemQLDichVu) {// quan ly dich vu
+            System.out.println("Dich vu");
+            indx_nav = 3;
+            createGUI();
+        } else if (obj == itemQLKhachHang) {// quan ly khach hang
+            System.out.println("Khach hang");
+            indx_nav = 4;
+            createGUI();
         }
         // thêm tương tự như phía trên, indx_nav tương ứng với mảng nav trên đầu
     }

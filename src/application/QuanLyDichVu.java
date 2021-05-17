@@ -12,9 +12,9 @@ import DAO.DichVuDAO;
 import connectDB.ConnectDB;
 import entity.DichVu;
 
-public class QuanLyDichVu extends JFrame implements ActionListener, MouseListener, KeyListener {
+public class QuanLyDichVu extends JPanel implements ActionListener, MouseListener, KeyListener {
 
-    private JPanel pnMain;
+    public JPanel pnMain;
     private JTable tableDV;
     private DefaultTableModel modelTableDV;
     private JTextField txtTim, txtMaDV, txtTenDV, txtDonGia;
@@ -30,17 +30,15 @@ public class QuanLyDichVu extends JFrame implements ActionListener, MouseListene
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        setTitle("Danh Mục Dịch Vụ");
         setSize(1000, 700);
-        setLocationRelativeTo(null);
-        setResizable(false);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        // setLocationRelativeTo(null);
+        // setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         pnMain = new JPanel();
         pnMain.setLayout(null);
-        pnMain.setBounds(0, 0, 630, 420);
+        pnMain.setBounds(0, 0, 1000, 700);
 
-        getContentPane().add(pnMain);
+        this.add(pnMain);
 
         JLabel lbTitle = new JLabel("Danh Mục Dịch Vụ");
         lbTitle.setHorizontalAlignment(SwingConstants.CENTER);
@@ -109,8 +107,8 @@ public class QuanLyDichVu extends JFrame implements ActionListener, MouseListene
 
         JPanel pnShowDV = new JPanel();
         pnShowDV.setBounds(413, 46, 569, 613);
-        pnMain.add(pnShowDV);
         pnShowDV.setLayout(null);
+        pnMain.add(pnShowDV);
 
         JLabel lbTimKiem = new JLabel("Tên dịch vụ:");
         lbTimKiem.setBounds(0, 12, 75, 16);
