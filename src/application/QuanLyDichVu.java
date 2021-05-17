@@ -30,7 +30,7 @@ public class QuanLyDichVu extends JPanel implements ActionListener, MouseListene
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        setSize(1000, 700);
+        // setSize(1000, 700);
         // setLocationRelativeTo(null);
         // setDefaultCloseOperation(EXIT_ON_CLOSE);
 

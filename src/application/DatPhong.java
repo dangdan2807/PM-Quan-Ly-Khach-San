@@ -4,27 +4,41 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
-public class DatPhong extends JFrame {
 
-    public JPanel pMain;
+import java.awt.event.*;
+
+public class DatPhong extends JFrame implements ActionListener{
+
+    public JPanel pnMain;
     private ImageIcon icon_add = new ImageIcon("data/images/add.png");
     private ImageIcon icon_refresh = new ImageIcon("data/images/refresh.png");
     private ImageIcon icon_trash = new ImageIcon("data/images/trash.png");
     private ImageIcon icon_edit = new ImageIcon("data/images/edit.png");
     private ImageIcon icon_search = new ImageIcon("data/images/magnifying-glass.png");
+    private JTextField txtMaKH;
+    private JTextField txtTenKH;
+    private DefaultComboBoxModel modelMaPhong;
+    private JComboBox cboMaPhong;
+    private JTextField txtNgayDen;
+    private JTextField txtNgayDi;
+    private JTextField txtGhiChu;
+    private JButton btnDatPhong;
+    private JButton btnSua;
+    private JButton btnHuy;
+    private JButton btnClear;
 
     public DatPhong(){
-        pMain = renderGUI();
+        pnMain = renderGUI();
     }
 
     public JPanel renderGUI() {
-        JPanel pMain = new JPanel();
-        pMain.setLayout(new BoxLayout(pMain, BoxLayout.Y_AXIS));
-        pMain.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        JPanel pnMain = new JPanel();
+        pnMain.setLayout(new BoxLayout(pnMain, BoxLayout.Y_AXIS));
+        pnMain.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         JPanel pTop = new JPanel();
         pTop.setPreferredSize(new Dimension(1000, 400));
         pTop.setLayout(new BoxLayout(pTop, BoxLayout.X_AXIS));
-        pMain.add(pTop);
+        pnMain.add(pTop);
         
         // Fields
         JPanel p_sec_Fields = new JPanel();
@@ -35,12 +49,7 @@ public class DatPhong extends JFrame {
         JPanel p_sec_f_top = new JPanel();
         p_sec_f_top.setLayout(new BoxLayout(p_sec_f_top, BoxLayout.X_AXIS));
         p_sec_Fields.add(p_sec_f_top);
-        JPanel p_sec_f_bottom = new JPanel();
-        GridLayout grid = new GridLayout(2, 2);
-        grid.setHgap(10);
-        grid.setVgap(10);
-        p_sec_f_bottom.setLayout(grid);
-        p_sec_Fields.add(p_sec_f_bottom);
+        
 
         Box p_l = Box.createVerticalBox();
         Box p_r = Box.createVerticalBox();
@@ -49,42 +58,41 @@ public class DatPhong extends JFrame {
         p_sec_f_top.add(p_l);
         p_sec_f_top.add(p_r);
 
-        JLabel lbMaKH = new JLabel("Ma KH");
+        JLabel lbMaKH = new JLabel("Mã khách hàng");
         lbMaKH.setFont(fontSize(20));
-        JLabel lbTenKH = new JLabel("Ten KH");
+        JLabel lbTenKH = new JLabel("Tên khách hàng");
         lbTenKH.setFont(fontSize(20));
-        JLabel lbMaPhong = new JLabel("Ma Phong");
+        JLabel lbMaPhong = new JLabel("Mã phòng");
         lbMaPhong.setFont(fontSize(20));
-        JLabel lbNgayDen = new JLabel("Ngay den");
+        JLabel lbNgayDen = new JLabel("Ngày đến");
         lbNgayDen.setFont(fontSize(20));
-        JLabel lbNgayDi = new JLabel("Ngay di");
+        JLabel lbNgayDi = new JLabel("Ngày đi");
         lbNgayDi.setFont(fontSize(20));
-        JLabel lbGhiChu = new JLabel("Ghi chu");
+        JLabel lbGhiChu = new JLabel("Ghi chú");
         lbGhiChu.setFont(fontSize(20));
         
         p_l.add(lbMaKH);
-        p_l.add(Box.createVerticalStrut(20));
+        p_l.add(Box.createVerticalStrut(10));
         p_l.add(lbTenKH);
-        p_l.add(Box.createVerticalStrut(20));
+        p_l.add(Box.createVerticalStrut(10));
         p_l.add(lbMaPhong);
-        p_l.add(Box.createVerticalStrut(20));
+        p_l.add(Box.createVerticalStrut(10));
         p_l.add(lbNgayDen);
-        p_l.add(Box.createVerticalStrut(20));
+        p_l.add(Box.createVerticalStrut(10));
         p_l.add(lbNgayDi);
-        p_l.add(Box.createVerticalStrut(20));
+        p_l.add(Box.createVerticalStrut(10));
         p_l.add(lbGhiChu);
 
-        JTextField txtMaKH = new JTextField(10);
-        JTextField txtTenKH = new JTextField(10);
+        txtMaKH = new JTextField(10);
+        txtTenKH = new JTextField(10);
 
-        DefaultComboBoxModel modelMaPhong = new DefaultComboBoxModel();
-        JComboBox cboMaPhong = new JComboBox(modelMaPhong);
-        // JTextField txtMaPhong = new JTextField(10);
+        modelMaPhong = new DefaultComboBoxModel();
+        cboMaPhong = new JComboBox(modelMaPhong);
 
 
-        JTextField txtNgayDen = new JTextField(10);
-        JTextField txtNgayDi = new JTextField(10);
-        JTextField txtGhiChu = new JTextField(10);
+        txtNgayDen = new JTextField(10);
+        txtNgayDi = new JTextField(10);
+        txtGhiChu = new JTextField(10);
         p_r.add(Box.createVerticalStrut(20));
         p_r.add(txtMaKH);
         p_r.add(Box.createVerticalStrut(10));
@@ -99,16 +107,33 @@ public class DatPhong extends JFrame {
         p_r.add(txtGhiChu);
         p_r.add(Box.createVerticalStrut(10));
 
+        // check box
+        JPanel p_sec_f_center = new JPanel();
+        p_sec_Fields.add(p_sec_f_center);
+        // lbNhanPhong.setFont(fontSize(20));
+        JCheckBox chkIsNhanPhong = new JCheckBox("Nhận phòng ngay");
+        p_sec_f_center.add(chkIsNhanPhong);
+
         // action
-        JButton btnDatPhong = new JButton("Dat phong", icon_add);
-        JButton btnSua = new JButton("Sua", icon_edit);
-        JButton btnHuy = new JButton("Huy", icon_trash);
-        JButton btnClear = new JButton("Lam lai", icon_refresh);
+        JPanel p_sec_f_bottom = new JPanel();
+        GridLayout grid = new GridLayout(2, 2);
+        grid.setHgap(10);
+        grid.setVgap(10);
+        p_sec_f_bottom.setLayout(grid);
+        p_sec_Fields.add(p_sec_f_bottom);
+
+        btnDatPhong = new JButton("Đặt phòng", icon_add);
+        btnSua = new JButton("Sửa", icon_edit);
+        btnHuy = new JButton("Hủy", icon_trash);
+        btnClear = new JButton("Làm lại", icon_refresh);
         p_sec_f_bottom.add(btnDatPhong);
         p_sec_f_bottom.add(btnSua);
         p_sec_f_bottom.add(btnHuy);
         p_sec_f_bottom.add(btnClear);
-
+        btnDatPhong.addActionListener(this);
+        btnSua.addActionListener(this);
+        btnHuy.addActionListener(this);
+        btnClear.addActionListener(this);
 
         // Danh sách phòng trống
         JPanel p_sec_DS = new JPanel();
@@ -132,7 +157,7 @@ public class DatPhong extends JFrame {
 
         // danh sách đặt phòng
         JPanel p_sec_table = new JPanel();
-        pMain.add(p_sec_table);
+        pnMain.add(p_sec_table);
 
         JPanel pTimKiem = new JPanel();
         p_sec_table.add(pTimKiem);
@@ -144,7 +169,7 @@ public class DatPhong extends JFrame {
 
         JPanel pTable = new JPanel();
         pTable.setLayout(new BoxLayout(pTable, BoxLayout.X_AXIS));
-        pMain.add(pTable);
+        pnMain.add(pTable);
 
         String[] cols_datphong = {"Ma hoa don", "Ma KH", "Ten KH", "Ma Phong", "Ngay den", "Ngay di", "Ghi chu"};
         DefaultTableModel modelDatPhong = new DefaultTableModel(cols_datphong, 0);
@@ -157,7 +182,7 @@ public class DatPhong extends JFrame {
         modelDatPhong.addRow(new Object[]{"4", "1", "Tran Van Nhan", "1", "01-01-2001", "01-01-2001", ""});
         
 
-        return pMain;
+        return pnMain;
     }
 
     public JLabel space(int w, int h){
@@ -168,5 +193,40 @@ public class DatPhong extends JFrame {
 
     public Font fontSize(int size){
         return new Font(Font.DIALOG, Font.PLAIN, size);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // TODO Auto-generated method stub
+        Object obj = e.getSource();
+        if(obj == btnDatPhong){
+            System.out.println("Dat phong");
+            if(!txtMaKH.getText().matches("^[a-zA-Z0-9]+$")){
+                renderError(txtMaKH, "Mã khách hàng chỉ được chứa chữ cái, chữ số và không được để trống");
+                return;
+            }
+
+            if(!txtTenKH.getText().matches("^[a-zA-Z ]+$")){
+                renderError(txtTenKH, "Tên khách hàng chỉ được chứa chữ cái, khoảng trắng và không được để trống");
+                return;
+            }
+
+            // if(!txtGhiChu.getText().matches("^[a-zA-Z0-9,. ]*$")){
+            //     renderError(txtGhiChu, "Ghi chú không hợp lệ");
+            //     return;
+            // }
+
+            String maKh = txtMaKH.getText();
+            // String maKh = txtMaKH.getText();
+            // String maKh = txtMaKH.getText();
+            // String maKh = txtMaKH.getText();
+            // String maKh = txtMaKH.getText();
+        }
+    }
+
+    public void renderError(JTextField a, String message){
+        a.requestFocus();
+        a.selectAll();
+        JOptionPane.showMessageDialog(pnMain, message);
     }
 }
