@@ -15,8 +15,8 @@ import entity.DichVu;
 public class QuanLyDichVu extends JPanel implements ActionListener, MouseListener, KeyListener {
 
     public JPanel pnMain;
-    private JTable tableDV;
-    private DefaultTableModel modelTableDV;
+    private JTable table;
+    private DefaultTableModel modelTable;
     private JTextField txtTim, txtMaDV, txtTenDV, txtDonGia;
     private JButton btnTim, btnThem, btnSua, btnXoa, btnLamLai;
     private JLabel lbShowMessages;
@@ -30,7 +30,7 @@ public class QuanLyDichVu extends JPanel implements ActionListener, MouseListene
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        // setSize(1000, 700);
+        setSize(1000, 700);
         // setLocationRelativeTo(null);
         // setDefaultCloseOperation(EXIT_ON_CLOSE);
 
@@ -103,7 +103,7 @@ public class QuanLyDichVu extends JPanel implements ActionListener, MouseListene
         pnInfoDV.add(lbShowMessages);
 
         String[] cols = { "Mã DV", "Tên DV", "Đơn Giá" };
-        modelTableDV = new DefaultTableModel(cols, 0);
+        modelTable = new DefaultTableModel(cols, 0);
 
         JPanel pnShowDV = new JPanel();
         pnShowDV.setBounds(413, 46, 569, 613);
@@ -128,14 +128,14 @@ public class QuanLyDichVu extends JPanel implements ActionListener, MouseListene
         pnShowDV.add(pnTableDV);
         pnTableDV.setLayout(new BorderLayout(0, 0));
 
-        tableDV = new JTable(modelTableDV) {
+        table = new JTable(modelTable) {
             // khóa sửa dữ liệu trực tiếp trên table
             @Override
             public boolean isCellEditable(int i, int i1) {
                 return false;
             }
         };
-        JScrollPane scpTableDV = new JScrollPane(tableDV, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+        JScrollPane scpTableDV = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         pnTableDV.add(scpTableDV, BorderLayout.CENTER);
 
@@ -146,7 +146,7 @@ public class QuanLyDichVu extends JPanel implements ActionListener, MouseListene
         btnXoa.addActionListener(this);
         btnTim.addActionListener(this);
         // sự kiện chuột
-        tableDV.addMouseListener(this);
+        table.addMouseListener(this);
         txtTenDV.addMouseListener(this);
         txtDonGia.addMouseListener(this);
         // sự kiện phím enter
@@ -175,7 +175,7 @@ public class QuanLyDichVu extends JPanel implements ActionListener, MouseListene
                     int maDV = dvDAO.getLatestID();
                     if (result == true) {
                         txtMaDV.setText(String.valueOf(maDV));
-                        modelTableDV.addRow(new Object[] { maDV, dv.getTenDV(), dv.getDonGia() });
+                        modelTable.addRow(new Object[] { maDV, dv.getTenDV(), dv.getDonGia() });
                         showMessage("Thêm dịch vụ thành công", SUCCESS);
                     } else {
                         showMessage("Lỗi: Thêm dịch vụ thất bại", ERROR);
@@ -187,12 +187,12 @@ public class QuanLyDichVu extends JPanel implements ActionListener, MouseListene
         } else if (o.equals(btnSua)) {
             if (validData()) {
                 DichVu dv = getSelectedDataTable();
-                int row = tableDV.getSelectedRow();
+                int row = table.getSelectedRow();
                 try {
                     boolean result = dvDAO.update(dv);
                     if (result == true) {
-                        modelTableDV.setValueAt(dv.getTenDV(), row, 1);
-                        modelTableDV.setValueAt(dv.getDonGia(), row, 2);
+                        modelTable.setValueAt(dv.getTenDV(), row, 1);
+                        modelTable.setValueAt(dv.getDonGia(), row, 2);
                         showMessage("Cập nhật dịch vụ thành công", SUCCESS);
                     } else {
                         showMessage("Lỗi: Cập nhật dịch vụ thất bại", ERROR);
@@ -203,7 +203,7 @@ public class QuanLyDichVu extends JPanel implements ActionListener, MouseListene
             }
         } else if (o.equals(btnXoa)) {
             DichVu dv = getSelectedDataTable();
-            int row = tableDV.getSelectedRow();
+            int row = table.getSelectedRow();
             try {
                 if (row == -1) {
                     showMessage("Lỗi: Bạn cần chọn dòng cần xóa", ERROR);
@@ -213,7 +213,7 @@ public class QuanLyDichVu extends JPanel implements ActionListener, MouseListene
                             JOptionPane.YES_NO_OPTION);
                     if (select == JOptionPane.YES_OPTION) {
                         dvDAO.delete(dv);
-                        modelTableDV.removeRow(row);
+                        modelTable.removeRow(row);
                         showMessage("Xóa thành công", SUCCESS);
                     }
                 }
@@ -224,12 +224,12 @@ public class QuanLyDichVu extends JPanel implements ActionListener, MouseListene
             if (validDataTim()) {
                 String tenDV = txtTim.getText().trim();
                 if (tenDV.isEmpty()) {
-                    modelTableDV.getDataVector().removeAllElements();
+                    modelTable.getDataVector().removeAllElements();
                     ArrayList<DichVu> ds = dvDAO.getListDichVu();
                     DocDuLieuVaoTable(ds);
                 } else {
                     try {
-                        modelTableDV.getDataVector().removeAllElements();
+                        modelTable.getDataVector().removeAllElements();
                         ArrayList<DichVu> ds = dvDAO.getListDichVuByName(tenDV);
                         if (ds.size() <= 0) {
                             showMessage("Không tìm thấy dịch vụ", ERROR);
@@ -246,11 +246,11 @@ public class QuanLyDichVu extends JPanel implements ActionListener, MouseListene
     @Override
     public void mouseClicked(MouseEvent e) {
         Object o = e.getSource();
-        if (o.equals(tableDV)) {
-            int row = tableDV.getSelectedRow();
-            txtMaDV.setText(modelTableDV.getValueAt(row, 0).toString());
-            txtTenDV.setText(modelTableDV.getValueAt(row, 1).toString());
-            txtDonGia.setText(modelTableDV.getValueAt(row, 2).toString());
+        if (o.equals(table)) {
+            int row = table.getSelectedRow();
+            txtMaDV.setText(modelTable.getValueAt(row, 0).toString());
+            txtTenDV.setText(modelTable.getValueAt(row, 1).toString());
+            txtDonGia.setText(modelTable.getValueAt(row, 2).toString());
         } else if (o.equals(txtTenDV)) {
             txtTenDV.selectAll();
         } else if (o.equals(txtDonGia)) {
@@ -325,7 +325,8 @@ public class QuanLyDichVu extends JPanel implements ActionListener, MouseListene
         if (!(tenDV.length() > 0)) {
             showMessage("Lỗi: Tên không được để trống", txtTenDV);
             return false;
-        } else if (donGia.length() > 0) {
+        }
+        if (donGia.length() > 0) {
             try {
                 Double x = Double.parseDouble(donGia);
                 if (x < 0) {
@@ -361,7 +362,7 @@ public class QuanLyDichVu extends JPanel implements ActionListener, MouseListene
 
     private void DocDuLieuVaoTable(ArrayList<DichVu> dataList) {
         for (DichVu item : dataList) {
-            modelTableDV.addRow(new Object[] { item.getMaDV(), item.getTenDV(), item.getDonGia() });
+            modelTable.addRow(new Object[] { item.getMaDV(), item.getTenDV(), item.getDonGia() });
         }
     }
 }

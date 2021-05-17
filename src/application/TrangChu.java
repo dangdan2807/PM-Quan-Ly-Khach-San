@@ -28,8 +28,8 @@ public class TrangChu extends JFrame {
         JPanel pnFields = new JPanel();
         pn_interact.add(pnFields);
         JLabel lbLoaiPhong = new JLabel("Loai phong: ");
-        DefaultComboBoxModel modelLP = new DefaultComboBoxModel();
-        JComboBox cboLP = new JComboBox(modelLP);
+        DefaultComboBoxModel<String> modelLP = new DefaultComboBoxModel<String>();
+        JComboBox<String> cboLP = new JComboBox<String>(modelLP);
         modelLP.addElement("Tat ca");
         modelLP.addElement("Vip");
         modelLP.addElement("Thuong");

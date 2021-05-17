@@ -61,7 +61,7 @@ public class KhachHang {
 	}
 
 	public void setLoaiKH(String loaiKH) {
-		if (!loaiKH.equals("Việt Nam") || !loaiKH.equals("Nước ngoài"))
+		if (!(loaiKH.equals("Việt Nam")) || !(loaiKH.equals("Nước ngoài")))
 			loaiKH = "Việt Nam";
 		this.loaiKH = loaiKH;
 	}
@@ -71,12 +71,17 @@ public class KhachHang {
 		setTenKH(tenKH);
 		setCmnd(cmnd);
 		this.ngayHetHan = ngayHetHan;
-		setLoaiKH(loaiKH);
+		// setLoaiKH(loaiKH);
+		this.loaiKH = loaiKH;
 		setSoLanDatPhong(soLanDatPhong);
 	}
 
 	public KhachHang(int maKH) {
 		this(maKH, "Chưa cập nhật", "Chưa cập nhật", null, "VN", 0);
+	}
+
+	public KhachHang(int maKH, String tenKH) {
+		this(maKH, tenKH, "Chưa cập nhật", null, "VN", 0);
 	}
 
 	public KhachHang(ResultSet rs) throws SQLException {

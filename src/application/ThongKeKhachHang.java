@@ -5,7 +5,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.table.*;
 
-public class BaoCaoKhachHang extends JFrame implements ActionListener {
+public class ThongKeKhachHang extends JFrame implements ActionListener {
     private JPanel pnMain;
     private JTextField txtMaKH, txtTenKH;
     private kDatePicker dpTuNgay, dpDenNgay;
@@ -19,11 +19,11 @@ public class BaoCaoKhachHang extends JFrame implements ActionListener {
     private JTextField txtThanhTien;
     private JLabel lbVND;
     private JButton btnThongKe;
-    private JPanel pnTableBCDV;
-    private JTable tableBCKH;
+    private JPanel pnTable;
+    private JTable table;
 
-    public BaoCaoKhachHang() {
-        setTitle("Báo Cáo Tổng Hợp Khách Hàng");
+    public ThongKeKhachHang() {
+        setTitle("Thống Kê Tổng Hợp Khách Hàng");
         setSize(1000, 700);
         setLocationRelativeTo(null);
         setResizable(false);
@@ -76,19 +76,19 @@ public class BaoCaoKhachHang extends JFrame implements ActionListener {
         pnMain.add(txtTenKH);
         txtTenKH.setColumns(10);
         
-        pnTableBCDV = new JPanel();
-        pnTableBCDV.setBounds(10, 108, 972, 509);
-        pnMain.add(pnTableBCDV);
-        pnTableBCDV.setLayout(new BorderLayout(0, 0));
+        pnTable = new JPanel();
+        pnTable.setBounds(10, 108, 972, 509);
+        pnMain.add(pnTable);
+        pnTable.setLayout(new BorderLayout(0, 0));
 
         // mã hóa đơn phòng
         String[] cols = { "Mã HD", "Phòng", "Giá phòng", "Ngày đến", "Ngày Trả", "Mã DV", "Tên DV", "Đơn giá", "Mã KH",
                 "Mã NV" };
         modelTableBCKH = new DefaultTableModel(cols, 0);
-        tableBCKH = new JTable(modelTableBCKH);
-        JScrollPane scpTableBCDV = new JScrollPane(tableBCKH, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+        table = new JTable(modelTableBCKH);
+        JScrollPane scpTableBCDV = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-        pnTableBCDV.add(scpTableBCDV, BorderLayout.CENTER);
+        pnTable.add(scpTableBCDV, BorderLayout.CENTER);
         
         pnThongKe = new JPanel();
         pnThongKe.setBounds(10, 619, 972, 40);
@@ -119,7 +119,7 @@ public class BaoCaoKhachHang extends JFrame implements ActionListener {
     }
 
     public static void main(String[] args) {
-        new BaoCaoKhachHang().setVisible(true);
+        new ThongKeKhachHang().setVisible(true);
     }
 
     @Override

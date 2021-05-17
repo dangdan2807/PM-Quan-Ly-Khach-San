@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.sql.*;
-import java.text.ParseException;
+import java.text.*;
 
 import javax.swing.*;
 import javax.swing.border.*;
@@ -18,7 +18,7 @@ public class QuanLyKhachHang extends JPanel implements ActionListener, MouseList
 
     public JPanel pnMain;
     private DefaultTableModel modelTable;
-    private JTable tableShowKH;
+    private JTable tableShowInfo;
     private kDatePicker dpNgayHetHan;
     private JTextField txtMaKH, txtTenKH, txtCMND, txtSoLanDat, txtTim;
     private JButton btnTim, btnThem, btnSua, btnXoa, btnLamLai;
@@ -33,8 +33,8 @@ public class QuanLyKhachHang extends JPanel implements ActionListener, MouseList
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        // setTitle("Quản Lý Khách Hàng");
         setSize(1000, 700);
+        // setTitle("Quản Lý Khách Hàng");
         // setLocationRelativeTo(null);
         // setResizable(false);
         // setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -64,7 +64,7 @@ public class QuanLyKhachHang extends JPanel implements ActionListener, MouseList
 
         txtMaKH = new JTextField();
         txtMaKH.setEditable(false);
-        txtMaKH.setBounds(125, 18, 225, 20);
+        txtMaKH.setBounds(145, 18, 205, 20);
         pnThongTinKH.add(txtMaKH);
         txtMaKH.setColumns(10);
 
@@ -73,7 +73,7 @@ public class QuanLyKhachHang extends JPanel implements ActionListener, MouseList
         pnThongTinKH.add(lbTenKH);
 
         txtTenKH = new JTextField();
-        txtTenKH.setBounds(125, 43, 225, 20);
+        txtTenKH.setBounds(145, 43, 205, 20);
         pnThongTinKH.add(txtTenKH);
         txtTenKH.setColumns(10);
 
@@ -82,26 +82,26 @@ public class QuanLyKhachHang extends JPanel implements ActionListener, MouseList
         pnThongTinKH.add(lbLoaiKhach);
 
         cboLoaiKhach = new JComboBox<String>();
-        cboLoaiKhach.setBounds(125, 121, 225, 20);
+        cboLoaiKhach.setBounds(145, 121, 205, 20);
         cboLoaiKhach.addItem("Việt Nam");
         cboLoaiKhach.addItem("Nước ngoài");
         pnThongTinKH.add(cboLoaiKhach);
 
-        JLabel lbCMND = new JLabel("CMND:");
-        lbCMND.setBounds(10, 71, 80, 14);
+        JLabel lbCMND = new JLabel("CMND/CCCD/Hộ chiếu:");
+        lbCMND.setBounds(10, 71, 136, 14);
         pnThongTinKH.add(lbCMND);
 
-        JLabel lbNgayHetHan = new JLabel("Ngày hết hạn CMND:");
-        lbNgayHetHan.setBounds(10, 95, 123, 16);
+        JLabel lbNgayHetHan = new JLabel("Ngày hết hạn hộ chiếu:");
+        lbNgayHetHan.setBounds(10, 95, 136, 16);
         pnThongTinKH.add(lbNgayHetHan);
 
         txtCMND = new JTextField();
-        txtCMND.setBounds(125, 68, 225, 20);
+        txtCMND.setBounds(145, 68, 205, 20);
         pnThongTinKH.add(txtCMND);
         txtCMND.setColumns(10);
 
-        dpNgayHetHan = new kDatePicker(225);
-        dpNgayHetHan.setBounds(125, 93, 225, 20);
+        dpNgayHetHan = new kDatePicker(205);
+        dpNgayHetHan.setBounds(145, 93, 205, 20);
         pnThongTinKH.add(dpNgayHetHan);
 
         JLabel lbSoLanDat = new JLabel("Số lần đặt phòng:");
@@ -110,7 +110,7 @@ public class QuanLyKhachHang extends JPanel implements ActionListener, MouseList
 
         txtSoLanDat = new JTextField();
         txtSoLanDat.setText("0");
-        txtSoLanDat.setBounds(125, 148, 225, 20);
+        txtSoLanDat.setBounds(145, 148, 205, 20);
         pnThongTinKH.add(txtSoLanDat);
         txtSoLanDat.setColumns(10);
 
@@ -167,8 +167,8 @@ public class QuanLyKhachHang extends JPanel implements ActionListener, MouseList
                 return false;
             }
         };
-        tableShowKH = new JTable(modelTable);
-        JScrollPane scpShowTableKH = new JScrollPane(tableShowKH, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+        tableShowInfo = new JTable(modelTable);
+        JScrollPane scpShowTableKH = new JScrollPane(tableShowInfo, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         pnShowTableKH.add(scpShowTableKH, BorderLayout.CENTER);
 
@@ -179,7 +179,7 @@ public class QuanLyKhachHang extends JPanel implements ActionListener, MouseList
         btnXoa.addActionListener(this);
         btnTim.addActionListener(this);
         // sự kiện chuột
-        tableShowKH.addMouseListener(this);
+        tableShowInfo.addMouseListener(this);
         // sự kiện phím enter
         txtTim.addKeyListener(this);
 
@@ -203,19 +203,20 @@ public class QuanLyKhachHang extends JPanel implements ActionListener, MouseList
             txtSoLanDat.setText("0");
         } else if (o.equals(btnThem)) {
             if (validData()) {
-                KhachHang dv = null;
+                KhachHang kh = null;
                 try {
-                    dv = getSelectedDataTable();
+                    kh = getSelectedDataTable();
                 } catch (ParseException e2) {
                     e2.printStackTrace();
                 }
                 try {
-                    boolean result = khDAO.create(dv);
+                    boolean result = khDAO.create(kh);
                     int maKH = khDAO.getLatestID();
                     if (result == true) {
                         txtMaKH.setText(String.valueOf(maKH));
-                        modelTable.addRow(new Object[] { maKH, dv.getTenKH(), dv.getCmnd(), dv.getNgayHetHan(),
-                                dv.getLoaiKH(), dv.getSoLanDatPhong() });
+                        String date = formatDate(kh.getNgayHetHan());
+                        modelTable.addRow(new Object[] { maKH, kh.getTenKH(), kh.getCmnd(), date, kh.getLoaiKH(),
+                                kh.getSoLanDatPhong() });
                         showMessage("Thêm khách hàng thành công", SUCCESS);
                     } else {
                         showMessage("Lỗi: Thêm khách hàng thất bại", ERROR);
@@ -226,21 +227,22 @@ public class QuanLyKhachHang extends JPanel implements ActionListener, MouseList
             }
         } else if (o.equals(btnSua)) {
             if (validData()) {
-                KhachHang dv = null;
+                KhachHang kh = null;
                 try {
-                    dv = getSelectedDataTable();
+                    kh = getSelectedDataTable();
                 } catch (ParseException e1) {
                     e1.printStackTrace();
                 }
-                int row = tableShowKH.getSelectedRow();
+                int row = tableShowInfo.getSelectedRow();
                 try {
-                    boolean result = khDAO.update(dv);
+                    boolean result = khDAO.update(kh);
                     if (result == true) {
-                        modelTable.setValueAt(dv.getTenKH(), row, 1);
-                        modelTable.setValueAt(dv.getCmnd(), row, 2);
-                        modelTable.setValueAt(dv.getNgayHetHan(), row, 3);
-                        modelTable.setValueAt(dv.getLoaiKH(), row, 4);
-                        modelTable.setValueAt(dv.getSoLanDatPhong(), row, 5);
+                        String date = formatDate(kh.getNgayHetHan());
+                        modelTable.setValueAt(kh.getTenKH(), row, 1);
+                        modelTable.setValueAt(kh.getCmnd(), row, 2);
+                        modelTable.setValueAt(date, row, 3);
+                        modelTable.setValueAt(kh.getLoaiKH(), row, 4);
+                        modelTable.setValueAt(kh.getSoLanDatPhong(), row, 5);
                         showMessage("Cập nhật khách hàng thành công", SUCCESS);
                     } else {
                         showMessage("Lỗi: Cập nhật khách hàng thất bại", ERROR);
@@ -250,13 +252,13 @@ public class QuanLyKhachHang extends JPanel implements ActionListener, MouseList
                 }
             }
         } else if (o.equals(btnXoa)) {
-            KhachHang dv = null;
+            KhachHang kh = null;
             try {
-                dv = getSelectedDataTable();
+                kh = getSelectedDataTable();
             } catch (ParseException e1) {
                 e1.printStackTrace();
             }
-            int row = tableShowKH.getSelectedRow();
+            int row = tableShowInfo.getSelectedRow();
             try {
                 if (row == -1) {
                     showMessage("Lỗi: Bạn cần chọn dòng cần xóa", ERROR);
@@ -265,7 +267,7 @@ public class QuanLyKhachHang extends JPanel implements ActionListener, MouseList
                     select = JOptionPane.showConfirmDialog(this, "Bạn có muốn xoá dòng đã chọn ?", "Cảnh báo",
                             JOptionPane.YES_NO_OPTION);
                     if (select == JOptionPane.YES_OPTION) {
-                        khDAO.delete(dv);
+                        khDAO.delete(kh);
                         modelTable.removeRow(row);
                         showMessage("Xóa thành công", SUCCESS);
                     }
@@ -321,13 +323,17 @@ public class QuanLyKhachHang extends JPanel implements ActionListener, MouseList
     @Override
     public void mouseClicked(MouseEvent e) {
         Object o = e.getSource();
-        if (o.equals(tableShowKH)) {
-            int row = tableShowKH.getSelectedRow();
+        if (o.equals(tableShowInfo)) {
+            int row = tableShowInfo.getSelectedRow();
             txtMaKH.setText(modelTable.getValueAt(row, 0).toString());
             txtTenKH.setText(modelTable.getValueAt(row, 1).toString());
             txtCMND.setText(modelTable.getValueAt(row, 2).toString());
-            dpNgayHetHan.setValue(modelTable.getValueAt(row, 3).toString());
-            // cboLoaiKhach.setSelectedIndex(0);
+            try {
+                dpNgayHetHan.setValue(modelTable.getValueAt(row, 3).toString());
+            } catch (ParseException e1) {
+                e1.printStackTrace();
+            }
+            cboLoaiKhach.setSelectedItem(modelTable.getValueAt(row, 4).toString());
             txtSoLanDat.setText(modelTable.getValueAt(row, 5).toString());
         }
     }
@@ -368,6 +374,32 @@ public class QuanLyKhachHang extends JPanel implements ActionListener, MouseList
     }
 
     private boolean validData() {
+        String tenKH = txtTenKH.getText().trim();
+        String cmnd = txtCMND.getText().trim();
+        String soLanDat = txtSoLanDat.getText().trim();
+        if (!(tenKH.length() > 0)) {
+            showMessage("Lỗi: Tên không được để trống", txtTenKH);
+            return false;
+        } else if (tenKH.matches("\\d+")) {
+            showMessage("Lỗi: Tên không được có số", txtTenKH);
+            return false;
+        }
+        if (!(cmnd.length() > 0 && cmnd.matches("^(\\d{9}|\\d{12})$"))) {
+            showMessage("Lỗi: CMND phải có 9 số hoặc CCCD phải có 12 số", txtCMND);
+            return false;
+        }
+        if (soLanDat.length() > 0) {
+            try {
+                Integer x = Integer.parseInt(soLanDat);
+                if (x < 0) {
+                    showMessage("Lỗi: Số lần đặt phòng >= 0", txtSoLanDat);
+                    return false;
+                }
+            } catch (NumberFormatException ex) {
+                showMessage("Lỗi: Số lần đặt phòng phải nhập số.", txtSoLanDat);
+                return false;
+            }
+        }
         return true;
     }
 
@@ -394,8 +426,14 @@ public class QuanLyKhachHang extends JPanel implements ActionListener, MouseList
 
     private void DocDuLieuVaoTable(ArrayList<KhachHang> dataList) {
         for (KhachHang item : dataList) {
-            modelTable.addRow(new Object[] { item.getMaKH(), item.getTenKH(), item.getCmnd(), item.getNgayHetHan(),
-                    item.getLoaiKH(), item.getSoLanDatPhong() });
+            String date = formatDate(item.getNgayHetHan());
+            modelTable.addRow(new Object[] { item.getMaKH(), item.getTenKH(), item.getCmnd(), date, item.getLoaiKH(),
+                    item.getSoLanDatPhong() });
         }
+    }
+
+    private String formatDate(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyy");
+        return sdf.format(date);
     }
 }
