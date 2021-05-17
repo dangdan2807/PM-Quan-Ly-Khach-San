@@ -1,14 +1,14 @@
 package entity;
 
 public class NhanVien {
-    private String maNV;
+    private int maNV;
     private String tenNV;
 
-    public String getMaNV() {
+    public int getMaNV() {
         return maNV;
     }
 
-    public void setMaNV(String maNV) {
+    public void setMaNV(int maNV) {
         this.maNV = maNV;
     }
 
@@ -20,24 +20,20 @@ public class NhanVien {
         this.tenNV = tenNV;
     }
 
-    public NhanVien(String maNV, String tenNV) {
+    public NhanVien(int maNV, String tenNV) {
         this.maNV = maNV;
         this.tenNV = tenNV;
     }
 
-    public NhanVien(String maNV) {
+    public NhanVien(int maNV) {
         this(maNV, "Chưa cập nhật");
-    }
-
-    public NhanVien() {
-        this("NV0", "Chưa cập nhật");
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((maNV == null) ? 0 : maNV.hashCode());
+        result = prime * result + maNV;
         return result;
     }
 
@@ -50,11 +46,9 @@ public class NhanVien {
         if (getClass() != obj.getClass())
             return false;
         NhanVien other = (NhanVien) obj;
-        if (maNV == null) {
-            if (other.maNV != null)
-                return false;
-        } else if (!maNV.equals(other.maNV))
+        if (maNV != other.maNV)
             return false;
         return true;
     }
+
 }

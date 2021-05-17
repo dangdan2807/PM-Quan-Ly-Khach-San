@@ -3,17 +3,17 @@ package entity;
 import java.sql.*;
 
 public class HoaDonDV {
-	private String maHDDV;
+	private int maHDDV;
 	private Date ngayGioDat;
 
 	private NhanVien nhanVien;
 	private KhachHang khachHang;
 
-	public String getMaHDDV() {
+	public int getMaHDDV() {
 		return maHDDV;
 	}
 
-	public void setMaHDDV(String maHDDV) {
+	public void setMaHDDV(int maHDDV) {
 		this.maHDDV = maHDDV;
 	}
 
@@ -41,7 +41,7 @@ public class HoaDonDV {
 		this.khachHang = khachHang;
 	}
 
-	public HoaDonDV(String maHDDV, Date ngayGioDat, NhanVien nhanVien, KhachHang khachHang) {
+	public HoaDonDV(int maHDDV, Date ngayGioDat, NhanVien nhanVien, KhachHang khachHang) {
 		this.maHDDV = maHDDV;
 		this.ngayGioDat = ngayGioDat;
 		this.nhanVien = nhanVien;
@@ -52,7 +52,7 @@ public class HoaDonDV {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((maHDDV == null) ? 0 : maHDDV.hashCode());
+		result = prime * result + maHDDV;
 		return result;
 	}
 
@@ -65,10 +65,7 @@ public class HoaDonDV {
 		if (getClass() != obj.getClass())
 			return false;
 		HoaDonDV other = (HoaDonDV) obj;
-		if (maHDDV == null) {
-			if (other.maHDDV != null)
-				return false;
-		} else if (!maHDDV.equals(other.maHDDV))
+		if (maHDDV != other.maHDDV)
 			return false;
 		return true;
 	}

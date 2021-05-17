@@ -16,9 +16,11 @@ public class QuanLyKhachSan extends JFrame implements ActionListener {
     private TrangChu pageTrangChu = new TrangChu();
     private DatPhong pageDatPhong = new DatPhong();
     private HoaDonPhong pageHDPhong = new HoaDonPhong();
+    private QuanLyDichVu pageQLDichVu = new QuanLyDichVu();
+    private QuanLyKhachHang pageQLKhachHang = new QuanLyKhachHang();
     // private QuanLy pageQuanLy = new QuanLy();
 
-    private JPanel pMain = pageTrangChu.pMain;
+    private JPanel pnMain = pageTrangChu.pnMain;
     
 
     // components
@@ -45,30 +47,29 @@ public class QuanLyKhachSan extends JFrame implements ActionListener {
 
     public void createGUI() {
         // xóa hết vẽ lại
-        this.remove(pMain);
+        this.remove(pnMain);
         this.revalidate(); 
         this.repaint();
-        // jframe.repaint();
-        // pnContainer.removeAll();
+
         // hiển thị các page ở đây
         if (indx_nav == 0) {// trang chủ
-            // System.out.println(pageTrangChu.pMain);
-            pMain = pageTrangChu.pMain;
-            // pnContainer.add(pageTrangChu.pMain, BorderLayout.CENTER);
-            this.add(pageTrangChu.pMain, BorderLayout.CENTER);
+            pnMain = pageTrangChu.pnMain;
+
         }else if(indx_nav == 1){ // trang đặt phòng
-            // System.out.println(pageDatPhong.pMain);
-            pMain = pageDatPhong.pMain;
-            // pnContainer.add(pageDatPhong.pMain, BorderLayout.CENTER);
-            this.add(pageDatPhong.pMain, BorderLayout.CENTER);
+            pnMain = pageDatPhong.pnMain;
+
         }else if(indx_nav == 2){ // hóa đơn phòng
-            pMain = pageHDPhong.pMain;
-            // pnContainer.add(pageHDPhong.pMain, BorderLayout.CENTER);
-            this.add(pageHDPhong.pMain, BorderLayout.CENTER);
+            pnMain = pageHDPhong.pnMain;
+            
+        } else if (indx_nav == 3) { //
+            pnMain = pageQLDichVu.pnMain;
+
+        } else if (indx_nav == 4) { //
+            pnMain = pageQLKhachHang.pnMain;
         }
+        this.add(pnMain, BorderLayout.CENTER);
         this.revalidate(); 
         this.repaint();
-        // pnContainer.repaint();
 
     }
 
@@ -165,6 +166,14 @@ public class QuanLyKhachSan extends JFrame implements ActionListener {
             indx_nav = 2;
             createGUI();
 
+        } else if (obj == itemQLDichVu) {// quan ly dich vu
+            System.out.println("Dich vu");
+            indx_nav = 3;
+            createGUI();
+        } else if (obj == itemQLKhachHang) {// quan ly khach hang
+            System.out.println("Khach hang");
+            indx_nav = 4;
+            createGUI();
         }
         // thêm tương tự như phía trên, indx_nav tương ứng với mảng nav trên đầu
     }

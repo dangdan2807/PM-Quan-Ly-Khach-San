@@ -1,14 +1,18 @@
 package entity;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class DichVu {
-	private String maDV, tenDV;
+	private int maDV;
+	private String tenDV;
 	private double donGia;
 
-	public String getMaDV() {
+	public int getMaDV() {
 		return maDV;
 	}
 
-	public void setMaDV(String maDV) {
+	public void setMaDV(int maDV) {
 		this.maDV = maDV;
 	}
 
@@ -17,6 +21,8 @@ public class DichVu {
 	}
 
 	public void setTenDV(String tenDV) {
+		if (tenDV.equals(""))
+			tenDV = "Chưa cập nhật";
 		this.tenDV = tenDV;
 	}
 
@@ -25,28 +31,34 @@ public class DichVu {
 	}
 
 	public void setDonGia(double donGia) {
+		if (donGia < 0)
+			donGia = 0.0;
 		this.donGia = donGia;
 	}
 
-	public DichVu(String maDV, String tenDV, double donGia) {
-		this.maDV = maDV;
-		this.tenDV = tenDV;
-		this.donGia = donGia;
+	public DichVu(int maDV, String tenDV, double donGia) {
+		setMaDV(maDV);
+		setDonGia(donGia);
+		setTenDV(tenDV);
+	}
+	public DichVu(String tenDV, double donGia) {
+		setDonGia(donGia);
+		setTenDV(tenDV);
 	}
 
-	public DichVu(String maDV) {
-		this(maDV, "", 0.0);
+	public DichVu(int maDV) {
+		this(maDV, "Chưa cập nhật", 0.0);
 	}
 
-	public DichVu() {
-		this("DV00", "Chưa cập nhật", 0.0);
+	public DichVu(ResultSet rs) throws SQLException {
+		this(rs.getInt("MaDV"), rs.getString("TenDV"), rs.getDouble("donGia"));
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((maDV == null) ? 0 : maDV.hashCode());
+		result = prime * result + maDV;
 		return result;
 	}
 
@@ -59,11 +71,9 @@ public class DichVu {
 		if (getClass() != obj.getClass())
 			return false;
 		DichVu other = (DichVu) obj;
-		if (maDV == null) {
-			if (other.maDV != null)
-				return false;
-		} else if (!maDV.equals(other.maDV))
+		if (maDV != other.maDV)
 			return false;
 		return true;
 	}
+
 }

@@ -2,7 +2,6 @@ package application;
 
 import java.awt.*;
 import javax.swing.*;
-import java.awt.event.*;
 
 public class TrangChu extends JFrame {
     
@@ -10,21 +9,21 @@ public class TrangChu extends JFrame {
     private int So_Phong = 30;
     ImageIcon icon_green_check = new ImageIcon("data/images/check.png", "check");
     ImageIcon icon_red_close = new ImageIcon("data/images/close.png", "close");
-    public JPanel pMain;
+    public JPanel pnMain;
 
     public TrangChu(){
-        pMain = renderGUI();
+        pnMain = renderGUI();
     }
 
     public JPanel renderGUI() {
         // nội dung page trang chủ ở đây
-        pMain = new JPanel();
-        // pMain.setLayout(new BoxLayout(pMain, BoxLayout.Y_AXIS));
+        pnMain = new JPanel();
+        // pnMain.setLayout(new BoxLayout(pnMain, BoxLayout.Y_AXIS));
         
         // action
         JPanel pn_interact = new JPanel();
         pn_interact.setLayout(new BoxLayout(pn_interact, BoxLayout.Y_AXIS));
-        pMain.add(pn_interact);
+        pnMain.add(pn_interact);
 
         JPanel pnFields = new JPanel();
         pn_interact.add(pnFields);
@@ -65,7 +64,7 @@ public class TrangChu extends JFrame {
         JPanel pn_sec_available = new JPanel();
         pn_sec_available.setLayout(new BoxLayout(pn_sec_available, BoxLayout.Y_AXIS));
         // pn_sec_available.setAlignmentX(Component.CENTER_ALIGNMENT);
-        pMain.add(pn_sec_available);
+        pnMain.add(pn_sec_available);
 
         JLabel lbDSP = new JLabel("Tinh trang phong");
         lbDSP.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -85,7 +84,7 @@ public class TrangChu extends JFrame {
         pnPhongTrong.setLayout(grid_Phong);
         renderDSPhong();
 
-        return pMain;
+        return pnMain;
     }
 
     public void renderDSPhong(){

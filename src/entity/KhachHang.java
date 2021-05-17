@@ -1,20 +1,20 @@
 package entity;
 
-import java.sql.Date;
+import java.sql.*;
 
 public class KhachHang {
-	private String maKH;
+	private int maKH;
 	private String tenKH;
-	private int soLanDatPhong = 0;
 	private String cmnd;
 	private Date ngayHetHan;
 	private String loaiKH;
+	private int soLanDatPhong = 0;
 
-	public String getMaKH() {
+	public int getMaKH() {
 		return maKH;
 	}
 
-	public void setMaKH(String maKH) {
+	public void setMaKH(int maKH) {
 		this.maKH = maKH;
 	}
 
@@ -23,6 +23,8 @@ public class KhachHang {
 	}
 
 	public void setTenKH(String tenKH) {
+		if (tenKH.equals(""))
+			tenKH = "Chưa cập nhật";
 		this.tenKH = tenKH;
 	}
 
@@ -31,6 +33,8 @@ public class KhachHang {
 	}
 
 	public void setSoLanDatPhong(int soLanDatPhong) {
+		if (soLanDatPhong <= 0)
+			soLanDatPhong = 0;
 		this.soLanDatPhong = soLanDatPhong;
 	}
 
@@ -39,6 +43,8 @@ public class KhachHang {
 	}
 
 	public void setCmnd(String cmnd) {
+		if (cmnd.equals(""))
+			cmnd = "Chưa cập nhật";
 		this.cmnd = cmnd;
 	}
 
@@ -55,31 +61,34 @@ public class KhachHang {
 	}
 
 	public void setLoaiKH(String loaiKH) {
+		if (!loaiKH.equals("Việt Nam") || !loaiKH.equals("Nước ngoài"))
+			loaiKH = "Việt Nam";
 		this.loaiKH = loaiKH;
 	}
 
-	public KhachHang(String maKH, String tenKH, int soLanDatPhong, String cmnd, Date ngayHetHan, String loaiKH) {
-		this.maKH = maKH;
-		this.tenKH = tenKH;
-		this.soLanDatPhong = soLanDatPhong;
-		this.cmnd = cmnd;
+	public KhachHang(int maKH, String tenKH, String cmnd, Date ngayHetHan, String loaiKH, int soLanDatPhong) {
+		setMaKH(maKH);
+		setTenKH(tenKH);
+		setCmnd(cmnd);
 		this.ngayHetHan = ngayHetHan;
-		this.loaiKH = loaiKH;
+		setLoaiKH(loaiKH);
+		setSoLanDatPhong(soLanDatPhong);
 	}
 
-	public KhachHang(String maKH) {
-		this(maKH, "Chưa cập nhật", 0, "Chưa cập nhật", null, "VN");
+	public KhachHang(int maKH) {
+		this(maKH, "Chưa cập nhật", "Chưa cập nhật", null, "VN", 0);
 	}
 
-	public KhachHang() {
-		this("KH00", "Chưa cập nhật", 0, "Chưa cập nhật", null, "VN");
+	public KhachHang(ResultSet rs) throws SQLException {
+		this(rs.getInt("MaKH"), rs.getString("TenKH"), rs.getString("cmnd"), rs.getDate("ngayHetHan"),
+				rs.getString("LoaiKH"), rs.getInt("soLanDatPhong"));
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((maKH == null) ? 0 : maKH.hashCode());
+		result = prime * result + maKH;
 		return result;
 	}
 
@@ -92,13 +101,9 @@ public class KhachHang {
 		if (getClass() != obj.getClass())
 			return false;
 		KhachHang other = (KhachHang) obj;
-		if (maKH == null) {
-			if (other.maKH != null)
-				return false;
-		} else if (!maKH.equals(other.maKH))
+		if (maKH != other.maKH)
 			return false;
 		return true;
 	}
 
-	
 }

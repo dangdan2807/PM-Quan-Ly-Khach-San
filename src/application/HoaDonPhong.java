@@ -3,34 +3,33 @@ package application;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.*;
 
 public class HoaDonPhong extends JFrame {
 
     private ImageIcon icon_pay = new ImageIcon("data/images/purse.png");
     private ImageIcon icon_in = new ImageIcon("data/images/printer.png");
-    public JPanel pMain;
+    public JPanel pnMain;
 
     public HoaDonPhong(){
-        pMain = renderGUI();
+        pnMain = renderGUI();
     }
 
     public JPanel renderGUI() {
-        JPanel pMain1 = new JPanel();
+        JPanel pnMain1 = new JPanel();
         
         JLabel lbHeader = new JLabel("Hoa don thanh toan");
         lbHeader.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
         lbHeader.setAlignmentX(Component.CENTER_ALIGNMENT);
         lbHeader.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
-        pMain1.add(lbHeader);
-        // pMain1.setLayout(new BoxLayout(pMain1, BoxLayout.X_AXIS));
-        JPanel pMain = new JPanel();
-        pMain.setLayout(new BoxLayout(pMain, BoxLayout.X_AXIS));
-        pMain1.add(pMain);
+        pnMain1.add(lbHeader);
+        // pnMain1.setLayout(new BoxLayout(pnMain1, BoxLayout.X_AXIS));
+        JPanel pnMain = new JPanel();
+        pnMain.setLayout(new BoxLayout(pnMain, BoxLayout.X_AXIS));
+        pnMain1.add(pnMain);
         // thông tin hóa đơn
 
         JPanel p_left = new JPanel(new FlowLayout());
-        pMain.add(p_left);
+        pnMain.add(p_left);
 
         JPanel p_sec_info = new JPanel();
         p_sec_info.setLayout(new BoxLayout(p_sec_info, BoxLayout.Y_AXIS));
@@ -83,7 +82,7 @@ public class HoaDonPhong extends JFrame {
         
         // tổng tiền
         JPanel p_right = new JPanel();
-        pMain.add(p_right);
+        pnMain.add(p_right);
         JPanel p_sec_total = new JPanel();
         p_sec_total.setLayout(new BoxLayout(p_sec_total, BoxLayout.Y_AXIS));
         p_sec_total.setBorder(BorderFactory.createEmptyBorder(0, 20, 30, 30));
@@ -132,7 +131,7 @@ public class HoaDonPhong extends JFrame {
         pBtn.add(btnThanhToan);
         pBtn.add(btnIn);
 
-        return pMain1;
+        return pnMain1;
     }
     
 }

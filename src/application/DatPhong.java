@@ -9,7 +9,7 @@ import java.awt.event.*;
 
 public class DatPhong extends JFrame implements ActionListener{
 
-    public JPanel pMain;
+    public JPanel pnMain;
     private ImageIcon icon_add = new ImageIcon("data/images/add.png");
     private ImageIcon icon_refresh = new ImageIcon("data/images/refresh.png");
     private ImageIcon icon_trash = new ImageIcon("data/images/trash.png");
@@ -28,17 +28,17 @@ public class DatPhong extends JFrame implements ActionListener{
     private JButton btnClear;
 
     public DatPhong(){
-        pMain = renderGUI();
+        pnMain = renderGUI();
     }
 
     public JPanel renderGUI() {
-        JPanel pMain = new JPanel();
-        pMain.setLayout(new BoxLayout(pMain, BoxLayout.Y_AXIS));
-        pMain.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        JPanel pnMain = new JPanel();
+        pnMain.setLayout(new BoxLayout(pnMain, BoxLayout.Y_AXIS));
+        pnMain.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         JPanel pTop = new JPanel();
         pTop.setPreferredSize(new Dimension(1000, 400));
         pTop.setLayout(new BoxLayout(pTop, BoxLayout.X_AXIS));
-        pMain.add(pTop);
+        pnMain.add(pTop);
         
         // Fields
         JPanel p_sec_Fields = new JPanel();
@@ -157,7 +157,7 @@ public class DatPhong extends JFrame implements ActionListener{
 
         // danh sách đặt phòng
         JPanel p_sec_table = new JPanel();
-        pMain.add(p_sec_table);
+        pnMain.add(p_sec_table);
 
         JPanel pTimKiem = new JPanel();
         p_sec_table.add(pTimKiem);
@@ -169,7 +169,7 @@ public class DatPhong extends JFrame implements ActionListener{
 
         JPanel pTable = new JPanel();
         pTable.setLayout(new BoxLayout(pTable, BoxLayout.X_AXIS));
-        pMain.add(pTable);
+        pnMain.add(pTable);
 
         String[] cols_datphong = {"Ma hoa don", "Ma KH", "Ten KH", "Ma Phong", "Ngay den", "Ngay di", "Ghi chu"};
         DefaultTableModel modelDatPhong = new DefaultTableModel(cols_datphong, 0);
@@ -182,7 +182,7 @@ public class DatPhong extends JFrame implements ActionListener{
         modelDatPhong.addRow(new Object[]{"4", "1", "Tran Van Nhan", "1", "01-01-2001", "01-01-2001", ""});
         
 
-        return pMain;
+        return pnMain;
     }
 
     public JLabel space(int w, int h){
@@ -227,6 +227,6 @@ public class DatPhong extends JFrame implements ActionListener{
     public void renderError(JTextField a, String message){
         a.requestFocus();
         a.selectAll();
-        JOptionPane.showMessageDialog(pMain, message);
+        JOptionPane.showMessageDialog(pnMain, message);
     }
 }

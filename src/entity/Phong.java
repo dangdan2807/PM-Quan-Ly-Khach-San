@@ -1,7 +1,7 @@
 package entity;
 
 public class Phong {
-    private String maPhong;
+    private int maPhong;
     private int sucChua;
     private int soGiuong;
     private String viTri;
@@ -9,11 +9,11 @@ public class Phong {
 
     private LoaiPhong loaiPhong;
 
-    public String getMaPhong() {
+    public int getMaPhong() {
         return maPhong;
     }
 
-    public void setMaPhong(String maPhong) {
+    public void setMaPhong(int maPhong) {
         this.maPhong = maPhong;
     }
 
@@ -22,6 +22,8 @@ public class Phong {
     }
 
     public void setSucChua(int sucChua) {
+        if (sucChua <= 0)
+            sucChua = 1;
         this.sucChua = sucChua;
     }
 
@@ -30,6 +32,8 @@ public class Phong {
     }
 
     public void setSoGiuong(int soGiuong) {
+        if (soGiuong <= 0)
+            soGiuong = 1;
         this.soGiuong = soGiuong;
     }
 
@@ -57,10 +61,10 @@ public class Phong {
         this.loaiPhong = loaiPhong;
     }
 
-    public Phong(String maPhong, int sucChua, int soGiuong, String viTri, Boolean tinhTrang, LoaiPhong loaiPhong) {
+    public Phong(int maPhong, int sucChua, int soGiuong, String viTri, Boolean tinhTrang, LoaiPhong loaiPhong) {
         this.maPhong = maPhong;
-        this.sucChua = sucChua;
-        this.soGiuong = soGiuong;
+        setSucChua(sucChua);
+        setSoGiuong(soGiuong);
         this.viTri = viTri;
         this.tinhTrang = tinhTrang;
         this.loaiPhong = loaiPhong;
@@ -70,7 +74,7 @@ public class Phong {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((maPhong == null) ? 0 : maPhong.hashCode());
+        result = prime * result + maPhong;
         return result;
     }
 
@@ -83,12 +87,8 @@ public class Phong {
         if (getClass() != obj.getClass())
             return false;
         Phong other = (Phong) obj;
-        if (maPhong == null) {
-            if (other.maPhong != null)
-                return false;
-        } else if (!maPhong.equals(other.maPhong))
+        if (maPhong != other.maPhong)
             return false;
         return true;
     }
-
 }

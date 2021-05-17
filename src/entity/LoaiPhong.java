@@ -1,15 +1,15 @@
 package entity;
 
 public class LoaiPhong {
-    private String maLoaiPhong;
+    private int maLoaiPhong;
     private String tenLoaiPhong;
     private Double donGia;
 
-    public String getMaLoaiPhong() {
+    public int getMaLoaiPhong() {
         return maLoaiPhong;
     }
 
-    public void setMaLoaiPhong(String maLoaiPhong) {
+    public void setMaLoaiPhong(int maLoaiPhong) {
         this.maLoaiPhong = maLoaiPhong;
     }
 
@@ -26,28 +26,26 @@ public class LoaiPhong {
     }
 
     public void setDonGia(Double donGia) {
+        if (donGia < 0)
+            donGia = 0.0;
         this.donGia = donGia;
     }
 
-    public LoaiPhong(String maLoaiPhong, String tenLoaiPhong, Double donGia) {
+    public LoaiPhong(int maLoaiPhong, String tenLoaiPhong, Double donGia) {
         this.maLoaiPhong = maLoaiPhong;
         this.tenLoaiPhong = tenLoaiPhong;
-        this.donGia = donGia;
+        setDonGia(donGia);
     }
 
-    public LoaiPhong(String maLoaiPhong) {
+    public LoaiPhong(int maLoaiPhong) {
         this(maLoaiPhong, "Chưa cập nhật", 0.0);
-    }
-
-    public LoaiPhong() {
-        this("LP00", "Chưa cập nhật", 0.0);
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((maLoaiPhong == null) ? 0 : maLoaiPhong.hashCode());
+        result = prime * result + maLoaiPhong;
         return result;
     }
 
@@ -60,11 +58,9 @@ public class LoaiPhong {
         if (getClass() != obj.getClass())
             return false;
         LoaiPhong other = (LoaiPhong) obj;
-        if (maLoaiPhong == null) {
-            if (other.maLoaiPhong != null)
-                return false;
-        } else if (!maLoaiPhong.equals(other.maLoaiPhong))
+        if (maLoaiPhong != other.maLoaiPhong)
             return false;
         return true;
     }
+    
 }
