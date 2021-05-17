@@ -7,7 +7,7 @@ import javax.swing.table.DefaultTableModel;
 
 import java.awt.event.*;
 
-public class DatPhong extends JFrame implements ActionListener{
+public class DatPhong_UI extends JFrame implements ActionListener{
 
     public JPanel pnMain;
     private ImageIcon icon_add = new ImageIcon("data/images/add.png");
@@ -27,7 +27,7 @@ public class DatPhong extends JFrame implements ActionListener{
     private JButton btnHuy;
     private JButton btnClear;
 
-    public DatPhong(){
+    public DatPhong_UI(){
         pnMain = renderGUI();
     }
 

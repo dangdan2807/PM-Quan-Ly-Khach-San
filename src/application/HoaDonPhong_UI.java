@@ -4,13 +4,13 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
-public class HoaDonPhong extends JFrame {
+public class HoaDonPhong_UI extends JFrame {
 
     private ImageIcon icon_pay = new ImageIcon("data/images/purse.png");
     private ImageIcon icon_in = new ImageIcon("data/images/printer.png");
     public JPanel pnMain;
 
-    public HoaDonPhong(){
+    public HoaDonPhong_UI(){
         pnMain = renderGUI();
     }
 

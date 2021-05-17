@@ -11,8 +11,9 @@ import javax.swing.table.*;
 import DAO.DichVuDAO;
 import connectDB.ConnectDB;
 import entity.DichVu;
+import javax.swing.border.TitledBorder;
 
-public class QuanLyDichVu extends JPanel implements ActionListener, MouseListener, KeyListener {
+public class QuanLyDichVu_UI extends JFrame implements ActionListener, MouseListener, KeyListener {
 
     public JPanel pnMain;
     private JTable table;
@@ -24,21 +25,23 @@ public class QuanLyDichVu extends JPanel implements ActionListener, MouseListene
     ImageIcon blueAddIcon = new ImageIcon("data/images/blueAdd_16.png");
     DichVuDAO dvDAO = new DichVuDAO();
 
-    public QuanLyDichVu() {
+    public QuanLyDichVu_UI() {
         try {
             ConnectDB.getInstance().connect();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        setSize(1000, 700);
-        // setLocationRelativeTo(null);
-        // setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setSize(1000, 670);
+        setTitle("Quản Lý Dịch Vụ");
+        setLocationRelativeTo(null);
+        setResizable(false);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         pnMain = new JPanel();
         pnMain.setLayout(null);
-        pnMain.setBounds(0, 0, 1000, 700);
+        pnMain.setBounds(0, 0, 1000, 670);
 
-        this.add(pnMain);
+        getContentPane().add(pnMain);
 
         JLabel lbTitle = new JLabel("Danh Mục Dịch Vụ");
         lbTitle.setHorizontalAlignment(SwingConstants.CENTER);
@@ -47,58 +50,59 @@ public class QuanLyDichVu extends JPanel implements ActionListener, MouseListene
         pnMain.add(lbTitle);
 
         JPanel pnInfoDV = new JPanel();
-        pnInfoDV.setBounds(10, 46, 391, 613);
+        pnInfoDV.setBorder(new TitledBorder(null, "Thông tin dịch vụ", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        pnInfoDV.setBounds(10, 46, 391, 582);
         pnMain.add(pnInfoDV);
         pnInfoDV.setLayout(null);
 
         JLabel lbMaDV = new JLabel("Mã dịch vụ: ");
-        lbMaDV.setBounds(0, 12, 80, 20);
+        lbMaDV.setBounds(12, 23, 80, 20);
         pnInfoDV.add(lbMaDV);
 
         txtMaDV = new JTextField();
-        txtMaDV.setBounds(81, 12, 310, 20);
+        txtMaDV.setBounds(100, 23, 279, 20);
         txtMaDV.setEditable(false);
         txtMaDV.setColumns(10);
         pnInfoDV.add(txtMaDV);
 
         JLabel lbTenDV = new JLabel("Tên dịch vụ:");
-        lbTenDV.setBounds(0, 44, 80, 20);
+        lbTenDV.setBounds(12, 55, 80, 20);
         pnInfoDV.add(lbTenDV);
 
         txtTenDV = new JTextField();
-        txtTenDV.setBounds(81, 44, 310, 20);
+        txtTenDV.setBounds(100, 55, 279, 20);
         pnInfoDV.add(txtTenDV);
         txtTenDV.setColumns(10);
 
         JLabel lbDonGia = new JLabel("Đơn giá:");
-        lbDonGia.setBounds(0, 76, 80, 16);
+        lbDonGia.setBounds(12, 87, 80, 16);
         pnInfoDV.add(lbDonGia);
 
         txtDonGia = new JTextField();
         txtDonGia.setText("0.0");
-        txtDonGia.setBounds(81, 74, 310, 20);
+        txtDonGia.setBounds(100, 85, 279, 20);
         pnInfoDV.add(txtDonGia);
         txtDonGia.setColumns(10);
 
         btnThem = new JButton("Thêm");
         btnThem.setIcon(blueAddIcon);
-        btnThem.setBounds(0, 132, 120, 30);
+        btnThem.setBounds(12, 143, 108, 30);
         pnInfoDV.add(btnThem);
 
         btnSua = new JButton("Sửa");
-        btnSua.setBounds(139, 132, 120, 30);
+        btnSua.setBounds(132, 143, 120, 30);
         pnInfoDV.add(btnSua);
 
         btnXoa = new JButton("Xóa");
-        btnXoa.setBounds(271, 132, 120, 30);
+        btnXoa.setBounds(264, 143, 115, 30);
         pnInfoDV.add(btnXoa);
 
         btnLamLai = new JButton("Làm lại");
-        btnLamLai.setBounds(139, 174, 120, 30);
+        btnLamLai.setBounds(132, 185, 120, 30);
         pnInfoDV.add(btnLamLai);
 
         lbShowMessages = new JLabel("");
-        lbShowMessages.setBounds(0, 104, 391, 16);
+        lbShowMessages.setBounds(12, 115, 367, 16);
         lbShowMessages.setForeground(Color.RED);
         pnInfoDV.add(lbShowMessages);
 
@@ -106,25 +110,26 @@ public class QuanLyDichVu extends JPanel implements ActionListener, MouseListene
         modelTable = new DefaultTableModel(cols, 0);
 
         JPanel pnShowDV = new JPanel();
-        pnShowDV.setBounds(413, 46, 569, 613);
+        pnShowDV.setBorder(new TitledBorder(null, "Danh sách dịch vụ", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        pnShowDV.setBounds(402, 46, 580, 582);
         pnShowDV.setLayout(null);
         pnMain.add(pnShowDV);
 
         JLabel lbTimKiem = new JLabel("Tên dịch vụ:");
-        lbTimKiem.setBounds(0, 12, 75, 16);
+        lbTimKiem.setBounds(12, 23, 75, 20);
         pnShowDV.add(lbTimKiem);
 
         txtTim = new JTextField();
-        txtTim.setBounds(74, 10, 225, 20);
+        txtTim.setBounds(85, 23, 225, 20);
         pnShowDV.add(txtTim);
         txtTim.setColumns(10);
 
         btnTim = new JButton("Tìm");
-        btnTim.setBounds(311, 10, 69, 20);
+        btnTim.setBounds(325, 23, 90, 20);
         pnShowDV.add(btnTim);
 
         JPanel pnTableDV = new JPanel();
-        pnTableDV.setBounds(0, 35, 569, 578);
+        pnTableDV.setBounds(12, 55, 556, 515);
         pnShowDV.add(pnTableDV);
         pnTableDV.setLayout(new BorderLayout(0, 0));
 
@@ -157,7 +162,7 @@ public class QuanLyDichVu extends JPanel implements ActionListener, MouseListene
     }
 
     public static void main(String[] args) {
-        new QuanLyDichVu().setVisible(true);
+        new QuanLyDichVu_UI().setVisible(true);
     }
 
     @Override

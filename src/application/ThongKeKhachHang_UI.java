@@ -9,67 +9,67 @@ import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.table.*;
 
-import DAO.ChiTietDVDAO;
+import DAO.HoaDonPhongDAO;
 import connectDB.ConnectDB;
 import entity.*;
+import entity.HoaDonPhong;
 
-public class ThongKeDichVu extends JPanel implements ActionListener {
-
-    public JPanel pnMain;
+public class ThongKeKhachHang_UI extends JFrame implements ActionListener {
+    JPanel pnMain;
     private JTextField txtMaKH, txtTenKH, txtThanhTien;
     private kDatePicker dpTuNgay, dpDenNgay;
-    private JTable tableBCDV;
     private DefaultTableModel modelTable;
-    ImageIcon analyticsIcon = new ImageIcon("data/images/analytics_16.png");
     private JButton btnThongKe;
+    private JTable table;
     private JLabel lbShowMessages;
     private final int SUCCESS = 1, ERROR = 0;
-    ChiTietDVDAO chiTietDVDAO = new ChiTietDVDAO();
+    private HoaDonPhongDAO hdPhongDAO = new HoaDonPhongDAO();
+    ImageIcon analyticsIcon = new ImageIcon("data/images/analytics_16.png");
 
-    public ThongKeDichVu() {
+    public ThongKeKhachHang_UI() {
         try {
             ConnectDB.getInstance().connect();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        setSize(1000, 700);
-        // setTitle("Báo Cáo Dịch Vụ");
-        // setLocationRelativeTo(null);
-        // setResizable(false);
-        // setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setTitle("Thống Kê Tổng Hợp Khách Hàng");
+        setSize(1000, 670);
+        setLocationRelativeTo(null);
+        setResizable(false);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         pnMain = new JPanel();
         pnMain.setLayout(null);
-        pnMain.setBounds(0, 0, 630, 420);
+        pnMain.setBounds(0, 0, 1000, 670);
 
-        this.add(pnMain);
+        getContentPane().add(pnMain);
 
-        JLabel lbTitle = new JLabel("Thống Kê Dịch Vụ");
+        JLabel lbTitle = new JLabel("Báo Cáo Tổng Hợp Khách Hàng");
         lbTitle.setHorizontalAlignment(SwingConstants.CENTER);
         lbTitle.setFont(new Font("Dialog", Font.BOLD, 20));
         lbTitle.setBounds(10, 11, 972, 30);
         pnMain.add(lbTitle);
 
-        JLabel lbMaKH = new JLabel("Mã khách hàng:");
-        lbMaKH.setBounds(10, 52, 100, 16);
+        JLabel lbMaKH = new JLabel("Mã khách hàng: ");
+        lbMaKH.setBounds(10, 52, 110, 16);
         pnMain.add(lbMaKH);
 
         txtMaKH = new JTextField();
-        txtMaKH.setBounds(114, 50, 170, 20);
+        txtMaKH.setBounds(120, 50, 170, 20);
         pnMain.add(txtMaKH);
         txtMaKH.setColumns(10);
 
-        JLabel lbTuNgay = new JLabel("Từ ngày:");
-        lbTuNgay.setBounds(10, 80, 100, 16);
+        JLabel lbTuNgay = new JLabel("Từ ngày");
+        lbTuNgay.setBounds(10, 80, 55, 16);
 
         dpTuNgay = new kDatePicker(170);
-        dpTuNgay.setBounds(114, 76, 170, 20);
+        dpTuNgay.setBounds(120, 76, 170, 20);
         pnMain.add(dpTuNgay);
 
         pnMain.add(lbTuNgay);
 
-        JLabel lbTenKH = new JLabel("Tên Khách hàng:");
-        lbTenKH.setBounds(348, 52, 100, 16);
+        JLabel lbTenKH = new JLabel("Tên Khách Hàng:");
+        lbTenKH.setBounds(348, 52, 104, 16);
         pnMain.add(lbTenKH);
 
         JLabel lbDenNgay = new JLabel("Đến ngày:");
@@ -85,21 +85,29 @@ public class ThongKeDichVu extends JPanel implements ActionListener {
         pnMain.add(txtTenKH);
         txtTenKH.setColumns(10);
 
-        JPanel pnTableBCDV = new JPanel();
-        pnTableBCDV.setBounds(10, 128, 972, 489);
-        pnMain.add(pnTableBCDV);
-        pnTableBCDV.setLayout(new BorderLayout(0, 0));
-        // mã HDDV
-        String[] cols = { "Mã HD", "Mã DV", "Tên DV", "Số lượng", "Đơn giá", "Thành Tiền", "Ngày Đặt", "Mã KH",
-                "Tên KH", "Tên NV" };
-        modelTable = new DefaultTableModel(cols, 0);
-        tableBCDV = new JTable(modelTable);
-        JScrollPane scpTableBCDV = new JScrollPane(tableBCDV, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+        JPanel pnTable = new JPanel();
+        pnTable.setBounds(10, 128, 972, 458);
+        pnMain.add(pnTable);
+        pnTable.setLayout(new BorderLayout(0, 0));
+
+        // mã hóa đơn phòng
+        String[] cols = { "Mã HD", "Mã phòng", "Loại phòng", "Giá phòng", "Ngày đến", "Ngày Trả", "Số giờ/Ngày",
+                "Thành tiền", "Mã KH", "Tên KH", "Mã NV", "Tên NV" };
+        modelTable = new DefaultTableModel(cols, 0) {
+            // khóa sửa dữ liệu trực tiếp trên table
+            @Override
+            public boolean isCellEditable(int i, int i1) {
+                return false;
+            }
+        };
+
+        table = new JTable(modelTable);
+        JScrollPane scpTableBCDV = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
                 JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-        pnTableBCDV.add(scpTableBCDV, BorderLayout.CENTER);
+        pnTable.add(scpTableBCDV, BorderLayout.CENTER);
 
         JPanel pnThongKe = new JPanel();
-        pnThongKe.setBounds(10, 619, 972, 40);
+        pnThongKe.setBounds(10, 589, 972, 40);
         pnMain.add(pnThongKe);
         pnThongKe.setLayout(null);
 
@@ -137,7 +145,7 @@ public class ThongKeDichVu extends JPanel implements ActionListener {
     }
 
     public static void main(String[] args) {
-        new ThongKeDichVu().setVisible(true);
+        new ThongKeKhachHang_UI().setVisible(true);
     }
 
     @Override
@@ -146,7 +154,7 @@ public class ThongKeDichVu extends JPanel implements ActionListener {
         if (o.equals(btnThongKe)) {
             String maKH = txtMaKH.getText().trim();
             String tenKH = txtTenKH.getText().trim();
-            ArrayList<ChiTietDV> dataList = null;
+            ArrayList<HoaDonPhong> dataList = null;
             try {
                 if (!maKH.isEmpty() && tenKH.isEmpty()) {
                     dataList = getListSearchByMaKH();
@@ -169,56 +177,60 @@ public class ThongKeDichVu extends JPanel implements ActionListener {
         }
     }
 
-    private ArrayList<ChiTietDV> getListSearchByDate() throws ParseException {
+    private ArrayList<HoaDonPhong> getListSearchByDate() throws ParseException {
         Date tuNgay = dpTuNgay.getFullDate();
         Date denNgay = dpDenNgay.getFullDate();
-        ArrayList<ChiTietDV> dataList = chiTietDVDAO.getListChiTietDVDate(tuNgay, denNgay);
+        ArrayList<HoaDonPhong> dataList = hdPhongDAO.getListHDPhongByDate(tuNgay, denNgay);
         return dataList;
     }
 
-    private ArrayList<ChiTietDV> getListSearchByMaKH() throws ParseException {
-        Date tuNgay = dpTuNgay.getFullDate();
-        Date denNgay = dpDenNgay.getFullDate();
-        int maKH = Integer.parseInt(txtMaKH.getText().trim());
-        ArrayList<ChiTietDV> dataList = chiTietDVDAO.getListChiTietDVByMaKH(maKH, tuNgay, denNgay);
-        return dataList;
-    }
-
-    private ArrayList<ChiTietDV> getListSearchByTenKH() throws ParseException {
-        Date tuNgay = dpTuNgay.getFullDate();
-        Date denNgay = dpDenNgay.getFullDate();
-        String tenKH = txtTenKH.getText().trim();
-        ArrayList<ChiTietDV> dataList = chiTietDVDAO.getListChiTietDVByTenKH(tenKH, tuNgay, denNgay);
-        return dataList;
-    }
-
-    private ArrayList<ChiTietDV> getListSearchByMaKHAndTenKH() throws ParseException {
+    private ArrayList<HoaDonPhong> getListSearchByMaKH() throws ParseException {
         Date tuNgay = dpTuNgay.getFullDate();
         Date denNgay = dpDenNgay.getFullDate();
         int maKH = Integer.parseInt(txtMaKH.getText().trim());
-        String tenKH = txtTenKH.getText().trim();
-        ArrayList<ChiTietDV> dataList = chiTietDVDAO.getListChiTietDVByMaKHAndTenKH(maKH, tenKH, tuNgay, denNgay);
+        ArrayList<HoaDonPhong> dataList = hdPhongDAO.getListHDPhongByMaKH(maKH, tuNgay, denNgay);
         return dataList;
     }
 
-    private void DocDuLieuVaoTable(ArrayList<ChiTietDV> dataList) {
+    private ArrayList<HoaDonPhong> getListSearchByTenKH() throws ParseException {
+        Date tuNgay = dpTuNgay.getFullDate();
+        Date denNgay = dpDenNgay.getFullDate();
+        String tenKH = txtTenKH.getText().trim();
+        ArrayList<HoaDonPhong> dataList = hdPhongDAO.getListHDPhongByTenKH(tenKH, tuNgay, denNgay);
+        return dataList;
+    }
+
+    private ArrayList<HoaDonPhong> getListSearchByMaKHAndTenKH() throws ParseException {
+        Date tuNgay = dpTuNgay.getFullDate();
+        Date denNgay = dpDenNgay.getFullDate();
+        int maKH = Integer.parseInt(txtMaKH.getText().trim());
+        String tenKH = txtTenKH.getText().trim();
+        ArrayList<HoaDonPhong> dataList = hdPhongDAO.getListHDPhongByMaKHAndTenKH(maKH, tenKH, tuNgay, denNgay);
+        return dataList;
+    }
+
+    private void DocDuLieuVaoTable(ArrayList<HoaDonPhong> dataList) {
         Double sum = 0.0;
-        for (ChiTietDV item : dataList) {
-            HoaDonDV hoaDonDv = item.getMaHDDV();
-            DichVu dv = item.getMaDV();
-            KhachHang kh = item.getMaHDDV().getKhachHang();
-            NhanVien nv = item.getMaHDDV().getNhanVien();
-            String date = formatDate(hoaDonDv.getNgayGioDat());
-            Double thanhTien = item.getSoLuong() * item.getMaDV().getDonGia();
-            sum += thanhTien;
-            modelTable.addRow(new Object[] { hoaDonDv.getMaHDDV(), dv.getMaDV(), dv.getTenDV(), item.getSoLuong(),
-                    dv.getDonGia(), thanhTien, date, kh.getMaKH(), kh.getTenKH(), nv.getTenNV() });
+        for (HoaDonPhong item : dataList) {
+            Phong phong = item.getPhong();
+            LoaiPhong lPhong = item.getPhong().getLoaiPhong();
+            KhachHang kh = item.getKhachHang();
+            NhanVien nv = item.getNhanVien();
+            String ngayGioNhan = formatDate(item.getNgayGioNhan());
+            String ngayGioTra = formatDate(item.getNgayGioTra());
+            // Double thanhTien = lPhong.getDonGia() * ;
+            // sum += thanhTien;
+            modelTable.addRow(new Object[] { item.getMaHD(), phong.getMaPhong(), lPhong.getTenLoaiPhong(),
+                    lPhong.getDonGia(), ngayGioNhan, ngayGioTra, "", "", kh.getMaKH(), kh.getTenKH(), nv.getMaNV(),
+                    nv.getTenNV() });
         }
         txtThanhTien.setText(sum.toString());
     }
 
     private String formatDate(Date date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyy");
+        if (date == null)
+            return "Chưa cập nhật";
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         return sdf.format(date);
     }
 

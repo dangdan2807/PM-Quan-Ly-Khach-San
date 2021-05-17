@@ -71,7 +71,7 @@ GO
 
 CREATE TABLE HoaDonPhong
 (
-	MaHD int PRIMARY KEY,
+	MaHD int identity PRIMARY KEY,
 	MaKH int REFERENCES KhachHang(MaKH),
 	MaNV int REFERENCES NhanVien(MaNV),
 	MaPhong int REFERENCES Phong(MaPhong),
@@ -133,8 +133,35 @@ VALUES
 	(3, 8, 2),
 	(3, 10, 2)
 GO
--- drop database KhachSan
 
+INSERT INTO dbo.LoaiPhong
+	(TenLoaiPhong, donGia)
+VALUES
+	(N'Phòng đơn', 20000),
+	(N'Phòng đôi', 50000)
+GO
+
+INSERT INTO dbo.Phong
+	(SoGiuong, SucChua, TinhTrang, ViTri, MaLoaiPhong)
+VALUES
+	(1, 2, 0, N'Tầng 1', 1),
+	(1, 2, 0, N'Tầng 1', 1),
+	(2, 4, 1, N'Tầng 1', 2),
+	(2, 4, 1, N'Tầng 2', 2),
+	(2, 2, 1, N'Tầng 2', 2),
+	(1, 1, 1, N'Tầng 2', 1)
+GO
+
+INSERT INTO dbo.HoaDonPhong
+	(MaKH, MaNV, MaPhong, NgayGioNhan, NgayGioTra)
+VALUES
+	(2, 2, 2, '2021-04-02 07:30:00', '2021-05-02 08:30:00'),
+	(1, 1, 1, '2021-05-16 18:30:00', '2021-05-16 21:30:00'),
+	(3, 3, 3, '2021-05-16 08:30:00', null)
+GO
+
+
+-- drop database KhachSan
 CREATE PROC UDP_SearchCTHDByDate
 	@tuNgay DATETIME,
 	@denNgay DATETIME
@@ -151,15 +178,15 @@ END
 GO
 
 
-create PROC UDP_SearchCTHDByMaHK
+CREATE PROC UDP_SearchCTHDByMaHK
 	@MaKH INT,
 	@tuNgay DATETIME,
 	@denNgay DATETIME
 AS
 BEGIN
 	SELECT hd.MaHDDV, hd.MaKH, hd.MaNV, hd.ngayGioDat, ct.MaDV, dv.TenDV, ct.SoLuong, dv.DonGia, kh.TenKH, nv.TenNV
-	FROM dbo.HoaDonDV hd JOIN dbo.ChiTietDV ct
-		ON hd.MaHDDV = ct.MaHDDV
+	FROM dbo.HoaDonDV hd
+		JOIN dbo.ChiTietDV ct ON hd.MaHDDV = ct.MaHDDV
 		JOIN dbo.DichVu dv ON ct.MaDV = dv.MaDV
 		JOIN dbo.KhachHang kh ON hd.MaKH = kh.MaKH
 		JOIN dbo.NhanVien nv ON nv.MaNV = hd.MaNV
@@ -176,8 +203,8 @@ BEGIN
 
 	SET @TenKH = '%' + @TenKH +'%'
 	SELECT hd.MaHDDV, hd.MaKH, hd.MaNV, hd.ngayGioDat, ct.MaDV, dv.TenDV, ct.SoLuong, dv.DonGia, kh.TenKH, nv.TenNV
-	FROM dbo.HoaDonDV hd JOIN dbo.ChiTietDV ct
-		ON hd.MaHDDV = ct.MaHDDV
+	FROM dbo.HoaDonDV hd 
+		JOIN dbo.ChiTietDV ct ON hd.MaHDDV = ct.MaHDDV
 		JOIN dbo.DichVu dv ON ct.MaDV = dv.MaDV
 		JOIN dbo.KhachHang kh ON hd.MaKH = kh.MaKH
 		JOIN dbo.NhanVien nv ON nv.MaNV = hd.MaNV
@@ -194,11 +221,79 @@ AS
 BEGIN
 	SET @TenKH = '%' + @TenKH +'%'
 	SELECT hd.MaHDDV, hd.MaKH, hd.MaNV, hd.ngayGioDat, ct.MaDV, dv.TenDV, ct.SoLuong, dv.DonGia, kh.TenKH, nv.TenNV
-	FROM dbo.HoaDonDV hd JOIN dbo.ChiTietDV ct
-		ON hd.MaHDDV = ct.MaHDDV
+	FROM dbo.HoaDonDV hd
+		JOIN dbo.ChiTietDV ct ON hd.MaHDDV = ct.MaHDDV
 		JOIN dbo.DichVu dv ON ct.MaDV = dv.MaDV
 		JOIN dbo.KhachHang kh ON hd.MaKH = kh.MaKH
 		JOIN dbo.NhanVien nv ON nv.MaNV = hd.MaNV
-	WHERE hd.MaKH = @MaKH AND kh.tenKH like @TenKH AND hd.ngayGioDat BETWEEN @tuNgay AND @denNgay
+	WHERE hd.MaKH = @MaKH AND kh.tenKH LIKE @TenKH AND hd.ngayGioDat BETWEEN @tuNgay AND @denNgay
+END
+GO
+
+-- Create PROC UDP_SearchHDPhong 
+
+CREATE PROC UDP_SearchHDPhongByDate
+	@tuNgay DATETIME,
+	@denNgay DATETIME
+AS
+BEGIN
+	SELECT hd.MaHD, hd.NgayGioNhan, hd.NgayGioTra, hd.MaPhong, lp.MaLoaiPhong, lp.TenLoaiPhong, lp.DonGia, kh.MaKH, kh.TenKH, nv.MaNV, nv.TenNV
+	FROM dbo.HoaDonPhong hd
+		JOIN dbo.Phong p ON hd.MaPhong = p.MaPhong
+		JOIN dbo.LoaiPhong lp ON lp.MaLoaiPhong = p.MaLoaiPhong
+		JOIN dbo.NhanVien nv ON nv.MaNV = hd.MaNV
+		JOIN dbo.KhachHang kh ON kh.MaKH = hd.MaKH
+	WHERE hd.NgayGioNhan BETWEEN @tuNgay AND @denNgay
+END
+GO
+
+CREATE PROC UDP_SearchHDPhongByMaKH
+	@MaKH INT,
+	@tuNgay DATETIME,
+	@denNgay DATETIME
+AS
+BEGIN
+	SELECT hd.MaHD, hd.NgayGioNhan, hd.NgayGioTra, hd.MaPhong, lp.MaLoaiPhong, lp.TenLoaiPhong, lp.DonGia, kh.MaKH, kh.TenKH, nv.MaNV, nv.TenNV
+	FROM dbo.HoaDonPhong hd
+		JOIN dbo.Phong p ON hd.MaPhong = p.MaPhong
+		JOIN dbo.LoaiPhong lp ON lp.MaLoaiPhong = p.MaLoaiPhong
+		JOIN dbo.NhanVien nv ON nv.MaNV = hd.MaNV
+		JOIN dbo.KhachHang kh ON kh.MaKH = hd.MaKH
+	WHERE hd.MaKH = @MaKH AND hd.NgayGioNhan BETWEEN @tuNgay AND @denNgay
+END
+GO
+
+CREATE PROC UDP_SearchHDPhongByTenKH
+	@TenKH NVARCHAR(100),
+	@tuNgay DATETIME,
+	@denNgay DATETIME
+AS
+BEGIN
+	SET @TenKH = '%' + @TenKH +'%'
+	SELECT hd.MaHD, hd.NgayGioNhan, hd.NgayGioTra, hd.MaPhong, lp.MaLoaiPhong, lp.TenLoaiPhong, lp.DonGia, kh.MaKH, kh.TenKH, nv.MaNV, nv.TenNV
+	FROM dbo.HoaDonPhong hd
+		JOIN dbo.Phong p ON hd.MaPhong = p.MaPhong
+		JOIN dbo.LoaiPhong lp ON lp.MaLoaiPhong = p.MaLoaiPhong
+		JOIN dbo.NhanVien nv ON nv.MaNV = hd.MaNV
+		JOIN dbo.KhachHang kh ON kh.MaKH = hd.MaKH
+	WHERE kh.TenKH LIKE @TenKH AND hd.NgayGioNhan BETWEEN @tuNgay AND @denNgay
+END
+GO
+
+CREATE PROC UDP_SearchHDPhongByMaKHAndTenKH
+	@MaKH INT,
+	@TenKH NVARCHAR(100),
+	@tuNgay DATETIME,
+	@denNgay DATETIME
+AS
+BEGIN
+	SET @TenKH = '%' + @TenKH +'%'
+	SELECT hd.MaHD, hd.NgayGioNhan, hd.NgayGioTra, hd.MaPhong, lp.MaLoaiPhong, lp.TenLoaiPhong, lp.DonGia, kh.MaKH, kh.TenKH, nv.MaNV, nv.TenNV
+	FROM dbo.HoaDonPhong hd
+		JOIN dbo.Phong p ON hd.MaPhong = p.MaPhong
+		JOIN dbo.LoaiPhong lp ON lp.MaLoaiPhong = p.MaLoaiPhong
+		JOIN dbo.NhanVien nv ON nv.MaNV = hd.MaNV
+		JOIN dbo.KhachHang kh ON kh.MaKH = hd.MaKH
+	WHERE hd.MaKH = @MaKH AND kh.tenKH LIKE @TenKH AND hd.NgayGioNhan BETWEEN @tuNgay AND @denNgay
 END
 GO

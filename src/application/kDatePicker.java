@@ -35,7 +35,7 @@ public class kDatePicker extends JPanel implements ActionListener {
         txt.setText(DialogDatePicker.getToDay());
 
         btn = new JButton(calenderIcon);
-        btn.setBounds(widthDefault - 30, 0, 29, 20);
+        btn.setBounds(widthDefault - 30, 0, 30, 20);
 
         this.add(txt);
         this.add(btn);

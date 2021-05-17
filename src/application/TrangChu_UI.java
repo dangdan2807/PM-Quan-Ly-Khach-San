@@ -3,7 +3,7 @@ package application;
 import java.awt.*;
 import javax.swing.*;
 
-public class TrangChu extends JFrame {
+public class TrangChu_UI extends JFrame {
     
     private JPanel pnPhongTrong;
     private int So_Phong = 30;
@@ -11,7 +11,7 @@ public class TrangChu extends JFrame {
     ImageIcon icon_red_close = new ImageIcon("data/images/close.png", "close");
     public JPanel pnMain;
 
-    public TrangChu(){
+    public TrangChu_UI(){
         pnMain = renderGUI();
     }
 
