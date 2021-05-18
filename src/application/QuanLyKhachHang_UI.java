@@ -25,6 +25,13 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
     private JComboBox<String> cboLoaiKhach;
     private JLabel lbShowMessages;
     private final int SUCCESS = 1, ERROR = 0;
+    ImageIcon blueAddIcon = new ImageIcon("data/images/blueAdd_16.png");
+    ImageIcon editIcon = new ImageIcon("data/images/edit2_16.png");
+    ImageIcon deleteIcon = new ImageIcon("data/images/trash2_16.png");
+    ImageIcon refreshIcon = new ImageIcon("data/images/refresh_16.png");
+    ImageIcon searchIcon = new ImageIcon("data/images/search_16.png");
+    ImageIcon checkIcon = new ImageIcon("data/images/check2_16.png");
+    ImageIcon errorIcon = new ImageIcon("data/images/cancel_16.png");
     KhachHangDAO khDAO = new KhachHangDAO();
 
     public QuanLyKhachHang_UI() {
@@ -46,7 +53,7 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
         JLabel lbTitle = new JLabel("Quản Lý Khách Hàng");
         lbTitle.setHorizontalAlignment(SwingConstants.CENTER);
         lbTitle.setFont(new Font("Dialog", Font.BOLD, 20));
-        lbTitle.setBounds(0, 0, 624, 30);
+        lbTitle.setBounds(0, 0, 984, 30);
         pnMain.add(lbTitle);
 
         getContentPane().add(pnMain);
@@ -114,19 +121,19 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
         pnThongTinKH.add(txtSoLanDat);
         txtSoLanDat.setColumns(10);
 
-        btnThem = new JButton("Thêm");
+        btnThem = new JButton("Thêm", blueAddIcon);
         btnThem.setBounds(10, 207, 98, 26);
         pnThongTinKH.add(btnThem);
 
-        btnSua = new JButton("Sửa");
+        btnSua = new JButton("Sửa", editIcon);
         btnSua.setBounds(125, 207, 98, 26);
         pnThongTinKH.add(btnSua);
 
-        btnXoa = new JButton("Xóa");
+        btnXoa = new JButton("Xóa", deleteIcon);
         btnXoa.setBounds(235, 207, 98, 26);
         pnThongTinKH.add(btnXoa);
 
-        btnLamLai = new JButton("Làm lại");
+        btnLamLai = new JButton("Làm lại", refreshIcon);
         btnLamLai.setBounds(125, 245, 98, 26);
         pnThongTinKH.add(btnLamLai);
 
@@ -150,7 +157,7 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
         pbTableKH.add(txtTim);
         txtTim.setColumns(10);
 
-        btnTim = new JButton("Tìm");
+        btnTim = new JButton("Tìm", searchIcon);
         btnTim.setBounds(330, 21, 80, 20);
         pbTableKH.add(btnTim);
 
@@ -201,6 +208,7 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
             dpNgayHetHan.setValueToDay();
             cboLoaiKhach.setSelectedIndex(0);
             txtSoLanDat.setText("0");
+            lbShowMessages.setText("");
         } else if (o.equals(btnThem)) {
             if (validData()) {
                 KhachHang kh = null;
@@ -363,13 +371,17 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
         txt.requestFocus();
         txt.selectAll();
         lbShowMessages.setText(message);
+        lbShowMessages.setIcon(errorIcon);
     }
 
     private void showMessage(String message, int type) {
-        if (type == SUCCESS)
+        if (type == SUCCESS) {
             lbShowMessages.setForeground(Color.GREEN);
-        else
+            lbShowMessages.setIcon(checkIcon);
+        } else {
             lbShowMessages.setForeground(Color.RED);
+            lbShowMessages.setIcon(errorIcon);
+        }
         lbShowMessages.setText(message);
     }
 

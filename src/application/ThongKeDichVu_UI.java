@@ -20,10 +20,12 @@ public class ThongKeDichVu_UI extends JFrame implements ActionListener {
     private kDatePicker dpTuNgay, dpDenNgay;
     private JTable table;
     private DefaultTableModel modelTable;
-    ImageIcon analyticsIcon = new ImageIcon("data/images/analytics_16.png");
     private JButton btnThongKe;
     private JLabel lbShowMessages;
     private final int SUCCESS = 1, ERROR = 0;
+    ImageIcon analyticsIcon = new ImageIcon("data/images/analytics_16.png");
+    ImageIcon checkIcon = new ImageIcon("data/images/check2_16.png");
+    ImageIcon errorIcon = new ImageIcon("data/images/cancel_16.png");
     ChiTietDVDAO chiTietDVDAO = new ChiTietDVDAO();
 
     public ThongKeDichVu_UI() {
@@ -211,12 +213,12 @@ public class ThongKeDichVu_UI extends JFrame implements ActionListener {
     private void DocDuLieuVaoTable(ArrayList<ChiTietDV> dataList) {
         Double sum = 0.0;
         for (ChiTietDV item : dataList) {
-            HoaDonDV hoaDonDv = item.getMaHDDV();
-            DichVu dv = item.getMaDV();
-            KhachHang kh = item.getMaHDDV().getKhachHang();
-            NhanVien nv = item.getMaHDDV().getNhanVien();
+            HoaDonDV hoaDonDv = item.getHoaDonDV();
+            DichVu dv = item.getDichVu();
+            KhachHang kh = item.getHoaDonDV().getKhachHang();
+            NhanVien nv = item.getHoaDonDV().getNhanVien();
             String date = formatDate(hoaDonDv.getNgayGioDat());
-            Double thanhTien = item.getSoLuong() * item.getMaDV().getDonGia();
+            Double thanhTien = item.getSoLuong() * item.getDichVu().getDonGia();
             sum += thanhTien;
             modelTable.addRow(new Object[] { hoaDonDv.getMaHDDV(), dv.getMaDV(), dv.getTenDV(), item.getSoLuong(),
                     dv.getDonGia(), thanhTien, date, kh.getMaKH(), kh.getTenKH(), nv.getMaNV(), nv.getTenNV() });
@@ -232,10 +234,13 @@ public class ThongKeDichVu_UI extends JFrame implements ActionListener {
     }
 
     private void showMessage(String message, int type) {
-        if (type == SUCCESS)
+        if (type == SUCCESS) {
             lbShowMessages.setForeground(Color.GREEN);
-        else
+            lbShowMessages.setIcon(checkIcon);
+        } else {
             lbShowMessages.setForeground(Color.RED);
+            lbShowMessages.setIcon(errorIcon);
+        }
         lbShowMessages.setText(message);
     }
 }

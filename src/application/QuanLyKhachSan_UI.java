@@ -22,6 +22,7 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener {
     private QuanLyKhachHang_UI pageQLKhachHang = new QuanLyKhachHang_UI();
     private ThongKeDichVu_UI pageTKeDichVu = new ThongKeDichVu_UI();
     private ThongKeKhachHang_UI pageTKeKhachHang = new ThongKeKhachHang_UI();
+    private HoaDonDichVu_UI pageHDDichVu = new HoaDonDichVu_UI();
     // private QuanLy pageQuanLy = new QuanLy();
 
     private JPanel pnMain = pageTrangChu.pnMain;
@@ -31,6 +32,7 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener {
     private JMenu menuTrangChu, menuDatPhong, menuQLHoaDon, menuQLDichVu, menuQLKhachHang, menuQLNhanVien, menuThongKe;
     private JMenuItem itemQLHDPhong, itemQLHDDichVu, itemQLPhong, itemQLDichVu;
     private JMenuItem itemTrangChu, itemDatPhong, itemQLKhachHang, itemQLNhanVien, itemThongKeDV, itemThongKeKH;
+	
     // private JPanel pnContainer;
 
     public QuanLyKhachSan_UI() {
@@ -85,6 +87,8 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener {
             pnMain = pageTKeDichVu.pnMain;
         } else if (indx_nav == 6) { //
             pnMain = pageTKeKhachHang.pnMain;
+        }else if(indx_nav==7) {
+        	pnMain = pageHDDichVu.pnMain;
         }
         
         this.add(pnMain, BorderLayout.CENTER);
@@ -257,7 +261,11 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener {
             System.out.println("-> Thong ke khach hang");
             indx_nav = 6;
             createGUI();
-        }
+        }else if(obj== itemQLHDDichVu) {
+       	 System.out.println("Hoa don dich vu");
+         indx_nav = 7;
+         createGUI();
+    }
         // thêm tương tự như phía trên, indx_nav tương ứng với mảng nav trên đầu
     }
 

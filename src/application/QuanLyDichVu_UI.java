@@ -23,6 +23,12 @@ public class QuanLyDichVu_UI extends JFrame implements ActionListener, MouseList
     private JLabel lbShowMessages;
     private final int SUCCESS = 1, ERROR = 0;
     ImageIcon blueAddIcon = new ImageIcon("data/images/blueAdd_16.png");
+    ImageIcon editIcon = new ImageIcon("data/images/edit2_16.png");
+    ImageIcon deleteIcon = new ImageIcon("data/images/trash2_16.png");
+    ImageIcon refreshIcon = new ImageIcon("data/images/refresh_16.png");
+    ImageIcon searchIcon = new ImageIcon("data/images/search_16.png");
+    ImageIcon checkIcon = new ImageIcon("data/images/check2_16.png");
+    ImageIcon errorIcon = new ImageIcon("data/images/cancel_16.png");
     DichVuDAO dvDAO = new DichVuDAO();
 
     public QuanLyDichVu_UI() {
@@ -50,7 +56,8 @@ public class QuanLyDichVu_UI extends JFrame implements ActionListener, MouseList
         pnMain.add(lbTitle);
 
         JPanel pnInfoDV = new JPanel();
-        pnInfoDV.setBorder(new TitledBorder(null, "Thông tin dịch vụ", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        pnInfoDV.setBorder(
+                new TitledBorder(null, "Thông tin dịch vụ", TitledBorder.LEADING, TitledBorder.TOP, null, null));
         pnInfoDV.setBounds(10, 46, 391, 582);
         pnMain.add(pnInfoDV);
         pnInfoDV.setLayout(null);
@@ -84,20 +91,19 @@ public class QuanLyDichVu_UI extends JFrame implements ActionListener, MouseList
         pnInfoDV.add(txtDonGia);
         txtDonGia.setColumns(10);
 
-        btnThem = new JButton("Thêm");
-        btnThem.setIcon(blueAddIcon);
+        btnThem = new JButton("Thêm", blueAddIcon);
         btnThem.setBounds(12, 143, 108, 30);
         pnInfoDV.add(btnThem);
 
-        btnSua = new JButton("Sửa");
+        btnSua = new JButton("Sửa", editIcon);
         btnSua.setBounds(132, 143, 120, 30);
         pnInfoDV.add(btnSua);
 
-        btnXoa = new JButton("Xóa");
+        btnXoa = new JButton("Xóa", deleteIcon);
         btnXoa.setBounds(264, 143, 115, 30);
         pnInfoDV.add(btnXoa);
 
-        btnLamLai = new JButton("Làm lại");
+        btnLamLai = new JButton("Làm lại", refreshIcon);
         btnLamLai.setBounds(132, 185, 120, 30);
         pnInfoDV.add(btnLamLai);
 
@@ -110,7 +116,8 @@ public class QuanLyDichVu_UI extends JFrame implements ActionListener, MouseList
         modelTable = new DefaultTableModel(cols, 0);
 
         JPanel pnShowDV = new JPanel();
-        pnShowDV.setBorder(new TitledBorder(null, "Danh sách dịch vụ", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        pnShowDV.setBorder(
+                new TitledBorder(null, "Danh sách dịch vụ", TitledBorder.LEADING, TitledBorder.TOP, null, null));
         pnShowDV.setBounds(402, 46, 580, 582);
         pnShowDV.setLayout(null);
         pnMain.add(pnShowDV);
@@ -124,7 +131,7 @@ public class QuanLyDichVu_UI extends JFrame implements ActionListener, MouseList
         pnShowDV.add(txtTim);
         txtTim.setColumns(10);
 
-        btnTim = new JButton("Tìm");
+        btnTim = new JButton("Tìm", searchIcon);
         btnTim.setBounds(325, 23, 90, 20);
         pnShowDV.add(btnTim);
 
@@ -172,6 +179,7 @@ public class QuanLyDichVu_UI extends JFrame implements ActionListener, MouseList
             txtMaDV.setText("");
             txtTenDV.setText("");
             txtDonGia.setText("0.0");
+            lbShowMessages.setText("");
         } else if (o.equals(btnThem)) {
             if (validData()) {
                 DichVu dv = getSelectedDataTable();
@@ -314,13 +322,17 @@ public class QuanLyDichVu_UI extends JFrame implements ActionListener, MouseList
         txt.requestFocus();
         txt.selectAll();
         lbShowMessages.setText(message);
+        lbShowMessages.setIcon(errorIcon);
     }
 
     private void showMessage(String message, int type) {
-        if (type == SUCCESS)
+        if (type == SUCCESS) {
             lbShowMessages.setForeground(Color.GREEN);
-        else
+            lbShowMessages.setIcon(checkIcon);
+        } else {
             lbShowMessages.setForeground(Color.RED);
+            lbShowMessages.setIcon(errorIcon);
+        }
         lbShowMessages.setText(message);
     }
 
