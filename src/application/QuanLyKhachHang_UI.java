@@ -46,7 +46,7 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
         JLabel lbTitle = new JLabel("Quản Lý Khách Hàng");
         lbTitle.setHorizontalAlignment(SwingConstants.CENTER);
         lbTitle.setFont(new Font("Dialog", Font.BOLD, 20));
-        lbTitle.setBounds(0, 0, 624, 30);
+        lbTitle.setBounds(0, 0, 984, 30);
         pnMain.add(lbTitle);
 
         getContentPane().add(pnMain);
