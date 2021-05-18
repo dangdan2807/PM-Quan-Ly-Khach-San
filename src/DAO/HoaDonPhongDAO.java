@@ -104,4 +104,25 @@ public class HoaDonPhongDAO {
         }
         return dataList;
     }
+
+    public ArrayList<Timestamp> getDateTimeHDPhongByMaHD(int maHD) {
+        ArrayList<Timestamp> dataList = new ArrayList<Timestamp>();
+        ConnectDB.getInstance();
+        PreparedStatement stmt = null;
+        try {
+            Connection con = ConnectDB.getConnection();
+            String sql = "EXEC UDP_GetDateTimeHDPhongByMaHD ? ";
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, maHD);
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                dataList.add(rs.getTimestamp("NgayGioNhan"));
+                dataList.add(rs.getTimestamp("NgayGioTra"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return dataList;
+    }
 }

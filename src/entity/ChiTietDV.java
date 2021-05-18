@@ -6,39 +6,39 @@ import java.sql.SQLException;
 public class ChiTietDV {
     private int soLuong;
 
-    private HoaDonDV maHDDV;
-    private DichVu maDV;
+    private HoaDonDV hoaDonDV;
+    private DichVu dichVu;
+
+    public DichVu getDichVu() {
+        return dichVu;
+    }
+
+    public void setDichVu(DichVu dichVu) {
+        this.dichVu = dichVu;
+    }
 
     public int getSoLuong() {
         return soLuong;
     }
 
     public void setSoLuong(int soLuong) {
-        if (soLuong <= 0)
-            soLuong = 1;
+        if(soLuong < 0)
+            soLuong = 0;
         this.soLuong = soLuong;
     }
 
-    public HoaDonDV getMaHDDV() {
-        return maHDDV;
+    public HoaDonDV getHoaDonDV() {
+        return hoaDonDV;
     }
 
-    public void setMaHDDV(HoaDonDV maHDDV) {
-        this.maHDDV = maHDDV;
+    public void setHoaDonDV(HoaDonDV hoaDonDV) {
+        this.hoaDonDV = hoaDonDV;
     }
 
-    public DichVu getMaDV() {
-        return maDV;
-    }
-
-    public void setMaDV(DichVu maDV) {
-        this.maDV = maDV;
-    }
-
-    public ChiTietDV(int soLuong, HoaDonDV maHDDV, DichVu maDV) {
+    public ChiTietDV(int soLuong, HoaDonDV hoaDonDV, DichVu dichVu) {
         setSoLuong(soLuong);
-        this.maHDDV = maHDDV;
-        this.maDV = maDV;
+        this.hoaDonDV = hoaDonDV;
+        this.dichVu = dichVu;
     }
 
     public ChiTietDV(ResultSet rs) throws SQLException {

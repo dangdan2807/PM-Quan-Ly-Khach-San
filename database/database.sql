@@ -297,3 +297,15 @@ BEGIN
 	WHERE hd.MaKH = @MaKH AND kh.tenKH LIKE @TenKH AND hd.NgayGioNhan BETWEEN @tuNgay AND @denNgay
 END
 GO
+
+CREATE PROC UDP_GetDateTimeHDPhongByMaHD
+	@MaHD INT
+AS
+BEGIN
+	SELECT hd.NgayGioNhan, hd.NgayGioTra
+	FROM dbo.HoaDonPhong hd
+	WHERE hd.MaHD = @MaHD
+END
+GO
+
+UDP_GetDateTimeHDPhongByMaHD 1
