@@ -74,6 +74,27 @@ public class KhachHangDAO {
         return dataList;
     }
 
+    public KhachHang getKhachHangByMaKH(int maKH) {
+        KhachHang khachHang = null;
+        ConnectDB.getInstance();
+        PreparedStatement stmt = null;
+        try {
+            Connection con = ConnectDB.getConnection();
+            String sql = "SELECT * FROM dbo.KhachHang dv where maKH = ?";
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, maKH);
+
+            ResultSet rs = stmt.executeQuery();
+            if(!rs.next())
+                return null;
+            
+            khachHang = new KhachHang(rs);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return khachHang;
+    }
+
     public boolean create(KhachHang dv) {
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();

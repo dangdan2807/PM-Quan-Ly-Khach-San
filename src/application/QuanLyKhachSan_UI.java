@@ -3,6 +3,8 @@ package application;
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class QuanLyKhachSan_UI extends JFrame implements ActionListener {
     // thêm các page vô đây cho dễ nhớ
@@ -10,7 +12,7 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener {
     private String[] nav = new String[] { "Trang chu", "Dat phong", "Quan ly hoa don phong", "Quan ly hoa don dich vu",
             "Quan ly phong", "Quan ly dich vu", "Quan ly nhan vien", "Quan ly khach hang" };
     // index ở đây tương ứng với mảng trên
-    private int indx_nav = 0;
+    public int indx_nav = 0;
 
     // khai báo các lớp giao diện ở đây
     private TrangChu_UI pageTrangChu = new TrangChu_UI();
@@ -36,13 +38,23 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener {
         setSize(1000, 700);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setResizable(false);
+        // setResizable(false);
 
         createMenuGUI();
-        // pnContainer = new JPanel();
-        // pnContainer.setLayout(new BoxLayout(pnContainer, BoxLayout.Y_AXIS));
-        // this.add(pnContainer);
         createGUI();
+
+    }
+
+    public QuanLyKhachSan_UI(int index) {
+        setTitle("Quan Ly Khach San");
+        setSize(1000, 700);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        // setResizable(false);
+
+        createMenuGUI();
+        createGUI();
+        indx_nav = index;
 
     }
 
@@ -55,10 +67,12 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener {
         // hiển thị các page ở đây
         if (indx_nav == 0) {// trang chủ
             pnMain = pageTrangChu.pnMain;
-
+            handleEventTrangChu();
+            handleEventThayDoiLoaiPhong();
         } else if (indx_nav == 1) { // trang đặt phòng
             pnMain = pageDatPhong.pnMain;
-
+            pageDatPhong.renderDSPhongAvail();
+            // pageDatPhong.renderHoaDon();
         } else if (indx_nav == 2) { // hóa đơn phòng
             pnMain = pageHDPhong.pnMain;
 
@@ -78,6 +92,8 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener {
         this.repaint();
 
     }
+
+    
 
     public void createMenuGUI() {
         menuBar = new JMenuBar();
@@ -163,6 +179,47 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener {
         new QuanLyKhachSan_UI().setVisible(true);
     }
 
+    private void handleEventThayDoiLoaiPhong() {
+        pageTrangChu.cboLP.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                new Timer().schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        handleEventTrangChu();
+                    }
+                }, 1000L); // 300 is the delay in millis
+                
+            }
+        });
+    }
+
+
+    public void handleEventTrangChu(){
+        // print(String.valueOf(pageTrangChu.dsp.size()));
+        for(int i=0; i<pageTrangChu.dsp.size(); i++){
+            int j = i;
+            // System.out.println(pageTrangChu.btn_ThanhToan[i]);
+            pageTrangChu.btn_ThanhToan[j].addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println("-> Hoa don");
+                    indx_nav = 2;
+                    createGUI();
+                    pageTrangChu.popup.dispose();
+                }
+            });
+
+            pageTrangChu.btn_DatPhong[j].addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println("-> Dat phong");
+                    indx_nav = 1;
+                    pageDatPhong.maPhong = pageTrangChu.dsp.get(j).getMaPhong();
+                    pageTrangChu.popup.dispose();
+                    createGUI();
+                }
+            });
+        }
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         Object obj = e.getSource();
@@ -172,10 +229,12 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener {
             System.out.println("-> Trang chu");
             indx_nav = 0;
             createGUI();
-
+            
+            
         } else if (obj == itemDatPhong) {// Đặt phòng
             System.out.println("-> Dat phong");
             indx_nav = 1;
+            pageDatPhong.maPhong = 0;
             createGUI();
         } else if (obj == itemQLHDPhong) {// hóa đơn phòng
             System.out.println("-> Hoa don");
@@ -200,6 +259,10 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener {
             createGUI();
         }
         // thêm tương tự như phía trên, indx_nav tương ứng với mảng nav trên đầu
+    }
+
+    public void print(String msg){
+        System.out.println(msg);
     }
 
 }

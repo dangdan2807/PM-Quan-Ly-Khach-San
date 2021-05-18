@@ -4,13 +4,41 @@ import java.sql.*;
 import java.util.ArrayList;
 
 import connectDB.ConnectDB;
-import entity.HoaDonPhong;
+import entity.*;
 
 public class HoaDonPhongDAO {
     private static HoaDonPhongDAO instance = new HoaDonPhongDAO();
 
     public static HoaDonPhongDAO getInstance() {
         return instance;
+    }
+
+    public ArrayList<HoaDonPhong> getAllHDPhong() {
+        ArrayList<HoaDonPhong> dataList = new ArrayList<HoaDonPhong>();
+        ConnectDB.getInstance();
+        PreparedStatement stmt = null;
+        Connection con = ConnectDB.getConnection();
+        try {
+            String sql = "select * from HoaDonPhong";
+            stmt = con.prepareStatement(sql);
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                int maHD = rs.getInt("MaHD");
+                Date ngayGioNhan = rs.getDate("NgayGioNhan");
+                Date ngayGioTra = rs.getDate("NgayGioTra");
+                Phong phong = new Phong(rs.getInt("MaPhong"));
+                KhachHang khachHang = new KhachHang(rs.getInt("MaKH"));
+                NhanVien nhanVien = new NhanVien(rs.getInt("MaNV"));
+
+                // HoaDonPhong ctdv = new HoaDonPhong(rs);
+                HoaDonPhong hdp = new HoaDonPhong(maHD, ngayGioNhan, ngayGioTra, phong, khachHang, nhanVien);
+                dataList.add(hdp);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return dataList;
     }
 
     public ArrayList<HoaDonPhong> getListHDPhongByDate(Date tuNgay, Date denNgay) {

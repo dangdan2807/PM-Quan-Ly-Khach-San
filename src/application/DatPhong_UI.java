@@ -3,13 +3,27 @@ package application;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-
-
 import java.awt.event.*;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.sql.*;
+
+import connectDB.ConnectDB;
+import DAO.PhongDAO;
+import DAO.LoaiPhongDAO;
+import DAO.HoaDonPhongDAO;
+import entity.*;
 
 public class DatPhong_UI extends JFrame implements ActionListener{
-
+    private PhongDAO phong_dao;
+    private LoaiPhongDAO loaiPhong_dao;
+    private HoaDonPhongDAO hoaDonPhong_dao;
+    public ArrayList<Phong> dsp, dsp_avail;
+    public ArrayList<LoaiPhong> dslp;
+    public ArrayList<HoaDonPhong> dshdp;
+    
     public JPanel pnMain;
+    public int maPhong = 0;
     private ImageIcon icon_add = new ImageIcon("data/images/add.png");
     private ImageIcon icon_refresh = new ImageIcon("data/images/refresh.png");
     private ImageIcon icon_trash = new ImageIcon("data/images/trash.png");
@@ -26,9 +40,28 @@ public class DatPhong_UI extends JFrame implements ActionListener{
     private JButton btnSua;
     private JButton btnHuy;
     private JButton btnClear;
+    private DefaultTableModel modelAvail;
+    private JTable tblAvail;
+    private DefaultTableModel modelDatPhong;
+    private JTable tblDatPhong;
 
     public DatPhong_UI(){
+        // khởi tạo
+        try{
+            ConnectDB.getInstance().connect();
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        phong_dao = new PhongDAO();
+        loaiPhong_dao = new LoaiPhongDAO();
+        hoaDonPhong_dao = new HoaDonPhongDAO();
+
+        dsp = phong_dao.getAllPhong();
+        dsp_avail = phong_dao.getPhongAvail();
+        dslp = loaiPhong_dao.getAllLoaiPhong();
+        dshdp = hoaDonPhong_dao.getAllHDPhong();
         pnMain = renderGUI();
+        renderHoaDon();
     }
 
     public JPanel renderGUI() {
@@ -144,15 +177,15 @@ public class DatPhong_UI extends JFrame implements ActionListener{
         lbAvail.setAlignmentX(Component.CENTER_ALIGNMENT);
         p_sec_DS.add(lbAvail);
         String[] cols_avail = {"Ma phong", "Loai phong", "Suc chua", "So giuong", "Vi tri", "Gia phong"};
-        DefaultTableModel modelAvail = new DefaultTableModel(cols_avail, 0);
-        JTable tblAvail = new JTable(modelAvail);
+        modelAvail = new DefaultTableModel(cols_avail, 0);
+        tblAvail = new JTable(modelAvail);
         // tblAvail.setLayout(new FlowLayout());
         // tblAvail.setPreferredSize(new Dimension(2000, 150));
         p_sec_DS.add(new JScrollPane(tblAvail));
 
-        modelAvail.addRow(new Object[]{"1", "vip", "2", "1", "Lau 1", "120.000"});
-        modelAvail.addRow(new Object[]{"2", "vip", "2", "1", "Lau 2", "120.000"});
-        modelAvail.addRow(new Object[]{"3", "vip", "2", "1", "Lau 3", "120.000"});
+        // modelAvail.addRow(new Object[]{"1", "vip", "2", "1", "Lau 1", "120.000"});
+        // modelAvail.addRow(new Object[]{"2", "vip", "2", "1", "Lau 2", "120.000"});
+        // modelAvail.addRow(new Object[]{"3", "vip", "2", "1", "Lau 3", "120.000"});
 
 
         // danh sách đặt phòng
@@ -171,18 +204,58 @@ public class DatPhong_UI extends JFrame implements ActionListener{
         pTable.setLayout(new BoxLayout(pTable, BoxLayout.X_AXIS));
         pnMain.add(pTable);
 
-        String[] cols_datphong = {"Ma hoa don", "Ma KH", "Ten KH", "Ma Phong", "Ngay den", "Ngay di", "Ghi chu"};
-        DefaultTableModel modelDatPhong = new DefaultTableModel(cols_datphong, 0);
-        JTable tblDatPhong = new JTable(modelDatPhong);
+        String[] cols_datphong = {"Mã hóa đơn", "Mã khách hàng", "Tên khách hàng", "Mã phòng", "Loại phòng", "Ngày đến", "Ngày đi", "Nhân viên", "Tình trạng"};
+        modelDatPhong = new DefaultTableModel(cols_datphong, 0);
+        tblDatPhong = new JTable(modelDatPhong);
         pTable.add(new JScrollPane(tblDatPhong));
 
-        modelDatPhong.addRow(new Object[]{"1", "1", "Tran Van Nhan", "1", "01-01-2001", "01-01-2001", ""});
-        modelDatPhong.addRow(new Object[]{"2", "1", "Tran Van Nhan", "1", "01-01-2001", "01-01-2001", ""});
-        modelDatPhong.addRow(new Object[]{"3", "1", "Tran Van Nhan", "1", "01-01-2001", "01-01-2001", ""});
-        modelDatPhong.addRow(new Object[]{"4", "1", "Tran Van Nhan", "1", "01-01-2001", "01-01-2001", ""});
+        // modelDatPhong.addRow(new Object[]{"1", "1", "Tran Van Nhan", "1", "01-01-2001", "01-01-2001", ""});
+        // modelDatPhong.addRow(new Object[]{"2", "1", "Tran Van Nhan", "1", "01-01-2001", "01-01-2001", ""});
+        // modelDatPhong.addRow(new Object[]{"3", "1", "Tran Van Nhan", "1", "01-01-2001", "01-01-2001", ""});
+        // modelDatPhong.addRow(new Object[]{"4", "1", "Tran Van Nhan", "1", "01-01-2001", "01-01-2001", ""});
         
 
         return pnMain;
+    }
+
+    public void renderDSPhongAvail(){
+        // clear
+        modelAvail.getDataVector().removeAllElements();
+        modelMaPhong.removeAllElements();
+        
+        for(int i=0; i<dsp_avail.size(); i++){
+            Phong phong = dsp_avail.get(i);
+            int maPhong = phong.getMaPhong();
+            String tenLoaiPhong = phong.getLoaiPhong().getTenLoaiPhong();
+            int sucChua = phong.getSucChua();
+            int soGiuong = phong.getSoGiuong();
+            String viTri = phong.getViTri();
+            Double donGia = phong.getLoaiPhong().getDonGia();
+            // render data
+            modelAvail.addRow(new Object[]{maPhong, tenLoaiPhong, sucChua, soGiuong, viTri, donGia});
+            modelMaPhong.addElement(String.valueOf(maPhong));
+            if(this.maPhong == maPhong){
+                cboMaPhong.setSelectedIndex(i);
+                tblAvail.addRowSelectionInterval(i, i);
+            }
+        }
+    }
+
+    public void renderHoaDon(){
+        modelDatPhong.getDataVector().removeAllElements();
+        for(int i=0; i<dshdp.size(); i++){
+            int maHD = dshdp.get(i).getMaHD();
+            Date ngayGioNhan = dshdp.get(i).getNgayGioNhan();
+            Date ngayGioTra = dshdp.get(i).getNgayGioTra();
+            Phong phong = dshdp.get(i).getPhong();
+            int maKhachHang = dshdp.get(i).getKhachHang().getMaKH();
+            String tenKhachHang = dshdp.get(i).getKhachHang().getTenKH();
+            NhanVien nhanVien = dshdp.get(i).getNhanVien();
+            modelDatPhong.addRow(
+                new Object[]{maHD, maKhachHang, tenKhachHang, 
+                    phong.getMaPhong(), phong.getLoaiPhong().getTenLoaiPhong(), 
+                    ngayGioNhan, ngayGioTra, nhanVien.getTenNV(), "Đã đặt phòng"});
+        }
     }
 
     public JLabel space(int w, int h){

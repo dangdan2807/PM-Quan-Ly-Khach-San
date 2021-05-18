@@ -1,6 +1,7 @@
 package entity;
 
 import java.sql.*;
+import DAO.*;
 
 public class KhachHang {
 	private int maKH;
@@ -9,6 +10,37 @@ public class KhachHang {
 	private Date ngayHetHan;
 	private String loaiKH;
 	private int soLanDatPhong = 0;
+
+	public KhachHang(int maKH, String tenKH, String cmnd, Date ngayHetHan, String loaiKH, int soLanDatPhong) {
+		setMaKH(maKH);
+		setTenKH(tenKH);
+		setCmnd(cmnd);
+		this.ngayHetHan = ngayHetHan;
+		// setLoaiKH(loaiKH);
+		this.loaiKH = loaiKH;
+		setSoLanDatPhong(soLanDatPhong);
+	}
+
+	public KhachHang(int maKH) {
+		KhachHangDAO khachHang_dao = new KhachHangDAO();
+		KhachHang kh = khachHang_dao.getKhachHangByMaKH(maKH);
+		this.maKH = maKH;
+		this.tenKH = kh.getTenKH();
+		this.cmnd = kh.getCmnd();
+		this.ngayHetHan = kh.getNgayHetHan();
+		this.loaiKH = kh.getLoaiKH();
+		this. soLanDatPhong = kh.getSoLanDatPhong();
+	}
+
+	public KhachHang(int maKH, String tenKH) {
+		this(maKH, tenKH, "Chưa cập nhật", null, "VN", 0);
+	}
+
+	public KhachHang(ResultSet rs) throws SQLException {
+		this(rs.getInt("MaKH"), rs.getString("TenKH"), rs.getString("cmnd"), rs.getDate("ngayHetHan"),
+				rs.getString("LoaiKH"), rs.getInt("soLanDatPhong"));
+	}
+
 
 	public int getMaKH() {
 		return maKH;
@@ -66,28 +98,7 @@ public class KhachHang {
 		this.loaiKH = loaiKH;
 	}
 
-	public KhachHang(int maKH, String tenKH, String cmnd, Date ngayHetHan, String loaiKH, int soLanDatPhong) {
-		setMaKH(maKH);
-		setTenKH(tenKH);
-		setCmnd(cmnd);
-		this.ngayHetHan = ngayHetHan;
-		// setLoaiKH(loaiKH);
-		this.loaiKH = loaiKH;
-		setSoLanDatPhong(soLanDatPhong);
-	}
-
-	public KhachHang(int maKH) {
-		this(maKH, "Chưa cập nhật", "Chưa cập nhật", null, "VN", 0);
-	}
-
-	public KhachHang(int maKH, String tenKH) {
-		this(maKH, tenKH, "Chưa cập nhật", null, "VN", 0);
-	}
-
-	public KhachHang(ResultSet rs) throws SQLException {
-		this(rs.getInt("MaKH"), rs.getString("TenKH"), rs.getString("cmnd"), rs.getDate("ngayHetHan"),
-				rs.getString("LoaiKH"), rs.getInt("soLanDatPhong"));
-	}
+	
 
 	@Override
 	public int hashCode() {

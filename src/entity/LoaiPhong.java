@@ -1,15 +1,31 @@
 package entity;
+import DAO.LoaiPhongDAO;
 
 public class LoaiPhong {
     private int maLoaiPhong;
     private String tenLoaiPhong;
     private Double donGia;
 
+    public LoaiPhong(int maLoaiPhong, String tenLoaiPhong, Double donGia) {
+        this.maLoaiPhong = maLoaiPhong;
+        this.tenLoaiPhong = tenLoaiPhong;
+        setDonGia(donGia);
+    }
+
+    public LoaiPhong(int maLoaiPhong) {
+        LoaiPhongDAO loaiPhong_dao = new LoaiPhongDAO();
+        LoaiPhong loaiPhong = loaiPhong_dao.getLoaiPhongByMa(maLoaiPhong);
+        this.maLoaiPhong = loaiPhong.getMaLoaiPhong();
+        this.tenLoaiPhong = loaiPhong.getTenLoaiPhong();
+        this.donGia = loaiPhong.getDonGia();
+    }
+
     public int getMaLoaiPhong() {
         return maLoaiPhong;
     }
 
     public void setMaLoaiPhong(int maLoaiPhong) {
+        
         this.maLoaiPhong = maLoaiPhong;
     }
 
@@ -31,15 +47,7 @@ public class LoaiPhong {
         this.donGia = donGia;
     }
 
-    public LoaiPhong(int maLoaiPhong, String tenLoaiPhong, Double donGia) {
-        this.maLoaiPhong = maLoaiPhong;
-        this.tenLoaiPhong = tenLoaiPhong;
-        setDonGia(donGia);
-    }
-
-    public LoaiPhong(int maLoaiPhong) {
-        this(maLoaiPhong, "Chưa cập nhật", 0.0);
-    }
+    
 
     @Override
     public int hashCode() {

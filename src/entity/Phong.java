@@ -1,13 +1,45 @@
 package entity;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import DAO.*;
+
 public class Phong {
     private int maPhong;
+    private LoaiPhong loaiPhong;
     private int sucChua;
     private int soGiuong;
     private String viTri;
     private Boolean tinhTrang;
 
-    private LoaiPhong loaiPhong;
+    public Phong(int maPhong, int sucChua, int soGiuong, String viTri, Boolean tinhTrang, LoaiPhong loaiPhong) {
+        this.maPhong = maPhong;
+        setSucChua(sucChua);
+        setSoGiuong(soGiuong);
+        this.viTri = viTri;
+        this.tinhTrang = tinhTrang;
+        this.loaiPhong = loaiPhong;
+    }
+
+    public Phong(int maPhong) {
+        PhongDAO phong_dao = new PhongDAO();
+        Phong phong = phong_dao.getPhongByMaPhong(maPhong);
+        this.maPhong = phong.getMaPhong();
+        this.loaiPhong = phong.getLoaiPhong();
+        this.sucChua = phong.getSucChua();
+        this.soGiuong = phong.getSoGiuong();
+        this.viTri = phong.getViTri();
+        this.tinhTrang = phong.getTinhTrang();
+    }
+
+    public Phong(int maPhong, LoaiPhong loaiPhong) {
+        this.maPhong = maPhong;
+        this.loaiPhong = loaiPhong;
+    }
+
+    public Phong(ResultSet rs) throws SQLException {
+        this(rs.getInt("maPhong"), rs.getInt("SucChua"),  rs.getInt("SoGiuong"), rs.getString("ViTri"), rs.getBoolean("tinhTrang"), new LoaiPhong(rs.getInt("MaLoaiPhong")));
+    }
 
     public int getMaPhong() {
         return maPhong;
@@ -61,19 +93,7 @@ public class Phong {
         this.loaiPhong = loaiPhong;
     }
 
-    public Phong(int maPhong, int sucChua, int soGiuong, String viTri, Boolean tinhTrang, LoaiPhong loaiPhong) {
-        this.maPhong = maPhong;
-        setSucChua(sucChua);
-        setSoGiuong(soGiuong);
-        this.viTri = viTri;
-        this.tinhTrang = tinhTrang;
-        this.loaiPhong = loaiPhong;
-    }
-
-    public Phong(int maPhong, LoaiPhong loaiPhong) {
-        this.maPhong = maPhong;
-        this.loaiPhong = loaiPhong;
-    }
+    
 
     @Override
     public int hashCode() {

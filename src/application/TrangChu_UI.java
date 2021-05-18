@@ -1,18 +1,53 @@
 package application;
 
 import java.awt.*;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.awt.event.*;
 import javax.swing.*;
 
-public class TrangChu_UI extends JFrame {
-    
+import connectDB.ConnectDB;
+import DAO.PhongDAO;
+import DAO.LoaiPhongDAO;
+import entity.*;
+
+public class TrangChu_UI extends JFrame implements ActionListener{
+    private PhongDAO phong_dao;
+    private LoaiPhongDAO loaiPhong_dao;
+    public ArrayList<Phong> dsp;
+    public ArrayList<LoaiPhong> dslp;
+
     private JPanel pnPhongTrong;
-    private int So_Phong = 30;
     ImageIcon icon_green_check = new ImageIcon("data/images/check.png", "check");
     ImageIcon icon_red_close = new ImageIcon("data/images/close.png", "close");
+    private ImageIcon icon_pay = new ImageIcon("data/images/purse.png");
+    private ImageIcon icon_order = new ImageIcon("data/images/booking.png");
+
     public JPanel pnMain;
+    private DefaultComboBoxModel<String> modelLP;
+    public JComboBox<String> cboLP;
+    private JPanel pn_sec_available;
+    private JLabel lbAvail;
+    private JLabel lbUsing;
+    
+    public JButton[] btnPhong;
+    public JButton[] btn_ThanhToan;
+    public JButton[] btn_DatPhong;
+    public JFrame popup;
 
     public TrangChu_UI(){
+        // khởi tạo
+        try{
+            ConnectDB.getInstance().connect();
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        phong_dao = new PhongDAO();
+        loaiPhong_dao = new LoaiPhongDAO();
+        dsp = phong_dao.getAllPhong();
+        dslp = loaiPhong_dao.getAllLoaiPhong();
         pnMain = renderGUI();
+        // renderData();
     }
 
     public JPanel renderGUI() {
@@ -27,12 +62,10 @@ public class TrangChu_UI extends JFrame {
 
         JPanel pnFields = new JPanel();
         pn_interact.add(pnFields);
-        JLabel lbLoaiPhong = new JLabel("Loai phong: ");
-        DefaultComboBoxModel<String> modelLP = new DefaultComboBoxModel<String>();
-        JComboBox<String> cboLP = new JComboBox<String>(modelLP);
-        modelLP.addElement("Tat ca");
-        modelLP.addElement("Vip");
-        modelLP.addElement("Thuong");
+        JLabel lbLoaiPhong = new JLabel("Loại phòng: ");
+        modelLP = new DefaultComboBoxModel<String>();
+        cboLP = new JComboBox<String>(modelLP);
+        cboLP.addActionListener(this);
 
         pnFields.add(lbLoaiPhong);
         pnFields.add(cboLP);
@@ -46,7 +79,7 @@ public class TrangChu_UI extends JFrame {
         JPanel lb_sec_avail = new JPanel();
         lb_sec_avail.setBorder(BorderFactory.createEtchedBorder());
         pnThongKe.add(lb_sec_avail);
-        JLabel lbAvail = new JLabel("Phong trong (20)", icon_green_check, JLabel.CENTER);
+        lbAvail = new JLabel("Phòng trống (20)", icon_green_check, JLabel.CENTER);
         lb_sec_avail.add(lbAvail);
         lbAvail.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         pnThongKe.add(space(5, 5));
@@ -55,82 +88,160 @@ public class TrangChu_UI extends JFrame {
         JPanel lb_sec_using = new JPanel();
         lb_sec_using.setBorder(BorderFactory.createEtchedBorder());
         pnThongKe.add(lb_sec_using);
-        JLabel lbUsing = new JLabel("Dang o (20)", icon_red_close, JLabel.CENTER);
+        lbUsing = new JLabel("Đang ở (20)", icon_red_close, JLabel.CENTER);
         lb_sec_using.add(lbUsing);
         lbUsing.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
 
         // hiển thị các phòng trống
-        JPanel pn_sec_available = new JPanel();
+        pn_sec_available = new JPanel();
         pn_sec_available.setLayout(new BoxLayout(pn_sec_available, BoxLayout.Y_AXIS));
         // pn_sec_available.setAlignmentX(Component.CENTER_ALIGNMENT);
         pnMain.add(pn_sec_available);
 
-        JLabel lbDSP = new JLabel("Tinh trang phong");
+        JLabel lbDSP = new JLabel("Tình trạng phòng");
         lbDSP.setAlignmentX(Component.CENTER_ALIGNMENT);
         lbDSP.setFont(fontSize(25));
         pn_sec_available.add(lbDSP);
         pn_sec_available.add(space(10, 10));
 
         pnPhongTrong = new JPanel();
-        JScrollPane scroll = new JScrollPane(pnPhongTrong);
-        scroll.setBorder(BorderFactory.createEmptyBorder());
-        pn_sec_available.add(scroll);
+        // JScrollPane scroll = new JScrollPane(pnPhongTrong);
+        // scroll.setBorder(BorderFactory.createEmptyBorder());
+        pn_sec_available.add(pnPhongTrong);
         // pnPhongTrong.setLayout(new BoxLayout(pnPhongTrong, BoxLayout.X_AXIS));
         
-        GridLayout grid_Phong = new GridLayout((So_Phong+7)/8, 8);
+        GridLayout grid_Phong = new GridLayout(0, 5);
         grid_Phong.setHgap(10);
         grid_Phong.setVgap(10);
         pnPhongTrong.setLayout(grid_Phong);
         renderDSPhong();
-
+        renderLoaiPhong();
         return pnMain;
     }
 
     public void renderDSPhong(){
-        for(int i=1; i<=So_Phong; i++){
-            JPanel pnPhong = new JPanel();
-            pnPhongTrong.add(pnPhong);
-            pnPhong.setLayout(new BoxLayout(pnPhong, BoxLayout.Y_AXIS));
-            pnPhong.setAlignmentX(CENTER_ALIGNMENT);
-            pnPhong.setBorder(BorderFactory.createEmptyBorder(10, 30, 10, 30));
+        pn_sec_available.remove(pnPhongTrong);
+        pn_sec_available.revalidate();
+        pn_sec_available.repaint();
 
+        pnPhongTrong = new JPanel();
+        GridLayout grid_Phong = new GridLayout(0, 5);
+        grid_Phong.setHgap(10);
+        grid_Phong.setVgap(10);
+        pnPhongTrong.setLayout(grid_Phong);
+        btnPhong = new JButton[dsp.size()];
+        btn_ThanhToan = new JButton[dsp.size()];
+        btn_DatPhong = new JButton[dsp.size()];
+
+        for(int i=0; i<dsp.size(); i++){
+            Phong phong = dsp.get(i);
+            int j = i;
+            // JPanel pnPhong = new JPanel();
+            btnPhong[i] = new JButton();
+            pnPhongTrong.add(btnPhong[i]);
+            btnPhong[i].setLayout(new BoxLayout(btnPhong[i], BoxLayout.Y_AXIS));
+            btnPhong[i].setAlignmentX(CENTER_ALIGNMENT);
+            btnPhong[i].setBorder(BorderFactory.createEmptyBorder(10, 30, 10, 30));
             
-            JLabel lbMaPhong = new JLabel(String.valueOf(i));
+            JLabel lbMaPhong = new JLabel(String.valueOf(phong.getMaPhong()));
             lbMaPhong.setAlignmentX(Component.CENTER_ALIGNMENT);
-            lbMaPhong.setFont(fontSize(25));
+            lbMaPhong.setFont(fontSize(20));
             lbMaPhong.setForeground(Color.WHITE);
 
-            JLabel lbLoai = new JLabel("Vip");
-            lbLoai.setFont(fontSize(25));
+            JLabel lbLoai = new JLabel(phong.getLoaiPhong().getTenLoaiPhong());
+            lbLoai.setFont(fontSize(20));
             lbLoai.setAlignmentX(Component.CENTER_ALIGNMENT);
             lbLoai.setForeground(Color.WHITE);
-            // lbLoai.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
 
-            
-            
-            
-            // System.out.println(icon_green_check.getIconWidth());
             JLabel lbIcon;
-            if(i % 3 == 0){
-                pnPhong.setBackground(Color.red);
+            if(phong.getTinhTrang()){
+                btnPhong[i].setBackground(Color.red);
                 lbIcon = new JLabel(icon_red_close);
             }else{
-                pnPhong.setBackground(Color.green);
+                btnPhong[i].setBackground(Color.green);
                 lbIcon = new JLabel(icon_green_check);
                 
             }
             lbIcon.setAlignmentX(Component.CENTER_ALIGNMENT);
-            lbIcon.setFont(fontSize(25));
+            lbIcon.setFont(fontSize(20));
             lbIcon.setForeground(Color.WHITE);
 
-            pnPhong.add(lbMaPhong);
-            pnPhong.add(lbLoai);
-            pnPhong.add(space(0, 5));
-            pnPhong.add(lbIcon);
-            
+            btnPhong[i].add(lbMaPhong);
+            btnPhong[i].add(lbLoai);
+            btnPhong[i].add(space(0, 5));
+            btnPhong[i].add(lbIcon);
 
+            btn_ThanhToan[j] = new JButton("Thanh toán", icon_pay);
+            btn_DatPhong[j] = new JButton("Đặt phòng này", icon_order);
+            // sự kiện bấm vào phòng
+            btnPhong[i].addActionListener(new ActionListener(){
+                
+
+                public void actionPerformed(ActionEvent e) {
+                    popup = new JFrame();
+                    popup.setTitle("Thông tin phòng");
+                    popup.setSize(400, 200);
+                    popup.setResizable(false);
+                    popup.setLocationRelativeTo(pnMain);
+
+                    JPanel pn_p_main = new JPanel();
+                    popup.add(pn_p_main);
+                    pn_p_main.setLayout(new BoxLayout(pn_p_main, BoxLayout.Y_AXIS));
+
+                    JPanel pn_p_top = new JPanel();
+                    pn_p_main.add(pn_p_top);
+                    pn_p_top.setLayout(new GridLayout(3, 2));
+                    // pn_p_top.setLayout(new BoxLayout(pn_p_top, BoxLayout.Y_AXIS));
+                    pn_p_top.setBorder(BorderFactory.createTitledBorder("Chi tiết phòng"));
+
+                    String tinhTrang = phong.getTinhTrang() ? "Đang ở" : "Có thể sử dụng";
+                    pn_p_top.add(new JLabel("<html><p style='padding-left: 10px;'>Mã phòng: "+ phong.getMaPhong() +"</p></html>"));
+                    pn_p_top.add(new JLabel("<html><p style='padding-left: 10px;'>Vị trí: "+ phong.getViTri() +"</p></html>"));
+                    pn_p_top.add(new JLabel("<html><p style='padding-left: 10px;'>Số giường: "+ phong.getSoGiuong() +"</p></html>"));
+                    pn_p_top.add(new JLabel("<html><p style='padding-left: 10px;'>Tình trạng: "+ tinhTrang +"</p></html>"));
+                    pn_p_top.add(new JLabel("<html><p style='padding-left: 10px;'>Loại phòng: "+ phong.getLoaiPhong().getTenLoaiPhong() +"</p></html>"));
+                    pn_p_top.add(new JLabel("<html><p style='padding-left: 10px;'>Đơn giá: "+ phong.getLoaiPhong().getDonGia() +"</p></html>"));
+
+                    JPanel pn_p_bottom = new JPanel();
+                    pn_p_main.add(pn_p_bottom);
+                    
+                    if(phong.getTinhTrang()){
+                        pn_p_bottom.add(btn_ThanhToan[j]);
+                        
+                    }else{
+                        pn_p_bottom.add(btn_DatPhong[j]);
+                    }
+                    popup.setVisible(true);
+                }
+            });
         }
+        pn_sec_available.add(pnPhongTrong);
+        pn_sec_available.revalidate();
+        pn_sec_available.repaint();
+
+        int countAvail = this.getCountAvailable();
+        lbAvail.setText("Phòng trống (" + countAvail + ")");
+        lbUsing.setText("Đang ở (" + (dsp.size() - countAvail) + ")");
+    }
+
+    public void renderLoaiPhong(){
+        modelLP.removeAllElements();
+        modelLP.addElement("Tất cả");
+        // System.out.println(dslp.size());
+        for(int i=0; i<dslp.size(); i++){
+            modelLP.addElement(dslp.get(i).getTenLoaiPhong());
+        }
+    }
+
+    public int getCountAvailable(){
+        int c = 0;
+        for(int i = 0; i<dsp.size(); i++){
+            if(!dsp.get(i).getTinhTrang()){
+                c++;
+            }
+        }
+        return c;
     }
 
     public Font fontSize(int size){
@@ -141,6 +252,25 @@ public class TrangChu_UI extends JFrame {
         JLabel space = new JLabel("");
         space.setBorder(BorderFactory.createEmptyBorder(h/2, w/2, h/2, w/2));
         return space;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // TODO Auto-generated method stub
+        Object obj = e.getSource();
+        if(obj == cboLP){
+            int choose = cboLP.getSelectedIndex() - 1;
+            if(choose == -1){
+                dsp = phong_dao.getAllPhong();
+                renderDSPhong();
+            }else{
+                dsp = phong_dao.getPhongByMaLoaiPhong(dslp.get(choose).getMaLoaiPhong());
+                renderDSPhong();
+            }
+        }
+        // else if(obj == btnPhong){
+        //     System.out.println("detail more");
+        // }
     }
 
 }
