@@ -67,6 +67,7 @@ public class QuanLyKhachSan extends JFrame implements ActionListener {
         } else if (indx_nav == 4) { //
             pnMain = pageQLKhachHang.pnMain;
         }
+        
         this.add(pnMain, BorderLayout.CENTER);
         this.revalidate(); 
         this.repaint();
