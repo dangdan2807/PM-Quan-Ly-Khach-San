@@ -94,8 +94,8 @@ public class ThongKeKhachHang_UI extends JFrame implements ActionListener {
         pnTable.setLayout(new BorderLayout(0, 0));
 
         // mã hóa đơn phòng
-        String[] cols = { "Mã HD", "Mã phòng", "Loại phòng", "Giá phòng", "Ngày đến", "Ngày Trả", "Số Ngày",
-                "Thành tiền", "Mã KH", "Tên KH", "Mã NV", "Tên NV" };
+        String[] cols = { "Mã HD", "Mã phòng", "Loại phòng", "Giá phòng", "Ngày đến", "Ngày Trả", "Số Ngày", "Số giờ",
+                "Thành tiền", "Mã KH", "Tên KH" };
         modelTable = new DefaultTableModel(cols, 0) {
             // khóa sửa dữ liệu trực tiếp trên table
             @Override
@@ -218,15 +218,14 @@ public class ThongKeKhachHang_UI extends JFrame implements ActionListener {
             Phong phong = item.getPhong();
             LoaiPhong lPhong = item.getPhong().getLoaiPhong();
             KhachHang kh = item.getKhachHang();
-            NhanVien nv = item.getNhanVien();
             String ngayGioNhan = formatDate(item.getNgayGioNhan());
             String ngayGioTra = formatDate(item.getNgayGioTra());
             int soNgay = (int) tinhSoNgay(item.getNgayGioNhan(), item.getNgayGioTra());
             Double thanhTien = lPhong.getDonGia() * soNgay;
             sum += thanhTien;
-            modelTable.addRow(new Object[] { item.getMaHD(), phong.getMaPhong(), lPhong.getTenLoaiPhong(),
-                    lPhong.getDonGia(), ngayGioNhan, ngayGioTra, soNgay, thanhTien, kh.getMaKH(), kh.getTenKH(),
-                    nv.getMaNV(), nv.getTenNV() });
+            modelTable.addRow(
+                    new Object[] { item.getMaHD(), phong.getMaPhong(), lPhong.getTenLoaiPhong(), lPhong.getDonGia(),
+                            ngayGioNhan, ngayGioTra, soNgay, thanhTien, kh.getMaKH(), kh.getTenKH() });
         }
         txtThanhTien.setText(sum.toString());
     }

@@ -44,7 +44,6 @@ public class ChiTietDV {
     public ChiTietDV(ResultSet rs) throws SQLException {
         this(rs.getInt("SoLuong"),
                 new HoaDonDV(rs.getInt("MaHDDV"), rs.getDate("ngayGioDat"),
-                        new NhanVien(rs.getInt("MaNV"), rs.getString("TenNV")),
                         new KhachHang(rs.getInt("MaKH"), rs.getString("TenKH"))),
                 new DichVu(rs.getInt("MaDV"), rs.getString("tenDV"), rs.getDouble("donGia")));
     }
