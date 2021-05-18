@@ -1,6 +1,6 @@
 package entity;
 
-import java.sql.Date;
+import java.sql.*;
 
 public class HoaDonPhong {
     private int maHD;
@@ -67,6 +67,14 @@ public class HoaDonPhong {
         this.phong = phong;
         this.khachHang = khachHang;
         this.nhanVien = nhanVien;
+    }
+
+    public HoaDonPhong(ResultSet rs) throws SQLException {
+        this(rs.getInt("MaHD"), rs.getDate("NgayGioNhan"), rs.getDate("NgayGioTra"),
+                new Phong(rs.getInt("MaPhong"),
+                        new LoaiPhong(rs.getInt("MaLoaiPhong"), rs.getString("TenLoaiPhong"), rs.getDouble("DonGia"))),
+                new KhachHang(rs.getInt("MaKH"), rs.getString("TenKH")),
+                new NhanVien(rs.getInt("MaNV"), rs.getString("TenNV")));
     }
 
     @Override

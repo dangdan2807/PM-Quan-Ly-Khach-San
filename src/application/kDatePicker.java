@@ -35,7 +35,7 @@ public class kDatePicker extends JPanel implements ActionListener {
         txt.setText(DialogDatePicker.getToDay());
 
         btn = new JButton(calenderIcon);
-        btn.setBounds(widthDefault - 30, 0, 29, 20);
+        btn.setBounds(widthDefault - 30, 0, 30, 20);
 
         this.add(txt);
         this.add(btn);
@@ -73,11 +73,10 @@ public class kDatePicker extends JPanel implements ActionListener {
     }
 
     // cập nhật giá trị với input String
-    public void setValue(String date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-        Date date2 = Date.valueOf(sdf.format(date));
-        sdf = new SimpleDateFormat("dd-MM-yyyy");
-        txt.setText(sdf.format(date2));
+    public void setValue(String strDate) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        java.util.Date date = sdf.parse(strDate);
+        txt.setText(sdf.format(date));
     }
 
     // lấy ra giá trị ngày dưới dạng java.sql.Date

@@ -70,6 +70,11 @@ public class Phong {
         this.loaiPhong = loaiPhong;
     }
 
+    public Phong(int maPhong, LoaiPhong loaiPhong) {
+        this.maPhong = maPhong;
+        this.loaiPhong = loaiPhong;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;

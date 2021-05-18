@@ -7,7 +7,7 @@ import javax.swing.table.DefaultTableModel;
 
 import java.awt.event.*;
 
-public class DatPhong extends JFrame implements ActionListener{
+public class DatPhong_UI extends JFrame implements ActionListener{
 
     public JPanel pnMain;
     private ImageIcon icon_add = new ImageIcon("data/images/add.png");
@@ -17,8 +17,8 @@ public class DatPhong extends JFrame implements ActionListener{
     private ImageIcon icon_search = new ImageIcon("data/images/magnifying-glass.png");
     private JTextField txtMaKH;
     private JTextField txtTenKH;
-    private DefaultComboBoxModel modelMaPhong;
-    private JComboBox cboMaPhong;
+    private DefaultComboBoxModel<String> modelMaPhong;
+    private JComboBox<String> cboMaPhong;
     private JTextField txtNgayDen;
     private JTextField txtNgayDi;
     private JTextField txtGhiChu;
@@ -27,7 +27,7 @@ public class DatPhong extends JFrame implements ActionListener{
     private JButton btnHuy;
     private JButton btnClear;
 
-    public DatPhong(){
+    public DatPhong_UI(){
         pnMain = renderGUI();
     }
 
@@ -86,8 +86,8 @@ public class DatPhong extends JFrame implements ActionListener{
         txtMaKH = new JTextField(10);
         txtTenKH = new JTextField(10);
 
-        modelMaPhong = new DefaultComboBoxModel();
-        cboMaPhong = new JComboBox(modelMaPhong);
+        modelMaPhong = new DefaultComboBoxModel<String>();
+        cboMaPhong = new JComboBox<String>(modelMaPhong);
 
 
         txtNgayDen = new JTextField(10);
@@ -197,7 +197,6 @@ public class DatPhong extends JFrame implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // TODO Auto-generated method stub
         Object obj = e.getSource();
         if(obj == btnDatPhong){
             System.out.println("Dat phong");
@@ -216,7 +215,7 @@ public class DatPhong extends JFrame implements ActionListener{
             //     return;
             // }
 
-            String maKh = txtMaKH.getText();
+            // String maKh = txtMaKH.getText();
             // String maKh = txtMaKH.getText();
             // String maKh = txtMaKH.getText();
             // String maKh = txtMaKH.getText();

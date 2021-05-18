@@ -38,8 +38,8 @@ public class DichVu {
 
 	public DichVu(int maDV, String tenDV, double donGia) {
 		setMaDV(maDV);
-		setDonGia(donGia);
 		setTenDV(tenDV);
+		setDonGia(donGia);
 	}
 	public DichVu(String tenDV, double donGia) {
 		setDonGia(donGia);

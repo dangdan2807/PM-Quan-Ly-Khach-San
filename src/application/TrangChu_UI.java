@@ -3,7 +3,7 @@ package application;
 import java.awt.*;
 import javax.swing.*;
 
-public class TrangChu extends JFrame {
+public class TrangChu_UI extends JFrame {
     
     private JPanel pnPhongTrong;
     private int So_Phong = 30;
@@ -11,7 +11,7 @@ public class TrangChu extends JFrame {
     ImageIcon icon_red_close = new ImageIcon("data/images/close.png", "close");
     public JPanel pnMain;
 
-    public TrangChu(){
+    public TrangChu_UI(){
         pnMain = renderGUI();
     }
 
@@ -28,8 +28,8 @@ public class TrangChu extends JFrame {
         JPanel pnFields = new JPanel();
         pn_interact.add(pnFields);
         JLabel lbLoaiPhong = new JLabel("Loai phong: ");
-        DefaultComboBoxModel modelLP = new DefaultComboBoxModel();
-        JComboBox cboLP = new JComboBox(modelLP);
+        DefaultComboBoxModel<String> modelLP = new DefaultComboBoxModel<String>();
+        JComboBox<String> cboLP = new JComboBox<String>(modelLP);
         modelLP.addElement("Tat ca");
         modelLP.addElement("Vip");
         modelLP.addElement("Thuong");
