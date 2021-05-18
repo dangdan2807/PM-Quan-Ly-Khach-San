@@ -24,8 +24,10 @@ public class ThongKeKhachHang_UI extends JFrame implements ActionListener {
     private JTable table;
     private JLabel lbShowMessages;
     private final int SUCCESS = 1, ERROR = 0;
-    private HoaDonPhongDAO hdPhongDAO = new HoaDonPhongDAO();
     ImageIcon analyticsIcon = new ImageIcon("data/images/analytics_16.png");
+    ImageIcon checkIcon = new ImageIcon("data/images/check2_16.png");
+    ImageIcon errorIcon = new ImageIcon("data/images/cancel_16.png");
+    private HoaDonPhongDAO hdPhongDAO = new HoaDonPhongDAO();
 
     public ThongKeKhachHang_UI() {
         try {
@@ -93,7 +95,7 @@ public class ThongKeKhachHang_UI extends JFrame implements ActionListener {
 
         // mã hóa đơn phòng
         String[] cols = { "Mã HD", "Mã phòng", "Loại phòng", "Giá phòng", "Ngày đến", "Ngày Trả", "Số Ngày", "Số giờ",
-                "Thành tiền", "Mã KH", "Tên KH", "Mã NV", "Tên NV" };
+                "Thành tiền", "Mã KH", "Tên KH" };
         modelTable = new DefaultTableModel(cols, 0) {
             // khóa sửa dữ liệu trực tiếp trên table
             @Override
@@ -216,7 +218,6 @@ public class ThongKeKhachHang_UI extends JFrame implements ActionListener {
             Phong phong = item.getPhong();
             LoaiPhong lPhong = item.getPhong().getLoaiPhong();
             KhachHang kh = item.getKhachHang();
-            NhanVien nv = item.getNhanVien();
             String ngayGioNhan = formatDate(item.getNgayGioNhan());
             String ngayGioTra = formatDate(item.getNgayGioTra());
             ArrayList<Timestamp> ngayGio = getDateTimeByMaHD(item.getMaHD());
@@ -224,9 +225,9 @@ public class ThongKeKhachHang_UI extends JFrame implements ActionListener {
             int soNgay = (int) tinhSoNgay(item.getNgayGioNhan(), item.getNgayGioTra());
             Double thanhTien = lPhong.getDonGia() * soNgay;
             sum += thanhTien;
-            modelTable.addRow(new Object[] { item.getMaHD(), phong.getMaPhong(), lPhong.getTenLoaiPhong(),
-                    lPhong.getDonGia(), ngayGioNhan, ngayGioTra, soNgay, soGio, thanhTien, kh.getMaKH(), kh.getTenKH(),
-                    nv.getMaNV(), nv.getTenNV() });
+            modelTable.addRow(
+                    new Object[] { item.getMaHD(), phong.getMaPhong(), lPhong.getTenLoaiPhong(), lPhong.getDonGia(),
+                            ngayGioNhan, ngayGioTra, soNgay, soGio, thanhTien, kh.getMaKH(), kh.getTenKH() });
         }
         txtThanhTien.setText(sum.toString());
     }
@@ -239,10 +240,13 @@ public class ThongKeKhachHang_UI extends JFrame implements ActionListener {
     }
 
     private void showMessage(String message, int type) {
-        if (type == SUCCESS)
+        if (type == SUCCESS) {
             lbShowMessages.setForeground(Color.GREEN);
-        else
+            lbShowMessages.setIcon(checkIcon);
+        } else {
             lbShowMessages.setForeground(Color.RED);
+            lbShowMessages.setIcon(errorIcon);
+        }
         lbShowMessages.setText(message);
     }
 

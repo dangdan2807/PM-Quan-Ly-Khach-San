@@ -6,7 +6,6 @@ public class HoaDonDV {
 	private int maHDDV;
 	private Date ngayGioDat;
 
-	private NhanVien nhanVien;
 	private KhachHang khachHang;
 
 	public int getMaHDDV() {
@@ -25,14 +24,6 @@ public class HoaDonDV {
 		this.ngayGioDat = ngayGioDat;
 	}
 
-	public NhanVien getNhanVien() {
-		return nhanVien;
-	}
-
-	public void setNhanVien(NhanVien nhanVien) {
-		this.nhanVien = nhanVien;
-	}
-
 	public KhachHang getKhachHang() {
 		return khachHang;
 	}
@@ -41,10 +32,9 @@ public class HoaDonDV {
 		this.khachHang = khachHang;
 	}
 
-	public HoaDonDV(int maHDDV, Date ngayGioDat, NhanVien nhanVien, KhachHang khachHang) {
+	public HoaDonDV(int maHDDV, Date ngayGioDat, KhachHang khachHang) {
 		this.maHDDV = maHDDV;
 		this.ngayGioDat = ngayGioDat;
-		this.nhanVien = nhanVien;
 		this.khachHang = khachHang;
 	}
 
