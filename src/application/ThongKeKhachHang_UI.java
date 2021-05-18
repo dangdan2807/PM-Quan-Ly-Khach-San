@@ -5,6 +5,7 @@ import java.awt.event.*;
 import java.sql.*;
 import java.text.*;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import javax.swing.*;
 import javax.swing.table.*;
@@ -91,7 +92,7 @@ public class ThongKeKhachHang_UI extends JFrame implements ActionListener {
         pnTable.setLayout(new BorderLayout(0, 0));
 
         // mã hóa đơn phòng
-        String[] cols = { "Mã HD", "Mã phòng", "Loại phòng", "Giá phòng", "Ngày đến", "Ngày Trả", "Số giờ/Ngày",
+        String[] cols = { "Mã HD", "Mã phòng", "Loại phòng", "Giá phòng", "Ngày đến", "Ngày Trả", "Số Ngày",
                 "Thành tiền", "Mã KH", "Tên KH", "Mã NV", "Tên NV" };
         modelTable = new DefaultTableModel(cols, 0) {
             // khóa sửa dữ liệu trực tiếp trên table
@@ -218,11 +219,12 @@ public class ThongKeKhachHang_UI extends JFrame implements ActionListener {
             NhanVien nv = item.getNhanVien();
             String ngayGioNhan = formatDate(item.getNgayGioNhan());
             String ngayGioTra = formatDate(item.getNgayGioTra());
-            // Double thanhTien = lPhong.getDonGia() * ;
-            // sum += thanhTien;
+            int soNgay = (int) tinhSoNgay(item.getNgayGioNhan(), item.getNgayGioTra());
+            Double thanhTien = lPhong.getDonGia() * soNgay;
+            sum += thanhTien;
             modelTable.addRow(new Object[] { item.getMaHD(), phong.getMaPhong(), lPhong.getTenLoaiPhong(),
-                    lPhong.getDonGia(), ngayGioNhan, ngayGioTra, "", "", kh.getMaKH(), kh.getTenKH(), nv.getMaNV(),
-                    nv.getTenNV() });
+                    lPhong.getDonGia(), ngayGioNhan, ngayGioTra, soNgay, thanhTien, kh.getMaKH(), kh.getTenKH(),
+                    nv.getMaNV(), nv.getTenNV() });
         }
         txtThanhTien.setText(sum.toString());
     }
@@ -240,5 +242,21 @@ public class ThongKeKhachHang_UI extends JFrame implements ActionListener {
         else
             lbShowMessages.setForeground(Color.RED);
         lbShowMessages.setText(message);
+    }
+
+    private long tinhSoNgay(Date tuNgay, Date denNgay) {
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        long millis = System.currentTimeMillis();
+        if (tuNgay == null) {
+            tuNgay = new Date(millis);
+        }
+        if (denNgay == null) {
+            denNgay = new Date(millis);
+        }
+        cal1.setTime(tuNgay);
+        cal2.setTime(denNgay);
+        long result = (cal2.getTime().getTime() - cal1.getTime().getTime()) / (24 * 3600 * 1000);
+        return result;
     }
 }
