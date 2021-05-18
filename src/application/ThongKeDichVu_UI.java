@@ -20,10 +20,12 @@ public class ThongKeDichVu_UI extends JFrame implements ActionListener {
     private kDatePicker dpTuNgay, dpDenNgay;
     private JTable table;
     private DefaultTableModel modelTable;
-    ImageIcon analyticsIcon = new ImageIcon("data/images/analytics_16.png");
     private JButton btnThongKe;
     private JLabel lbShowMessages;
     private final int SUCCESS = 1, ERROR = 0;
+    ImageIcon analyticsIcon = new ImageIcon("data/images/analytics_16.png");
+    ImageIcon checkIcon = new ImageIcon("data/images/check2_16.png");
+    ImageIcon errorIcon = new ImageIcon("data/images/cancel_16.png");
     ChiTietDVDAO chiTietDVDAO = new ChiTietDVDAO();
 
     public ThongKeDichVu_UI() {
@@ -232,10 +234,13 @@ public class ThongKeDichVu_UI extends JFrame implements ActionListener {
     }
 
     private void showMessage(String message, int type) {
-        if (type == SUCCESS)
+        if (type == SUCCESS) {
             lbShowMessages.setForeground(Color.GREEN);
-        else
+            lbShowMessages.setIcon(checkIcon);
+        } else {
             lbShowMessages.setForeground(Color.RED);
+            lbShowMessages.setIcon(errorIcon);
+        }
         lbShowMessages.setText(message);
     }
 }
