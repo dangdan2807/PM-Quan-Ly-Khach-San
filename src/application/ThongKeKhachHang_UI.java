@@ -265,6 +265,13 @@ public class ThongKeKhachHang_UI extends JFrame implements ActionListener {
     private long tinhSoGio(Timestamp tuNgay, Timestamp denNgay) {
         Calendar cal1 = Calendar.getInstance();
         Calendar cal2 = Calendar.getInstance();
+        long millis = System.currentTimeMillis();
+        if (tuNgay == null) {
+            tuNgay = new Timestamp(millis);
+        }
+        if (denNgay == null) {
+            denNgay = new Timestamp(millis);
+        }
         cal1.setTime(tuNgay);
         cal2.setTime(denNgay);
         long day = (cal2.getTime().getTime() - cal1.getTime().getTime()) / (24 * 3600 * 1000);
