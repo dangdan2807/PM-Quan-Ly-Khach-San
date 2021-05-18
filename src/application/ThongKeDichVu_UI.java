@@ -211,12 +211,12 @@ public class ThongKeDichVu_UI extends JFrame implements ActionListener {
     private void DocDuLieuVaoTable(ArrayList<ChiTietDV> dataList) {
         Double sum = 0.0;
         for (ChiTietDV item : dataList) {
-            HoaDonDV hoaDonDv = item.getMaHDDV();
-            DichVu dv = item.getMaDV();
-            KhachHang kh = item.getMaHDDV().getKhachHang();
-            NhanVien nv = item.getMaHDDV().getNhanVien();
+            HoaDonDV hoaDonDv = item.getHoaDonDV();
+            DichVu dv = item.getDichVu();
+            KhachHang kh = item.getHoaDonDV().getKhachHang();
+            NhanVien nv = item.getHoaDonDV().getNhanVien();
             String date = formatDate(hoaDonDv.getNgayGioDat());
-            Double thanhTien = item.getSoLuong() * item.getMaDV().getDonGia();
+            Double thanhTien = item.getSoLuong() * item.getDichVu().getDonGia();
             sum += thanhTien;
             modelTable.addRow(new Object[] { hoaDonDv.getMaHDDV(), dv.getMaDV(), dv.getTenDV(), item.getSoLuong(),
                     dv.getDonGia(), thanhTien, date, kh.getMaKH(), kh.getTenKH(), nv.getMaNV(), nv.getTenNV() });
