@@ -71,10 +71,12 @@ GO
 
 CREATE TABLE HoaDonPhong
 (
-	MaHD Nvarchar(100) PRIMARY KEY,
+	MaHD int identity PRIMARY KEY,
 	MaKH int REFERENCES KhachHang(MaKH),
 	-- MaNV int REFERENCES NhanVien(MaNV),
 	MaPhong Nvarchar(100) REFERENCES Phong(MaPhong),
+	-- 0. trống | 1. đã đặt | 2.có người ở
+	tinhTrang int,
 	NgayGioNhan DATETIME,
 	NgayGioTra DATETIME
 )
@@ -144,25 +146,26 @@ GO
 INSERT INTO dbo.Phong
 	(MaPhong, SoGiuong, SucChua, TinhTrang, ViTri, MaLoaiPhong)
 VALUES
-	(N'P101',1, 2, 1, N'Tầng 1', 1),
-	(N'P102',1, 2, 1, N'Tầng 1', 1),
-	(N'P103',2, 4, 1, N'Tầng 1', 2),
-	(N'P201',2, 4, 2, N'Tầng 2', 2),
-	(N'P202',2, 2, 3, N'Tầng 2', 2),
-	(N'P203',1, 1, 3, N'Tầng 2', 1)
+	(N'P101',1, 2, 0, N'Tầng 1', 1),
+	(N'P102',1, 2, 0, N'Tầng 1', 1),
+	(N'P103',2, 4, 0, N'Tầng 1', 2),
+	(N'P201',2, 4, 1, N'Tầng 2', 2),
+	(N'P202',2, 2, 2, N'Tầng 2', 2),
+	(N'P203',1, 1, 2, N'Tầng 2', 1)
 GO
 
 INSERT INTO dbo.HoaDonPhong
-	(MaHD, MaKH, MaPhong, NgayGioNhan, NgayGioTra)
+	(MaKH, MaPhong, tinhTrang, NgayGioNhan, NgayGioTra)
 VALUES
-	(N'HD01', 2, N'P102', '2021-05-02 07:30:00', '2021-05-05 08:30:00'),
-	(N'HD02', 1, N'P101', '2021-05-16 18:30:00', '2021-05-16 21:30:00'),
-	(N'HD03', 3, N'P103', '2021-05-16 08:30:00', null)
+	(2, N'P102', 0, '2021-05-02 07:30:00', '2021-05-05 08:30:00'),
+	(1, N'P101', 1, '2021-05-16 18:30:00', '2021-05-16 21:30:00'),
+	(3, N'P103', 2, '2021-05-16 08:30:00', null)
 GO
 
 
 -- drop database KhachSan
 
+-- Chi tiết hóa đơn DV
 CREATE PROC UDP_SearchCTHDByDate
 	@tuNgay DATETIME,
 	@denNgay DATETIME
@@ -227,12 +230,13 @@ BEGIN
 END
 GO
 
+-- Hóa đơn phòng
 CREATE PROC UDP_SearchHDPhongByDate
 	@tuNgay DATETIME,
 	@denNgay DATETIME
 AS
 BEGIN
-	SELECT hd.MaHD, hd.NgayGioNhan, hd.NgayGioTra, hd.MaPhong, lp.MaLoaiPhong, lp.TenLoaiPhong, lp.DonGia, kh.MaKH, kh.TenKH
+	SELECT hd.MaHD, hd.TinhTrang, hd.NgayGioNhan, hd.NgayGioTra, hd.MaPhong, lp.MaLoaiPhong, lp.TenLoaiPhong, lp.DonGia, kh.MaKH, kh.TenKH
 	FROM dbo.HoaDonPhong hd
 		JOIN dbo.Phong p ON hd.MaPhong = p.MaPhong
 		JOIN dbo.LoaiPhong lp ON lp.MaLoaiPhong = p.MaLoaiPhong
@@ -247,7 +251,7 @@ CREATE PROC UDP_SearchHDPhongByMaKH
 	@denNgay DATETIME
 AS
 BEGIN
-	SELECT hd.MaHD, hd.NgayGioNhan, hd.NgayGioTra, hd.MaPhong, lp.MaLoaiPhong, lp.TenLoaiPhong, lp.DonGia, kh.MaKH, kh.TenKH
+	SELECT hd.MaHD, hd.TinhTrang, hd.NgayGioNhan, hd.NgayGioTra, hd.MaPhong, lp.MaLoaiPhong, lp.TenLoaiPhong, lp.DonGia, kh.MaKH, kh.TenKH
 	FROM dbo.HoaDonPhong hd
 		JOIN dbo.Phong p ON hd.MaPhong = p.MaPhong
 		JOIN dbo.LoaiPhong lp ON lp.MaLoaiPhong = p.MaLoaiPhong
@@ -263,7 +267,7 @@ CREATE PROC UDP_SearchHDPhongByTenKH
 AS
 BEGIN
 	SET @TenKH = '%' + @TenKH +'%'
-	SELECT hd.MaHD, hd.NgayGioNhan, hd.NgayGioTra, hd.MaPhong, lp.MaLoaiPhong, lp.TenLoaiPhong, lp.DonGia, kh.MaKH, kh.TenKH
+	SELECT hd.MaHD, hd.TinhTrang, hd.NgayGioNhan, hd.NgayGioTra, hd.MaPhong, lp.MaLoaiPhong, lp.TenLoaiPhong, lp.DonGia, kh.MaKH, kh.TenKH
 	FROM dbo.HoaDonPhong hd
 		JOIN dbo.Phong p ON hd.MaPhong = p.MaPhong
 		JOIN dbo.LoaiPhong lp ON lp.MaLoaiPhong = p.MaLoaiPhong
@@ -280,7 +284,7 @@ CREATE PROC UDP_SearchHDPhongByMaKHAndTenKH
 AS
 BEGIN
 	SET @TenKH = '%' + @TenKH +'%'
-	SELECT hd.MaHD, hd.NgayGioNhan, hd.NgayGioTra, hd.MaPhong, lp.MaLoaiPhong, lp.TenLoaiPhong, lp.DonGia, kh.MaKH, kh.TenKH
+	SELECT hd.MaHD, hd.TinhTrang, hd.NgayGioNhan, hd.NgayGioTra, hd.MaPhong, lp.MaLoaiPhong, lp.TenLoaiPhong, lp.DonGia, kh.MaKH, kh.TenKH
 	FROM dbo.HoaDonPhong hd
 		JOIN dbo.Phong p ON hd.MaPhong = p.MaPhong
 		JOIN dbo.LoaiPhong lp ON lp.MaLoaiPhong = p.MaLoaiPhong

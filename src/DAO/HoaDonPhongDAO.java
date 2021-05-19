@@ -25,13 +25,14 @@ public class HoaDonPhongDAO {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 int maHD = rs.getInt("MaHD");
+                int tinhTrang = rs.getInt("TinhTrang");
                 Date ngayGioNhan = rs.getDate("NgayGioNhan");
                 Date ngayGioTra = rs.getDate("NgayGioTra");
                 Phong phong = new Phong(rs.getInt("MaPhong"));
                 KhachHang khachHang = new KhachHang(rs.getInt("MaKH"));
 
                 // HoaDonPhong ctdv = new HoaDonPhong(rs);
-                HoaDonPhong hdp = new HoaDonPhong(maHD, ngayGioNhan, ngayGioTra, phong, khachHang);
+                HoaDonPhong hdp = new HoaDonPhong(maHD, tinhTrang,ngayGioNhan, ngayGioTra, phong, khachHang);
                 dataList.add(hdp);
             }
         } catch (SQLException e) {
@@ -76,8 +77,8 @@ public class HoaDonPhongDAO {
 
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                HoaDonPhong ctdv = new HoaDonPhong(rs);
-                dataList.add(ctdv);
+                HoaDonPhong hdP = new HoaDonPhong(rs);
+                dataList.add(hdP);
             }
         } catch (SQLException e) {
             e.printStackTrace();

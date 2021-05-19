@@ -260,6 +260,6 @@ public class ThongKeKhachHang_UI extends JFrame implements ActionListener {
         cal1.setTime(tuNgay);
         cal2.setTime(denNgay);
         long result = (cal2.getTime().getTime() - cal1.getTime().getTime()) / (24 * 3600 * 1000);
-        return result;
+        return result <= 0 ? 1 : result;
     }
 }
