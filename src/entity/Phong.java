@@ -23,7 +23,7 @@ public class Phong {
         this.loaiPhong = loaiPhong;
     }
 
-    public Phong(int maPhong) {
+    public Phong(String maPhong) {
         PhongDAO phong_dao = new PhongDAO();
         Phong phong = phong_dao.getPhongByMaPhong(maPhong);
         this.maPhong = phong.getMaPhong();

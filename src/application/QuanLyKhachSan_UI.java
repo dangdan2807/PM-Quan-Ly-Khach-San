@@ -2,11 +2,13 @@ package application;
 
 import java.awt.*;
 import javax.swing.*;
+import javax.swing.event.*;
+
 import java.awt.event.*;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class QuanLyKhachSan_UI extends JFrame implements ActionListener {
+public class QuanLyKhachSan_UI extends JFrame implements ActionListener, ListSelectionListener{
     // thêm các page vô đây cho dễ nhớ
 
     private String[] nav = new String[] { "Trang chu", "Dat phong", "Quan ly hoa don phong", "Quan ly hoa don dich vu",
@@ -75,6 +77,7 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener {
         } else if (indx_nav == 1) { // trang đặt phòng
             pnMain = pageDatPhong.pnMain;
             pageDatPhong.renderDSPhong();
+            handleEventTraPhong();
             // pageDatPhong.renderHoaDon();
         } else if (indx_nav == 2) { // hóa đơn phòng
             pnMain = pageHDPhong.pnMain;
@@ -235,10 +238,28 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener {
         }
     }
 
+    private void handleEventTraPhong() {
+        pageDatPhong.tblDatPhong.getSelectionModel().addListSelectionListener(
+            new ListSelectionListener(){
+                public void valueChanged(ListSelectionEvent e) {
+                    System.out.println(pageDatPhong.btn_TraPhong);
+                    pageDatPhong.btn_TraPhong.addActionListener(new ActionListener(){
+                        public void actionPerformed(ActionEvent e) {
+                            System.out.println("-> Thanh toan");
+                            indx_nav = 2;
+                            createGUI();
+                        }
+                    });
+                }
+            }
+        );
+
+        
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         Object obj = e.getSource();
-        System.out.println("chuyen trang");
 
         if (obj == itemTrangChu) { // trang chủ
             System.out.println("-> Trang chu");
@@ -287,5 +308,13 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener {
     public void print(String msg){
         System.out.println(msg);
     }
+
+    @Override
+    public void valueChanged(ListSelectionEvent e) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    // public void check
 
 }

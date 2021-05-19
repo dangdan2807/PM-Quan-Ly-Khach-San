@@ -28,7 +28,7 @@ public class HoaDonPhongDAO {
                 int tinhTrang = rs.getInt("TinhTrang");
                 Date ngayGioNhan = rs.getDate("NgayGioNhan");
                 Date ngayGioTra = rs.getDate("NgayGioTra");
-                Phong phong = new Phong(rs.getInt("MaPhong"));
+                Phong phong = new Phong(rs.getString("MaPhong"));
                 KhachHang khachHang = new KhachHang(rs.getInt("MaKH"));
 
                 // HoaDonPhong ctdv = new HoaDonPhong(rs);
@@ -139,18 +139,127 @@ public class HoaDonPhongDAO {
             ConnectDB.getInstance();
             Connection conn = ConnectDB.getConnection();
 
-            String sql = "insert into HoaDonPhong values(?, ?, ?, ?, ?)";
+            // kiểm tra xem có thể đặt không
+            String sql = "select * from HoaDonPhong where MaPhong = ? and tinhTrang != 2";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, hdp.getPhong().getMaPhong());
+            ResultSet rs = stmt.executeQuery();
+            boolean flag = true;
+            while (rs.next()) {
+                if(compareDate(hdp.getNgayGioTra(), rs.getDate("NgayGioNhan")) == -1){
+                    continue;
+                }
+                if(compareDate(hdp.getNgayGioNhan(), rs.getDate("NgayGioTra")) == 1){
+                    continue;
+                }
+                flag = false;
+                System.out.println(compareDate(hdp.getNgayGioTra(), rs.getDate("NgayGioNhan")));
+                System.out.println(compareDate(hdp.getNgayGioNhan(), rs.getDate("NgayGioTra")));
+                System.out.println(rs.getDate("NgayGioNhan"));
+                System.out.println(rs.getDate("NgayGioTra"));
+            }
+
+            if(!flag){
+                return false;
+            }
+            sql = "insert into HoaDonPhong values(?, ?, ?, ?, ?)";
             PreparedStatement statement = conn.prepareStatement(sql);
             statement.setInt(1, hdp.getKhachHang().getMaKH());
-            statement.setInt(2, 1);
-            statement.setString(3, hdp.getPhong().getMaPhong());
-            statement.setDate(4, hdp.getNgayGioNhan());
-            statement.setDate(5, hdp.getNgayGioTra());
+            statement.setString(2, hdp.getPhong().getMaPhong());
+            statement.setDate(3, hdp.getNgayGioNhan());
+            statement.setDate(4, hdp.getNgayGioTra());
+            statement.setInt(5, hdp.getTinhTrang());
             n = statement.executeUpdate();
+
+            // insert thành công
+            if(n > 0){
+                // update tình trạng phòng
+                PhongDAO phong_dao = new PhongDAO();
+                Phong phong = hdp.getPhong();
+                phong.setTinhTrang(1);// đã đặt
+                phong_dao.update(phong);
+            }
         }catch(SQLException e){
             e.printStackTrace();
         }
         return n > 0;
+    }
+
+    public boolean delete(int maHD) {
+        int n = 0;
+        PreparedStatement stmt = null;
+        ConnectDB.getInstance();
+        Connection con = ConnectDB.getConnection();
+        String query = "delete from dbo.HoaDonPhong where MaHD = ?";
+        try {
+            stmt = con.prepareStatement(query);
+            stmt.setInt(1, maHD);
+
+            n = stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                stmt.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return n > 0;
+    }
+
+    public boolean nhanPhong(int maHD) {
+        int n = 0;
+        PreparedStatement stmt = null;
+        ConnectDB.getInstance();
+        Connection con = ConnectDB.getConnection();
+        String query = "update dbo.HoaDonPhong set tinhTrang = 1 Where MaHD = ?";
+        try {
+            stmt = con.prepareStatement(query);
+            stmt.setInt(1, maHD);
+            n = stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                stmt.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return n > 0;
+    }
+
+    public boolean traPhong(int maHD) {
+        int n = 0;
+        PreparedStatement stmt = null;
+        ConnectDB.getInstance();
+        Connection con = ConnectDB.getConnection();
+        String query = "update dbo.HoaDonPhong set tinhTrang = 2 Where MaHD = ?";
+        try {
+            stmt = con.prepareStatement(query);
+            stmt.setInt(1, maHD);
+            n = stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                stmt.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return n > 0;
+    }
+
+    public int compareDate(Date d1, Date d2){
+        if(d1.toString().equals(d2.toString()))
+            return 0;
+        
+        if(d1.before(d2))
+            return -1;
+        
+        return 1;
     }
 
     public ArrayList<Timestamp> getDateTimeHDPhongByMaHD(int maHD) {
@@ -172,5 +281,29 @@ public class HoaDonPhongDAO {
             e.printStackTrace();
         }
         return dataList;
+    }
+
+    public int getLatestID() {
+        int id = 0;
+        ConnectDB.getInstance();
+        Statement stmt = null;
+        try {
+            Connection con = ConnectDB.getConnection();
+            String sql = "SELECT * FROM dbo.HoaDonPhong";
+            stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+
+            ResultSet rs = stmt.executeQuery(sql);
+            rs.last();
+            id = rs.getInt("MaHD");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return id;
     }
 }
