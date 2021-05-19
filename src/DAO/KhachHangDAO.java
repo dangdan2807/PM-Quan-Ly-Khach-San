@@ -31,6 +31,12 @@ public class KhachHangDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         return dataList;
     }
@@ -49,6 +55,12 @@ public class KhachHangDAO {
             id = rs.getInt("MaKH");
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         return id;
     }
@@ -59,7 +71,7 @@ public class KhachHangDAO {
         PreparedStatement stmt = null;
         try {
             Connection con = ConnectDB.getConnection();
-            String sql = "SELECT * FROM dbo.KhachHang dv where dv.TenKH like ?";
+            String sql = "SELECT * FROM dbo.KhachHang dv where dv.TenKH like % ? %";
             stmt = con.prepareStatement(sql);
             stmt.setString(1, "%" + name + "%");
 
@@ -70,6 +82,12 @@ public class KhachHangDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         return dataList;
     }

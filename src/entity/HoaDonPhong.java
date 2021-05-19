@@ -9,7 +9,21 @@ public class HoaDonPhong {
 
     private Phong phong;
     private KhachHang khachHang;
-    private NhanVien nhanVien;
+
+    public HoaDonPhong(int maHD, Date ngayGioNhan, Date ngayGioTra, Phong phong, KhachHang khachHang) {
+        this.maHD = maHD;
+        this.ngayGioNhan = ngayGioNhan;
+        this.ngayGioTra = ngayGioTra;
+        this.phong = phong;
+        this.khachHang = khachHang;
+    }
+
+    public HoaDonPhong(ResultSet rs) throws SQLException {
+        this(rs.getInt("MaHD"), rs.getDate("NgayGioNhan"), rs.getDate("NgayGioTra"),
+                new Phong(rs.getString("MaPhong"),
+                        new LoaiPhong(rs.getInt("MaLoaiPhong"), rs.getString("TenLoaiPhong"), rs.getDouble("DonGia"))),
+                new KhachHang(rs.getInt("MaKH"), rs.getString("TenKH")));
+    }
 
     public int getMaHD() {
         return maHD;
@@ -51,52 +65,5 @@ public class HoaDonPhong {
         this.khachHang = khachHang;
     }
 
-    public NhanVien getNhanVien() {
-        return nhanVien;
-    }
-
-    public void setNhanVien(NhanVien nhanVien) {
-        this.nhanVien = nhanVien;
-    }
-
-    public HoaDonPhong(int maHD, Date ngayGioNhan, Date ngayGioTra, Phong phong, KhachHang khachHang,
-            NhanVien nhanVien) {
-        this.maHD = maHD;
-        this.ngayGioNhan = ngayGioNhan;
-        this.ngayGioTra = ngayGioTra;
-        this.phong = phong;
-        this.khachHang = khachHang;
-        this.nhanVien = nhanVien;
-    }
-
-    public HoaDonPhong(ResultSet rs) throws SQLException {
-        this(rs.getInt("MaHD"), rs.getDate("NgayGioNhan"), rs.getDate("NgayGioTra"),
-                new Phong(rs.getInt("MaPhong"),
-                        new LoaiPhong(rs.getInt("MaLoaiPhong"), rs.getString("TenLoaiPhong"), rs.getDouble("DonGia"))),
-                new KhachHang(rs.getInt("MaKH"), rs.getString("TenKH")),
-                new NhanVien(rs.getInt("MaNV"), rs.getString("TenNV")));
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + maHD;
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        HoaDonPhong other = (HoaDonPhong) obj;
-        if (maHD != other.maHD)
-            return false;
-        return true;
-    }
-
+    
 }

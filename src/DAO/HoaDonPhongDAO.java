@@ -29,10 +29,9 @@ public class HoaDonPhongDAO {
                 Date ngayGioTra = rs.getDate("NgayGioTra");
                 Phong phong = new Phong(rs.getInt("MaPhong"));
                 KhachHang khachHang = new KhachHang(rs.getInt("MaKH"));
-                NhanVien nhanVien = new NhanVien(rs.getInt("MaNV"));
 
                 // HoaDonPhong ctdv = new HoaDonPhong(rs);
-                HoaDonPhong hdp = new HoaDonPhong(maHD, ngayGioNhan, ngayGioTra, phong, khachHang, nhanVien);
+                HoaDonPhong hdp = new HoaDonPhong(maHD, ngayGioNhan, ngayGioTra, phong, khachHang);
                 dataList.add(hdp);
             }
         } catch (SQLException e) {
@@ -54,8 +53,8 @@ public class HoaDonPhongDAO {
 
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                HoaDonPhong ctdv = new HoaDonPhong(rs);
-                dataList.add(ctdv);
+                HoaDonPhong hdP = new HoaDonPhong(rs);
+                dataList.add(hdP);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -143,7 +142,7 @@ public class HoaDonPhongDAO {
             PreparedStatement statement = conn.prepareStatement(sql);
             statement.setInt(1, hdp.getKhachHang().getMaKH());
             statement.setInt(2, 1);
-            statement.setInt(3, hdp.getPhong().getMaPhong());
+            statement.setString(3, hdp.getPhong().getMaPhong());
             statement.setDate(4, hdp.getNgayGioNhan());
             statement.setDate(5, hdp.getNgayGioTra());
             n = statement.executeUpdate();
@@ -151,5 +150,26 @@ public class HoaDonPhongDAO {
             e.printStackTrace();
         }
         return n > 0;
+    }
+
+    public ArrayList<Timestamp> getDateTimeHDPhongByMaHD(int maHD) {
+        ArrayList<Timestamp> dataList = new ArrayList<Timestamp>();
+        ConnectDB.getInstance();
+        PreparedStatement stmt = null;
+        try {
+            Connection con = ConnectDB.getConnection();
+            String sql = "EXEC UDP_GetDateTimeHDPhongByMaHD ? ";
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, maHD);
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                dataList.add(rs.getTimestamp("NgayGioNhan"));
+                dataList.add(rs.getTimestamp("NgayGioTra"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return dataList;
     }
 }

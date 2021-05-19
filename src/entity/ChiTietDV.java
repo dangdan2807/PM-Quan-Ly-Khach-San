@@ -9,12 +9,20 @@ public class ChiTietDV {
     private HoaDonDV hoaDonDV;
     private DichVu dichVu;
 
+    public DichVu getDichVu() {
+        return dichVu;
+    }
+
+    public void setDichVu(DichVu dichVu) {
+        this.dichVu = dichVu;
+    }
+
     public int getSoLuong() {
         return soLuong;
     }
 
     public void setSoLuong(int soLuong) {
-        if (soLuong < 0)
+        if(soLuong < 0)
             soLuong = 0;
         this.soLuong = soLuong;
     }
@@ -27,14 +35,6 @@ public class ChiTietDV {
         this.hoaDonDV = hoaDonDV;
     }
 
-    public DichVu getDichVu() {
-        return dichVu;
-    }
-
-    public void setDichVu(DichVu dichVu) {
-        this.dichVu = dichVu;
-    }
-
     public ChiTietDV(int soLuong, HoaDonDV hoaDonDV, DichVu dichVu) {
         setSoLuong(soLuong);
         this.hoaDonDV = hoaDonDV;
@@ -44,7 +44,6 @@ public class ChiTietDV {
     public ChiTietDV(ResultSet rs) throws SQLException {
         this(rs.getInt("SoLuong"),
                 new HoaDonDV(rs.getInt("MaHDDV"), rs.getDate("ngayGioDat"),
-                        new NhanVien(rs.getInt("MaNV"), rs.getString("TenNV")),
                         new KhachHang(rs.getInt("MaKH"), rs.getString("TenKH"))),
                 new DichVu(rs.getInt("MaDV"), rs.getString("tenDV"), rs.getDouble("donGia")));
     }

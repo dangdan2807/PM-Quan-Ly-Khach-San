@@ -27,7 +27,7 @@ public class DatPhong_UI extends JFrame implements ActionListener{
     public ArrayList<KhachHang> dskh;
     
     public JPanel pnMain;
-    public int maPhong = 0;
+    public String maPhong = "0";
     private ImageIcon icon_add = new ImageIcon("data/images/add.png");
     private ImageIcon icon_refresh = new ImageIcon("data/images/refresh.png");
     private ImageIcon icon_trash = new ImageIcon("data/images/trash.png");
@@ -277,7 +277,7 @@ public class DatPhong_UI extends JFrame implements ActionListener{
         
         for(int i=0; i<dsp_avail.size(); i++){
             Phong phong = dsp_avail.get(i);
-            int maPhong = phong.getMaPhong();
+            String maPhong = phong.getMaPhong();
             String tenLoaiPhong = phong.getLoaiPhong().getTenLoaiPhong();
             int sucChua = phong.getSucChua();
             int soGiuong = phong.getSoGiuong();
@@ -286,7 +286,30 @@ public class DatPhong_UI extends JFrame implements ActionListener{
             // render data
             modelAvail.addRow(new Object[]{maPhong, tenLoaiPhong, sucChua, soGiuong, viTri, donGia});
             modelMaPhong.addElement(String.valueOf(maPhong));
-            if(this.maPhong == maPhong){
+            if(this.maPhong.equals(maPhong)){
+                cboMaPhong.setSelectedIndex(i);
+                tblAvail.addRowSelectionInterval(i, i);
+            }
+        }
+    }
+
+    public void renderDSPhong(){
+        // clear
+        modelAvail.getDataVector().removeAllElements();
+        modelMaPhong.removeAllElements();
+        
+        for(int i=0; i<dsp.size(); i++){
+            Phong phong = dsp.get(i);
+            String maPhong = phong.getMaPhong();
+            String tenLoaiPhong = phong.getLoaiPhong().getTenLoaiPhong();
+            int sucChua = phong.getSucChua();
+            int soGiuong = phong.getSoGiuong();
+            String viTri = phong.getViTri();
+            Double donGia = phong.getLoaiPhong().getDonGia();
+            // render data
+            modelAvail.addRow(new Object[]{maPhong, tenLoaiPhong, sucChua, soGiuong, viTri, donGia});
+            modelMaPhong.addElement(String.valueOf(maPhong));
+            if(this.maPhong.equals(maPhong)){
                 cboMaPhong.setSelectedIndex(i);
                 tblAvail.addRowSelectionInterval(i, i);
             }
@@ -302,11 +325,10 @@ public class DatPhong_UI extends JFrame implements ActionListener{
             Phong phong = dshdp.get(i).getPhong();
             int maKhachHang = dshdp.get(i).getKhachHang().getMaKH();
             String tenKhachHang = dshdp.get(i).getKhachHang().getTenKH();
-            NhanVien nhanVien = dshdp.get(i).getNhanVien();
             modelDatPhong.addRow(
                 new Object[]{maHD, maKhachHang, tenKhachHang, 
                     phong.getMaPhong(), phong.getLoaiPhong().getTenLoaiPhong(), 
-                    ngayGioNhan, ngayGioTra, nhanVien.getTenNV(), "Đã đặt phòng"});
+                    ngayGioNhan, ngayGioTra, "Đã đặt phòng"});
         }
     }
 
@@ -402,8 +424,7 @@ public class DatPhong_UI extends JFrame implements ActionListener{
             // insert hóa đơn phòng
 
             Phong phong = dsp_avail.get(cboMaPhong.getSelectedIndex());
-            NhanVien nhanVien = new NhanVien(0, "K");
-            HoaDonPhong hdp = new HoaDonPhong(0, tuNgay, denNgay, phong, khachHang, nhanVien);
+            HoaDonPhong hdp = new HoaDonPhong(0, tuNgay, denNgay, phong, khachHang);
             if(hoaDonPhong_dao.insert(hdp)){
                 JOptionPane.showMessageDialog(pnMain, "Đặt phòng thành công!");
             }else{

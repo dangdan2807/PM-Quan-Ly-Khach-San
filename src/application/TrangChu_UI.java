@@ -155,7 +155,7 @@ public class TrangChu_UI extends JFrame implements ActionListener{
             lbLoai.setForeground(Color.WHITE);
 
             JLabel lbIcon;
-            if(phong.getTinhTrang()){
+            if(phong.getTinhTrang() == 2){
                 btnPhong[i].setBackground(Color.red);
                 lbIcon = new JLabel(icon_red_close);
             }else{
@@ -200,7 +200,7 @@ public class TrangChu_UI extends JFrame implements ActionListener{
                     // pn_p_top.setLayout(new BoxLayout(pn_p_top, BoxLayout.Y_AXIS));
                     pn_p_top.setBorder(BorderFactory.createTitledBorder("Chi tiết phòng"));
 
-                    String tinhTrang = phong.getTinhTrang() ? "Đang ở" : "Có thể sử dụng";
+                    String tinhTrang = phong.getTinhTrang() == 2 ? "Đang ở" : "Có thể sử dụng";
                     pn_p_top.add(new JLabel("<html><p style='padding-left: 10px;'>Mã phòng: "+ phong.getMaPhong() +"</p></html>"));
                     pn_p_top.add(new JLabel("<html><p style='padding-left: 10px;'>Vị trí: "+ phong.getViTri() +"</p></html>"));
                     pn_p_top.add(new JLabel("<html><p style='padding-left: 10px;'>Số giường: "+ phong.getSoGiuong() +"</p></html>"));
@@ -211,7 +211,7 @@ public class TrangChu_UI extends JFrame implements ActionListener{
                     JPanel pn_p_bottom = new JPanel();
                     pn_p_main.add(pn_p_bottom);
                     
-                    if(phong.getTinhTrang()){
+                    if(phong.getTinhTrang() == 2){
                         pn_p_bottom.add(btn_ThanhToan[j]);
                         
                     }else{
@@ -242,7 +242,7 @@ public class TrangChu_UI extends JFrame implements ActionListener{
     public int getCountAvailable(){
         int c = 0;
         for(int i = 0; i<dsp.size(); i++){
-            if(!dsp.get(i).getTinhTrang()){
+            if(dsp.get(i).getTinhTrang() == 0){
                 c++;
             }
         }
