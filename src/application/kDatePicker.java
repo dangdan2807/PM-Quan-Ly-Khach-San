@@ -66,6 +66,15 @@ public class kDatePicker extends JPanel implements ActionListener {
         txt.setText(DialogDatePicker.getToDay());
     }
 
+    // set giá trị về ngày hiện tại
+    public Date getValueToDay() throws ParseException {
+        String strDate = DialogDatePicker.getToDay();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        java.util.Date date = sdf.parse(strDate);
+        Date sqlDate = new Date(date.getTime());
+        return sqlDate;
+    }
+
     // cập nhật giá trị với input java.sql.Date
     public void setValue(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");

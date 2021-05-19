@@ -94,7 +94,7 @@ public class ThongKeKhachHang_UI extends JFrame implements ActionListener {
         pnTable.setLayout(new BorderLayout(0, 0));
 
         // mã hóa đơn phòng
-        String[] cols = { "Mã HD", "Mã phòng", "Loại phòng", "Giá phòng", "Ngày đến", "Ngày Trả", "Số Ngày",
+        String[] cols = { "Mã HD", "Mã phòng", "Loại phòng", "Giá phòng", "Ngày CheckIn", "Ngày CheckOut", "Số Ngày",
                 "Thành tiền", "Mã KH", "Tên KH" };
         modelTable = new DefaultTableModel(cols, 0) {
             // khóa sửa dữ liệu trực tiếp trên table
@@ -105,9 +105,9 @@ public class ThongKeKhachHang_UI extends JFrame implements ActionListener {
         };
 
         table = new JTable(modelTable);
-        JScrollPane scpTableBCDV = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+        JScrollPane scpTableDV = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
                 JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-        pnTable.add(scpTableBCDV, BorderLayout.CENTER);
+        pnTable.add(scpTableDV, BorderLayout.CENTER);
 
         JPanel pnThongKe = new JPanel();
         pnThongKe.setBounds(10, 589, 972, 40);
