@@ -43,12 +43,12 @@ GO
 
 CREATE TABLE Phong
 (
-	MaPhong int identity PRIMARY KEY,
-	MaLoaiPhong int REFERENCES LoaiPhong(MaLoaiPhong),
+	MaPhong Nvarchar(100) PRIMARY KEY,
 	SucChua INT CHECK(SucChua > 0),
 	SoGiuong INT CHECK(SoGiuong > 0),
-	ViTri NVARCHAR(50),
-	TinhTrang BIT
+	ViTri NVARCHAR(100),
+	TinhTrang int,
+	MaLoaiPhong int REFERENCES LoaiPhong(MaLoaiPhong)
 )
 GO
 
@@ -71,10 +71,10 @@ GO
 
 CREATE TABLE HoaDonPhong
 (
-	MaHD int identity PRIMARY KEY,
+	MaHD Nvarchar(100) PRIMARY KEY,
 	MaKH int REFERENCES KhachHang(MaKH),
 	-- MaNV int REFERENCES NhanVien(MaNV),
-	MaPhong int REFERENCES Phong(MaPhong),
+	MaPhong Nvarchar(100) REFERENCES Phong(MaPhong),
 	NgayGioNhan DATETIME,
 	NgayGioTra DATETIME
 )
@@ -142,26 +142,27 @@ VALUES
 GO
 
 INSERT INTO dbo.Phong
-	(SoGiuong, SucChua, TinhTrang, ViTri, MaLoaiPhong)
+	(MaPhong, SoGiuong, SucChua, TinhTrang, ViTri, MaLoaiPhong)
 VALUES
-	(1, 2, 0, N'Tầng 1', 1),
-	(1, 2, 0, N'Tầng 1', 1),
-	(2, 4, 1, N'Tầng 1', 2),
-	(2, 4, 1, N'Tầng 2', 2),
-	(2, 2, 1, N'Tầng 2', 2),
-	(1, 1, 1, N'Tầng 2', 1)
+	(N'P101',1, 2, 1, N'Tầng 1', 1),
+	(N'P102',1, 2, 1, N'Tầng 1', 1),
+	(N'P103',2, 4, 1, N'Tầng 1', 2),
+	(N'P201',2, 4, 2, N'Tầng 2', 2),
+	(N'P202',2, 2, 3, N'Tầng 2', 2),
+	(N'P203',1, 1, 3, N'Tầng 2', 1)
 GO
 
 INSERT INTO dbo.HoaDonPhong
-	(MaKH, MaPhong, NgayGioNhan, NgayGioTra)
+	(MaHD, MaKH, MaPhong, NgayGioNhan, NgayGioTra)
 VALUES
-	(2, 2, '2021-04-02 07:30:00', '2021-05-02 08:30:00'),
-	(1, 1, '2021-05-16 18:30:00', '2021-05-16 21:30:00'),
-	(3, 3, '2021-05-16 08:30:00', null)
+	(N'HD01', 2, N'P102', '2021-05-02 07:30:00', '2021-05-05 08:30:00'),
+	(N'HD02', 1, N'P101', '2021-05-16 18:30:00', '2021-05-16 21:30:00'),
+	(N'HD03', 3, N'P103', '2021-05-16 08:30:00', null)
 GO
 
 
 -- drop database KhachSan
+
 CREATE PROC UDP_SearchCTHDByDate
 	@tuNgay DATETIME,
 	@denNgay DATETIME

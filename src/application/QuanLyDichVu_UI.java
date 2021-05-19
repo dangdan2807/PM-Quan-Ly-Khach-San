@@ -182,7 +182,7 @@ public class QuanLyDichVu_UI extends JFrame implements ActionListener, MouseList
             lbShowMessages.setText("");
         } else if (o.equals(btnThem)) {
             if (validData()) {
-                DichVu dv = getSelectedDataTable();
+                DichVu dv = getDataInTable();
                 try {
                     boolean result = dvDAO.create(dv);
                     int maDV = dvDAO.getLatestID();
@@ -199,7 +199,7 @@ public class QuanLyDichVu_UI extends JFrame implements ActionListener, MouseList
             }
         } else if (o.equals(btnSua)) {
             if (validData()) {
-                DichVu dv = getSelectedDataTable();
+                DichVu dv = getDataInTable();
                 int row = table.getSelectedRow();
                 try {
                     boolean result = dvDAO.update(dv);
@@ -215,7 +215,7 @@ public class QuanLyDichVu_UI extends JFrame implements ActionListener, MouseList
                 }
             }
         } else if (o.equals(btnXoa)) {
-            DichVu dv = getSelectedDataTable();
+            DichVu dv = getDataInTable();
             int row = table.getSelectedRow();
             try {
                 if (row == -1) {
@@ -367,7 +367,7 @@ public class QuanLyDichVu_UI extends JFrame implements ActionListener, MouseList
         return true;
     }
 
-    private DichVu getSelectedDataTable() {
+    private DichVu getDataInTable() {
         String ma = txtMaDV.getText().trim().equals("") ? "0" : txtMaDV.getText().trim();
         int maDV = Integer.parseInt(ma);
         String tenDV = txtTenDV.getText().trim();

@@ -60,7 +60,7 @@ public class HoaDonPhong {
 
     public HoaDonPhong(ResultSet rs) throws SQLException {
         this(rs.getInt("MaHD"), rs.getDate("NgayGioNhan"), rs.getDate("NgayGioTra"),
-                new Phong(rs.getInt("MaPhong"),
+                new Phong(rs.getString("MaPhong"),
                         new LoaiPhong(rs.getInt("MaLoaiPhong"), rs.getString("TenLoaiPhong"), rs.getDouble("DonGia"))),
                 new KhachHang(rs.getInt("MaKH"), rs.getString("TenKH")));
     }

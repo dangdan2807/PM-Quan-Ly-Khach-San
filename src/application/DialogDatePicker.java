@@ -171,7 +171,7 @@ public class DialogDatePicker extends JDialog implements ActionListener, ChangeL
         return (Date) cal.getTime();
     }
 
-    // lấy ngày hiện tại
+    // lấy ngày hiện tại dạng string
     public static String getToDay() {
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");

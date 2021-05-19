@@ -3,5 +3,5 @@
 .settings
 bin
 test
-src/application/testTinh2Ngay.java
 .vscode/*.json
+src/application/testTinh2Ngay.java

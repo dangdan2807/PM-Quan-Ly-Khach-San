@@ -1,5 +1,8 @@
 package entity;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class LoaiPhong {
     private int maLoaiPhong;
     private String tenLoaiPhong;
@@ -41,11 +44,15 @@ public class LoaiPhong {
         this(maLoaiPhong, "Chưa cập nhật", 0.0);
     }
 
+    public LoaiPhong(ResultSet rs) throws SQLException {
+        this(rs.getInt("MaLoaiPhong"), rs.getString("TenLoaiPhong"), rs.getDouble("DonGia"));
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + maLoaiPhong;
+        result = prime * result + ((tenLoaiPhong == null) ? 0 : tenLoaiPhong.hashCode());
         return result;
     }
 
@@ -58,9 +65,12 @@ public class LoaiPhong {
         if (getClass() != obj.getClass())
             return false;
         LoaiPhong other = (LoaiPhong) obj;
-        if (maLoaiPhong != other.maLoaiPhong)
+        if (tenLoaiPhong == null) {
+            if (other.tenLoaiPhong != null)
+                return false;
+        } else if (!tenLoaiPhong.equals(other.tenLoaiPhong))
             return false;
         return true;
     }
-    
+
 }

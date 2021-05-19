@@ -1,19 +1,22 @@
 package entity;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class Phong {
-    private int maPhong;
+    private String maPhong;
     private int sucChua;
     private int soGiuong;
     private String viTri;
-    private Boolean tinhTrang;
+    private int tinhTrang;
 
     private LoaiPhong loaiPhong;
 
-    public int getMaPhong() {
+    public String getMaPhong() {
         return maPhong;
     }
 
-    public void setMaPhong(int maPhong) {
+    public void setMaPhong(String maPhong) {
         this.maPhong = maPhong;
     }
 
@@ -45,11 +48,11 @@ public class Phong {
         this.viTri = viTri;
     }
 
-    public Boolean getTinhTrang() {
+    public int getTinhTrang() {
         return tinhTrang;
     }
 
-    public void setTinhTrang(Boolean tinhTrang) {
+    public void setTinhTrang(int tinhTrang) {
         this.tinhTrang = tinhTrang;
     }
 
@@ -61,7 +64,7 @@ public class Phong {
         this.loaiPhong = loaiPhong;
     }
 
-    public Phong(int maPhong, int sucChua, int soGiuong, String viTri, Boolean tinhTrang, LoaiPhong loaiPhong) {
+    public Phong(String maPhong, int sucChua, int soGiuong, String viTri, int tinhTrang, LoaiPhong loaiPhong) {
         this.maPhong = maPhong;
         setSucChua(sucChua);
         setSoGiuong(soGiuong);
@@ -70,30 +73,14 @@ public class Phong {
         this.loaiPhong = loaiPhong;
     }
 
-    public Phong(int maPhong, LoaiPhong loaiPhong) {
+    public Phong(ResultSet rs) throws SQLException {
+        this(rs.getString("MaPhong"), rs.getInt("SucChua"), rs.getInt("SoGiuong"), rs.getString("ViTri"),
+                rs.getInt("TinhTrang"),
+                new LoaiPhong(rs.getInt("MaLoaiPhong")));
+    }
+
+    public Phong(String maPhong, LoaiPhong loaiPhong) {
         this.maPhong = maPhong;
         this.loaiPhong = loaiPhong;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + maPhong;
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Phong other = (Phong) obj;
-        if (maPhong != other.maPhong)
-            return false;
-        return true;
     }
 }

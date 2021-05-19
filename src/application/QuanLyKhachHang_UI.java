@@ -213,7 +213,7 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
             if (validData()) {
                 KhachHang kh = null;
                 try {
-                    kh = getSelectedDataTable();
+                    kh = getDataInForm();
                 } catch (ParseException e2) {
                     e2.printStackTrace();
                 }
@@ -237,7 +237,7 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
             if (validData()) {
                 KhachHang kh = null;
                 try {
-                    kh = getSelectedDataTable();
+                    kh = getDataInForm();
                 } catch (ParseException e1) {
                     e1.printStackTrace();
                 }
@@ -262,7 +262,7 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
         } else if (o.equals(btnXoa)) {
             KhachHang kh = null;
             try {
-                kh = getSelectedDataTable();
+                kh = getDataInForm();
             } catch (ParseException e1) {
                 e1.printStackTrace();
             }
@@ -408,7 +408,7 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
                     return false;
                 }
             } catch (NumberFormatException ex) {
-                showMessage("Lỗi: Số lần đặt phòng phải nhập số.", txtSoLanDat);
+                showMessage("Lỗi: Số lần đặt phòng phải là số.", txtSoLanDat);
                 return false;
             }
         }
@@ -424,7 +424,7 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
         return true;
     }
 
-    private KhachHang getSelectedDataTable() throws ParseException {
+    private KhachHang getDataInForm() throws ParseException {
         String ma = txtMaKH.getText().trim().equals("") ? "0" : txtMaKH.getText().trim();
         int maKH = Integer.parseInt(ma);
         String tenKH = txtTenKH.getText().trim();
