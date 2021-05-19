@@ -4,13 +4,40 @@ import java.sql.*;
 import java.util.ArrayList;
 
 import connectDB.ConnectDB;
-import entity.HoaDonPhong;
+import entity.*;
 
 public class HoaDonPhongDAO {
     private static HoaDonPhongDAO instance = new HoaDonPhongDAO();
 
     public static HoaDonPhongDAO getInstance() {
         return instance;
+    }
+
+    public ArrayList<HoaDonPhong> getAllHDPhong() {
+        ArrayList<HoaDonPhong> dataList = new ArrayList<HoaDonPhong>();
+        ConnectDB.getInstance();
+        PreparedStatement stmt = null;
+        Connection con = ConnectDB.getConnection();
+        try {
+            String sql = "select * from HoaDonPhong";
+            stmt = con.prepareStatement(sql);
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                int maHD = rs.getInt("MaHD");
+                Date ngayGioNhan = rs.getDate("NgayGioNhan");
+                Date ngayGioTra = rs.getDate("NgayGioTra");
+                Phong phong = new Phong(rs.getInt("MaPhong"));
+                KhachHang khachHang = new KhachHang(rs.getInt("MaKH"));
+
+                // HoaDonPhong ctdv = new HoaDonPhong(rs);
+                HoaDonPhong hdp = new HoaDonPhong(maHD, ngayGioNhan, ngayGioTra, phong, khachHang);
+                dataList.add(hdp);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return dataList;
     }
 
     public ArrayList<HoaDonPhong> getListHDPhongByDate(Date tuNgay, Date denNgay) {
@@ -103,6 +130,26 @@ public class HoaDonPhongDAO {
             e.printStackTrace();
         }
         return dataList;
+    }
+
+    public boolean insert(HoaDonPhong hdp){
+        int n = 0;
+        try{
+            ConnectDB.getInstance();
+            Connection conn = ConnectDB.getConnection();
+
+            String sql = "insert into HoaDonPhong values(?, ?, ?, ?, ?)";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setInt(1, hdp.getKhachHang().getMaKH());
+            statement.setInt(2, 1);
+            statement.setString(3, hdp.getPhong().getMaPhong());
+            statement.setDate(4, hdp.getNgayGioNhan());
+            statement.setDate(5, hdp.getNgayGioTra());
+            n = statement.executeUpdate();
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return n > 0;
     }
 
     public ArrayList<Timestamp> getDateTimeHDPhongByMaHD(int maHD) {
