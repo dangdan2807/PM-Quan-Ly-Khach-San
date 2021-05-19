@@ -14,7 +14,7 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener, ListSel
     private String[] nav = new String[] { "Trang chu", "Dat phong", "Quan ly hoa don phong", "Quan ly hoa don dich vu",
             "Quan ly phong", "Quan ly dich vu", "Quan ly nhan vien", "Quan ly khach hang" };
     // index ở đây tương ứng với mảng trên
-    public int indx_nav = 0;
+    public int indx_nav = -1;
 
     // khai báo các lớp giao diện ở đây
     private TrangChu_UI pageTrangChu = new TrangChu_UI();
@@ -26,6 +26,7 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener, ListSel
     private ThongKeKhachHang_UI pageTKeKhachHang = new ThongKeKhachHang_UI();
     private HoaDonDichVu_UI pageHDDichVu = new HoaDonDichVu_UI();
     private QLPhong_UI pageQLPhong = new QLPhong_UI();
+    private MauDangNhap_UI pageLogin = new MauDangNhap_UI();
     // private QuanLy pageQuanLy = new QuanLy();
 
     private JPanel pnMain = pageTrangChu.pnMain;
@@ -70,6 +71,18 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener, ListSel
         this.repaint();
 
         // hiển thị các page ở đây
+        if(indx_nav == -1){ // login
+            menuBar.setVisible(false);
+            this.setSize(450, 350);
+            setLocationRelativeTo(null);
+            pnMain = pageLogin.pnMain;
+            this.add(pnMain, BorderLayout.CENTER);
+            this.revalidate();
+            this.repaint();
+            handleEventBtnLogin();
+            return;
+        }
+        setSize(1000, 700);
         if (indx_nav == 0) {// trang chủ
             pnMain = pageTrangChu.pnMain;
             handleEventTrangChu();
@@ -253,10 +266,30 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener, ListSel
                 }
             }
         );
-
-        
     }
 
+    private void handleEventBtnLogin() {
+        pageLogin.btnLogin.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if(pageLogin.txtUsername.getText().equals("admin") 
+                && pageLogin.txtPassword.getText().equals("admin")){
+                    setSize(1000, 700);
+                    setLocationRelativeTo(null);
+                    menuBar.setVisible(true);
+                    indx_nav = 0;
+                    createGUI();
+                }else{
+                    JOptionPane.showMessageDialog(pnMain, "Sai tài khoản hoặc mật khẩu");;
+                }
+            }
+        });
+
+        pageLogin.btnCancel.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+    }
     @Override
     public void actionPerformed(ActionEvent e) {
         Object obj = e.getSource();
