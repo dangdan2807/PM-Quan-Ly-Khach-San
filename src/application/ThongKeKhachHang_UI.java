@@ -94,7 +94,7 @@ public class ThongKeKhachHang_UI extends JFrame implements ActionListener {
         pnTable.setLayout(new BorderLayout(0, 0));
 
         // mã hóa đơn phòng
-        String[] cols = { "Mã HD", "Mã phòng", "Loại phòng", "Giá phòng", "Ngày đến", "Ngày Trả", "Số Ngày", "Số giờ",
+        String[] cols = { "Mã HD", "Mã phòng", "Loại phòng", "Giá phòng", "Ngày đến", "Ngày Trả", "Số Ngày",
                 "Thành tiền", "Mã KH", "Tên KH" };
         modelTable = new DefaultTableModel(cols, 0) {
             // khóa sửa dữ liệu trực tiếp trên table
@@ -220,14 +220,11 @@ public class ThongKeKhachHang_UI extends JFrame implements ActionListener {
             KhachHang kh = item.getKhachHang();
             String ngayGioNhan = formatDate(item.getNgayGioNhan());
             String ngayGioTra = formatDate(item.getNgayGioTra());
-            ArrayList<Timestamp> ngayGio = getDateTimeByMaHD(item.getMaHD());
-            int soGio = (int) tinhSoGio(ngayGio.get(0), ngayGio.get(1));
             int soNgay = (int) tinhSoNgay(item.getNgayGioNhan(), item.getNgayGioTra());
             Double thanhTien = lPhong.getDonGia() * soNgay;
             sum += thanhTien;
-            modelTable.addRow(
-                    new Object[] { item.getMaHD(), phong.getMaPhong(), lPhong.getTenLoaiPhong(), lPhong.getDonGia(),
-                            ngayGioNhan, ngayGioTra, soNgay, soGio, thanhTien, kh.getMaKH(), kh.getTenKH() });
+            modelTable.addRow(new Object[] { item.getMaHD(), phong.getMaPhong(), lPhong.getTenLoaiPhong(),
+                    lPhong.getDonGia(), ngayGioNhan, ngayGioTra, soNgay, thanhTien, kh.getMaKH(), kh.getTenKH() });
         }
         txtThanhTien.setText(sum.toString());
     }
@@ -264,28 +261,5 @@ public class ThongKeKhachHang_UI extends JFrame implements ActionListener {
         cal2.setTime(denNgay);
         long result = (cal2.getTime().getTime() - cal1.getTime().getTime()) / (24 * 3600 * 1000);
         return result;
-    }
-
-    private long tinhSoGio(Timestamp tuNgay, Timestamp denNgay) {
-        Calendar cal1 = Calendar.getInstance();
-        Calendar cal2 = Calendar.getInstance();
-        long millis = System.currentTimeMillis();
-        if (tuNgay == null) {
-            tuNgay = new Timestamp(millis);
-        }
-        if (denNgay == null) {
-            denNgay = new Timestamp(millis);
-        }
-        cal1.setTime(tuNgay);
-        cal2.setTime(denNgay);
-        long day = (cal2.getTime().getTime() - cal1.getTime().getTime()) / (24 * 3600 * 1000);
-        long gio = (cal2.getTime().getTime() - cal1.getTime().getTime()) / (3600 * 1000);
-        long gioCon = gio - day * 24;
-        return gioCon;
-    }
-
-    private ArrayList<Timestamp> getDateTimeByMaHD(int maHD) {
-        ArrayList<Timestamp> dataList = hdPhongDAO.getDateTimeHDPhongByMaHD(maHD);
-        return dataList;
     }
 }
