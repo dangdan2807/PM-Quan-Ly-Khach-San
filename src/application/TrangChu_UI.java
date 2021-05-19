@@ -39,7 +39,7 @@ public class TrangChu_UI extends JFrame implements ActionListener{
     public JButton[] btnPhong;
     public JButton[] btn_ThanhToan;
     public JButton[] btn_DatPhong;
-    public JFrame popup;
+    public JFrame popup = new JFrame();
     private JLabel lbBooking;
 
     public TrangChu_UI(){
@@ -199,6 +199,7 @@ public class TrangChu_UI extends JFrame implements ActionListener{
                 public void actionPerformed(ActionEvent e) {
                     // pnMain.setFocusable(false);
                     // pnMain.setVisible(false);
+                    popup.dispose();
                     popup = new JFrame();
                     popup.setTitle("Thông tin phòng");
                     popup.setSize(400, 200);
@@ -251,7 +252,7 @@ public class TrangChu_UI extends JFrame implements ActionListener{
         getCount();
         lbAvail.setText("Phòng trống (" + countAvail + ")");
         lbBooking.setText("Đã đặt (" + countBooking + ")");
-        lbUsing.setText("Đang ở (" + (dsp.size() - countUsing) + ")");
+        lbUsing.setText("Đang ở (" + countUsing + ")");
     }
 
     public void renderLoaiPhong(){

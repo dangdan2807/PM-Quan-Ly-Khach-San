@@ -608,12 +608,10 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener 
         int sucChua = Integer.parseInt(spinSucChua.getValue().toString());
         int soGiuong = Integer.parseInt(spinSoGiuong.getValue().toString());
         String viTri = txtViTri.getText().trim();
-        int tinhTrang = cboTinhTrang.getSelectedIndex() + 1;
+        int tinhTrang = cboTinhTrang.getSelectedIndex();
         String tenLPhong = cboLoaiPhong.getSelectedItem().toString();
         LoaiPhong loaiPhong = null;
-        System.out.println(tenLPhong);
         for (LoaiPhong item : dsLoaiPhong) {
-            System.out.println(item.getTenLoaiPhong());
             if (item.getTenLoaiPhong().contains(tenLPhong)) {
                 loaiPhong = item;
                 break;
@@ -626,11 +624,11 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener 
     private void DocDuLieuVaoTablePhong(ArrayList<Phong> dataList) {
         for (Phong item : dataList) {
             String tinhTrang = "";
-            if (item.getTinhTrang() == 1)
+            if (item.getTinhTrang() == 0)
                 tinhTrang = "Trống";
-            else if (item.getTinhTrang() == 2)
+            else if (item.getTinhTrang() == 1)
                 tinhTrang = "Đã được đặt";
-            else if (item.getTinhTrang() == 3)
+            else if (item.getTinhTrang() == 2)
                 tinhTrang = "Đã có người";
             int maLPhong = item.getLoaiPhong().getMaLoaiPhong();
             String tenLPhong = "";

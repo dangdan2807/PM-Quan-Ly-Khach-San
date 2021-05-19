@@ -4,7 +4,6 @@ import java.sql.*;
 import java.util.ArrayList;
 
 import connectDB.ConnectDB;
-import entity.LoaiPhong;
 import entity.Phong;
 
 public class PhongDAO {
