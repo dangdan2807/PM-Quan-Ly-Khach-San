@@ -132,4 +132,24 @@ public class HoaDonPhongDAO {
         }
         return dataList;
     }
+
+    public boolean insert(HoaDonPhong hdp){
+        int n = 0;
+        try{
+            ConnectDB.getInstance();
+            Connection conn = ConnectDB.getConnection();
+
+            String sql = "insert into HoaDonPhong values(?, ?, ?, ?, ?)";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setInt(1, hdp.getKhachHang().getMaKH());
+            statement.setInt(2, 1);
+            statement.setInt(3, hdp.getPhong().getMaPhong());
+            statement.setDate(4, hdp.getNgayGioNhan());
+            statement.setDate(5, hdp.getNgayGioTra());
+            n = statement.executeUpdate();
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return n > 0;
+    }
 }

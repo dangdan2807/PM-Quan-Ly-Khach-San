@@ -29,7 +29,7 @@ public class TrangChu_UI extends JFrame implements ActionListener{
     private JPanel pn_sec_available;
     private JLabel lbAvail;
     private JLabel lbUsing;
-    
+
     public JButton[] btnPhong;
     public JButton[] btn_ThanhToan;
     public JButton[] btn_DatPhong;
@@ -179,11 +179,16 @@ public class TrangChu_UI extends JFrame implements ActionListener{
                 
 
                 public void actionPerformed(ActionEvent e) {
+                    // pnMain.setFocusable(false);
+                    // pnMain.setVisible(false);
                     popup = new JFrame();
                     popup.setTitle("Thông tin phòng");
                     popup.setSize(400, 200);
                     popup.setResizable(false);
                     popup.setLocationRelativeTo(pnMain);
+                    popup.setAlwaysOnTop(true);
+                    // popup.setAutoRequestFocus(true);
+                    
 
                     JPanel pn_p_main = new JPanel();
                     popup.add(pn_p_main);

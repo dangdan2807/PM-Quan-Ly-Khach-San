@@ -34,13 +34,13 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener {
     private JMenuItem itemTrangChu, itemDatPhong, itemQLKhachHang, itemQLNhanVien, itemThongKeDV, itemThongKeKH;
 	
     // private JPanel pnContainer;
-
+    private ImageIcon icon_quest = new ImageIcon("data/images/question.png");
     public QuanLyKhachSan_UI() {
         setTitle("Quan Ly Khach San");
         setSize(1000, 700);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        // setResizable(false);
+        setResizable(false);
 
         createMenuGUI();
         createGUI();
@@ -205,6 +205,9 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener {
             // System.out.println(pageTrangChu.btn_ThanhToan[i]);
             pageTrangChu.btn_ThanhToan[j].addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e) {
+                    
+                    
+                    
                     System.out.println("-> Hoa don");
                     indx_nav = 2;
                     createGUI();
@@ -214,6 +217,11 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener {
 
             pageTrangChu.btn_DatPhong[j].addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e) {
+                    pageTrangChu.popup.dispose();
+                    // int choose = JOptionPane.showOptionDialog(pnMain, "Khách hàng đã có tài khoản chưa ?"
+                    //     , "Đặt phòng", 1, 1, (Icon)icon_quest, new Object[]{"Chưa có", "Đã có"}, (Object)"");
+                    // System.out.println(choose);
+                    // pageDatPhong.isKH = choose;
                     System.out.println("-> Dat phong");
                     indx_nav = 1;
                     pageDatPhong.maPhong = pageTrangChu.dsp.get(j).getMaPhong();

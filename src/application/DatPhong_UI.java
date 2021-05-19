@@ -5,6 +5,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.*;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.sql.*;
 
@@ -12,15 +13,18 @@ import connectDB.ConnectDB;
 import DAO.PhongDAO;
 import DAO.LoaiPhongDAO;
 import DAO.HoaDonPhongDAO;
+import DAO.KhachHangDAO;
 import entity.*;
 
 public class DatPhong_UI extends JFrame implements ActionListener{
     private PhongDAO phong_dao;
     private LoaiPhongDAO loaiPhong_dao;
     private HoaDonPhongDAO hoaDonPhong_dao;
+    private KhachHangDAO khachHang_dao;
     public ArrayList<Phong> dsp, dsp_avail;
     public ArrayList<LoaiPhong> dslp;
     public ArrayList<HoaDonPhong> dshdp;
+    public ArrayList<KhachHang> dskh;
     
     public JPanel pnMain;
     public int maPhong = 0;
@@ -33,8 +37,7 @@ public class DatPhong_UI extends JFrame implements ActionListener{
     private JTextField txtTenKH;
     private DefaultComboBoxModel<String> modelMaPhong;
     private JComboBox<String> cboMaPhong;
-    private JTextField txtNgayDen;
-    private JTextField txtNgayDi;
+    private kDatePicker dpTuNgay, dpDenNgay;
     private JTextField txtGhiChu;
     private JButton btnDatPhong;
     private JButton btnSua;
@@ -44,6 +47,15 @@ public class DatPhong_UI extends JFrame implements ActionListener{
     private JTable tblAvail;
     private DefaultTableModel modelDatPhong;
     private JTable tblDatPhong;
+    private DefaultComboBoxModel modelMaKH;
+    private JComboBox cboMaKH;
+    private JCheckBox chkIsNotKH;
+    private JCheckBox chkIsNhanPhong;
+    private JTextField txtCMND;
+    private JTextField txtNgayHetHan;
+    private kDatePicker dpNgayHetHan;
+    private DefaultComboBoxModel<String> modelLoaiKH;
+    private JComboBox<String> cboLoaiKH;
 
     public DatPhong_UI(){
         // khởi tạo
@@ -55,13 +67,16 @@ public class DatPhong_UI extends JFrame implements ActionListener{
         phong_dao = new PhongDAO();
         loaiPhong_dao = new LoaiPhongDAO();
         hoaDonPhong_dao = new HoaDonPhongDAO();
+        khachHang_dao = new KhachHangDAO();
 
         dsp = phong_dao.getAllPhong();
         dsp_avail = phong_dao.getPhongAvail();
         dslp = loaiPhong_dao.getAllLoaiPhong();
         dshdp = hoaDonPhong_dao.getAllHDPhong();
+        dskh = khachHang_dao.getListKhachHang();
         pnMain = renderGUI();
         renderHoaDon();
+        renderKhachHang();
     }
 
     public JPanel renderGUI() {
@@ -95,58 +110,95 @@ public class DatPhong_UI extends JFrame implements ActionListener{
         lbMaKH.setFont(fontSize(20));
         JLabel lbTenKH = new JLabel("Tên khách hàng");
         lbTenKH.setFont(fontSize(20));
+        JLabel lbCMND = new JLabel("Cmnd");
+        lbCMND.setFont(fontSize(20));
+        JLabel lbNgayHetHan = new JLabel("Ngày hết hạn");
+        lbNgayHetHan.setFont(fontSize(20));
+        JLabel lbLoaiKH = new JLabel("Loại khách hàng");
+        lbLoaiKH.setFont(fontSize(20));
         JLabel lbMaPhong = new JLabel("Mã phòng");
         lbMaPhong.setFont(fontSize(20));
         JLabel lbNgayDen = new JLabel("Ngày đến");
         lbNgayDen.setFont(fontSize(20));
         JLabel lbNgayDi = new JLabel("Ngày đi");
         lbNgayDi.setFont(fontSize(20));
-        JLabel lbGhiChu = new JLabel("Ghi chú");
-        lbGhiChu.setFont(fontSize(20));
         
         p_l.add(lbMaKH);
-        p_l.add(Box.createVerticalStrut(10));
+        p_l.add(Box.createVerticalStrut(7));
         p_l.add(lbTenKH);
-        p_l.add(Box.createVerticalStrut(10));
+        p_l.add(Box.createVerticalStrut(7));
+        p_l.add(lbCMND);
+        p_l.add(Box.createVerticalStrut(7));
+        p_l.add(lbNgayHetHan);
+        p_l.add(Box.createVerticalStrut(7));
+        p_l.add(lbLoaiKH);
+        p_l.add(Box.createVerticalStrut(7));
         p_l.add(lbMaPhong);
-        p_l.add(Box.createVerticalStrut(10));
+        p_l.add(Box.createVerticalStrut(7));
         p_l.add(lbNgayDen);
-        p_l.add(Box.createVerticalStrut(10));
+        p_l.add(Box.createVerticalStrut(7));
         p_l.add(lbNgayDi);
         p_l.add(Box.createVerticalStrut(10));
-        p_l.add(lbGhiChu);
 
-        txtMaKH = new JTextField(10);
+        // txtMaKH = new JTextField(10);
+        modelMaKH = new DefaultComboBoxModel();
+        cboMaKH = new JComboBox(modelMaKH);
+        
+        cboMaKH.addActionListener(this);
+
         txtTenKH = new JTextField(10);
+        txtTenKH.setEnabled(false);
+        txtCMND = new JTextField(10);
+        txtCMND.setEnabled(false);
+
+        dpNgayHetHan = new kDatePicker(200);
+        dpNgayHetHan.setPreferredSize(new Dimension(200, 40));
+        dpNgayHetHan.setEnabled(false);
+        
+       
+        modelLoaiKH = new DefaultComboBoxModel<String>();
+        modelLoaiKH.addElement("Việt nam");
+        modelLoaiKH.addElement("Nước ngoài");
+        cboLoaiKH = new JComboBox<String>(modelLoaiKH);
+        cboLoaiKH.setEnabled(false);
 
         modelMaPhong = new DefaultComboBoxModel<String>();
         cboMaPhong = new JComboBox<String>(modelMaPhong);
 
+        dpTuNgay = new kDatePicker(200);
+        dpTuNgay.setPreferredSize(new Dimension(200, 40));
+        dpDenNgay = new kDatePicker(200);
+        dpDenNgay.setPreferredSize(new Dimension(200, 40));
 
-        txtNgayDen = new JTextField(10);
-        txtNgayDi = new JTextField(10);
         txtGhiChu = new JTextField(10);
-        p_r.add(Box.createVerticalStrut(20));
-        p_r.add(txtMaKH);
+        p_r.add(Box.createVerticalStrut(10));
+        p_r.add(cboMaKH);
         p_r.add(Box.createVerticalStrut(10));
         p_r.add(txtTenKH);
         p_r.add(Box.createVerticalStrut(10));
+        p_r.add(txtCMND);
+        p_r.add(Box.createVerticalStrut(10));
+        p_r.add(dpNgayHetHan);
+        p_r.add(Box.createVerticalStrut(10));
+        p_r.add(cboLoaiKH);
+        p_r.add(Box.createVerticalStrut(10));
         p_r.add(cboMaPhong);
         p_r.add(Box.createVerticalStrut(10));
-        p_r.add(txtNgayDen);
-        p_r.add(Box.createVerticalStrut(10));
-        p_r.add(txtNgayDi);
-        p_r.add(Box.createVerticalStrut(10));
-        p_r.add(txtGhiChu);
-        p_r.add(Box.createVerticalStrut(10));
+        p_r.add(dpTuNgay);
+        p_r.add(Box.createVerticalStrut(5));
+        p_r.add(dpDenNgay);
+        // p_r.add(Box.createVerticalStrut(0));
 
         // check box
         JPanel p_sec_f_center = new JPanel();
         p_sec_Fields.add(p_sec_f_center);
         // lbNhanPhong.setFont(fontSize(20));
-        JCheckBox chkIsNhanPhong = new JCheckBox("Nhận phòng ngay");
+        chkIsNotKH = new JCheckBox("Chưa là khách hàng");
+        p_sec_f_center.add(chkIsNotKH);
+        chkIsNhanPhong = new JCheckBox("Nhận phòng ngay");
         p_sec_f_center.add(chkIsNhanPhong);
-
+        chkIsNotKH.addActionListener(this);
+        chkIsNhanPhong.addActionListener(this);
         // action
         JPanel p_sec_f_bottom = new JPanel();
         GridLayout grid = new GridLayout(2, 2);
@@ -258,6 +310,20 @@ public class DatPhong_UI extends JFrame implements ActionListener{
         }
     }
 
+    public void renderKhachHang(){
+        modelMaKH.removeAllElements();
+        modelMaKH.addElement("");
+        System.out.println(dskh.size());
+        for(int i=0; i<dskh.size(); i++){
+            int maKH = dskh.get(i).getMaKH();
+	        String tenKH = dskh.get(i).getTenKH();
+
+            // render data
+            modelMaKH.addElement(String.valueOf(maKH + " - " + tenKH));
+            
+        }
+    }
+
     public JLabel space(int w, int h){
         JLabel space = new JLabel("");
         space.setBorder(BorderFactory.createEmptyBorder(h/2, w/2, h/2, w/2));
@@ -271,28 +337,111 @@ public class DatPhong_UI extends JFrame implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         Object obj = e.getSource();
+        long ml=System.currentTimeMillis(); 
+        ml = ml/86400000*86400000;
+        Date now = new Date(ml);
         if(obj == btnDatPhong){
             System.out.println("Dat phong");
-            if(!txtMaKH.getText().matches("^[a-zA-Z0-9]+$")){
-                renderError(txtMaKH, "Mã khách hàng chỉ được chứa chữ cái, chữ số và không được để trống");
+            if(chkIsNotKH.isSelected()){
+                if(!txtTenKH.getText().matches("^[a-zA-Z ]+$")){
+                    renderError(txtTenKH, "Tên khách hàng chỉ được chứa chữ cái, khoảng trắng và không được để trống");
+                    return;
+                }
+            }else{
+                
+                if(cboMaKH.getSelectedIndex() == 0){
+                    JOptionPane.showMessageDialog(cboMaKH, "Mã khách hàng không được để trống");
+                    return;
+                }
+            }
+            
+            Date tuNgay = new Date(ml), denNgay = new Date(ml);
+            
+            
+            try {
+                tuNgay = dpTuNgay.getFullDate();
+                denNgay = dpDenNgay.getFullDate(); 
+            } catch (ParseException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+            
+            if(!tuNgay.toString().equals(now.toString()) && tuNgay.before(now)){
+                // renderError(tuNgay, "Tên khách hàng chỉ được chứa chữ cái, khoảng trắng và không được để trống");
+                JOptionPane.showMessageDialog(pnMain, "Ngày đến phải sau hoặc giống ngày hiện tại");
                 return;
             }
-
-            if(!txtTenKH.getText().matches("^[a-zA-Z ]+$")){
-                renderError(txtTenKH, "Tên khách hàng chỉ được chứa chữ cái, khoảng trắng và không được để trống");
+            if(!tuNgay.toString().equals(denNgay.toString()) && denNgay.before(tuNgay)){
+                // renderError(tuNgay, "Tên khách hàng chỉ được chứa chữ cái, khoảng trắng và không được để trống");
+                JOptionPane.showMessageDialog(pnMain, "Ngày đi phải sau hoặc giống ngày ở");
                 return;
             }
+            KhachHang khachHang = null;
+            if(chkIsNotKH.isSelected()){ // insert KH
+            
+                String tenKH = txtTenKH.getText();
+                String cmnd = txtCMND.getText();
+                Date ngayHetHan = new Date(ml);
+                try {
+                    ngayHetHan = dpNgayHetHan.getFullDate();
+                } catch (ParseException e1) {
+                    e1.printStackTrace();
+                }
+                String loaiKH = (String)cboLoaiKH.getSelectedItem();
+                int soLanDatPhong = 0;
+                khachHang = new KhachHang(0, tenKH, cmnd, ngayHetHan, loaiKH, soLanDatPhong);
+                if(!khachHang_dao.create(khachHang)){
+                    JOptionPane.showMessageDialog(pnMain, "Không thể thêm khách hàng!");
+                    return;
+                }
+                khachHang.setMaKH(khachHang_dao.getLatestID());
+            }else{
+                khachHang = dskh.get(cboMaKH.getSelectedIndex()-1);
+            }
+            
+            // insert hóa đơn phòng
 
-            // if(!txtGhiChu.getText().matches("^[a-zA-Z0-9,. ]*$")){
-            //     renderError(txtGhiChu, "Ghi chú không hợp lệ");
-            //     return;
-            // }
+            Phong phong = dsp_avail.get(cboMaPhong.getSelectedIndex());
+            NhanVien nhanVien = new NhanVien(0, "K");
+            HoaDonPhong hdp = new HoaDonPhong(0, tuNgay, denNgay, phong, khachHang, nhanVien);
+            if(hoaDonPhong_dao.insert(hdp)){
+                JOptionPane.showMessageDialog(pnMain, "Đặt phòng thành công!");
+            }else{
+                JOptionPane.showMessageDialog(pnMain, "Đặt phòng thất bại!");
+            }
+            
+        }else if(obj == cboMaKH){
+            int indx = cboMaKH.getSelectedIndex() - 1;
+            if(indx == -1){
+                txtTenKH.setText("");
+                txtCMND.setText("");
+                dpNgayHetHan.setValue(now);
+                cboLoaiKH.setSelectedIndex(0);
+            }else{
+                txtTenKH.setText(dskh.get(indx).getTenKH());
+                txtCMND.setText(dskh.get(indx).getCmnd());
+                dpNgayHetHan.setValue(dskh.get(indx).getNgayHetHan());
+                cboLoaiKH.setSelectedItem(dskh.get(indx).getLoaiKH());
+            }
+            
+        }else if(obj == chkIsNotKH){
+            if(chkIsNotKH.isSelected()){
+                txtTenKH.setEnabled(true);
+                txtCMND.setEnabled(true);
+                dpNgayHetHan.setEnabled(true);
+                cboLoaiKH.setEnabled(true);
+                txtTenKH.requestFocus();
 
-            // String maKh = txtMaKH.getText();
-            // String maKh = txtMaKH.getText();
-            // String maKh = txtMaKH.getText();
-            // String maKh = txtMaKH.getText();
-            // String maKh = txtMaKH.getText();
+                cboMaKH.setEnabled(false);
+            }else{
+                txtTenKH.setEnabled(false);
+                txtCMND.setEnabled(false);
+                dpNgayHetHan.setEnabled(false);
+                cboLoaiKH.setEnabled(false);
+
+                cboMaKH.setEnabled(true);
+                cboMaKH.requestFocus();
+            }
         }
     }
 

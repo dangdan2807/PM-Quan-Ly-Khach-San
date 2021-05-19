@@ -97,4 +97,24 @@ public class PhongDAO {
         }
         return phong;
     }
+
+    public boolean insert(Phong phong){
+        int n = 0;
+        try{
+            ConnectDB.getInstance();
+            Connection conn = ConnectDB.getConnection();
+
+            String sql = "insert into Phong values(?, ?, ?, ?, ?)";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setInt(1, phong.getLoaiPhong().getMaLoaiPhong());
+            statement.setInt(2, phong.getSucChua());
+            statement.setInt(3, phong.getSoGiuong());
+            statement.setString(4, phong.getViTri());
+            statement.setBoolean(5, phong.getTinhTrang());
+            n = statement.executeUpdate();
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return n > 0;
+    }
 }
