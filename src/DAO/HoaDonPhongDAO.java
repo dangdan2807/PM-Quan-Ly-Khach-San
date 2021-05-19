@@ -26,8 +26,8 @@ public class HoaDonPhongDAO {
 
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                HoaDonPhong ctdv = new HoaDonPhong(rs);
-                dataList.add(ctdv);
+                HoaDonPhong hdP = new HoaDonPhong(rs);
+                dataList.add(hdP);
             }
         } catch (SQLException e) {
             e.printStackTrace();

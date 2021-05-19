@@ -3,18 +3,18 @@ package entity;
 import java.sql.*;
 
 public class HoaDonPhong {
-    private int maHD;
+    private String maHD;
     private Date ngayGioNhan;
     private Date ngayGioTra;
 
     private Phong phong;
     private KhachHang khachHang;
 
-    public int getMaHD() {
+    public String getMaHD() {
         return maHD;
     }
 
-    public void setMaHD(int maHD) {
+    public void setMaHD(String maHD) {
         this.maHD = maHD;
     }
 
@@ -50,7 +50,7 @@ public class HoaDonPhong {
         this.khachHang = khachHang;
     }
 
-    public HoaDonPhong(int maHD, Date ngayGioNhan, Date ngayGioTra, Phong phong, KhachHang khachHang) {
+    public HoaDonPhong(String maHD, Date ngayGioNhan, Date ngayGioTra, Phong phong, KhachHang khachHang) {
         this.maHD = maHD;
         this.ngayGioNhan = ngayGioNhan;
         this.ngayGioTra = ngayGioTra;
@@ -59,32 +59,9 @@ public class HoaDonPhong {
     }
 
     public HoaDonPhong(ResultSet rs) throws SQLException {
-        this(rs.getInt("MaHD"), rs.getDate("NgayGioNhan"), rs.getDate("NgayGioTra"),
+        this(rs.getString("MaHD"), rs.getDate("NgayGioNhan"), rs.getDate("NgayGioTra"),
                 new Phong(rs.getString("MaPhong"),
                         new LoaiPhong(rs.getInt("MaLoaiPhong"), rs.getString("TenLoaiPhong"), rs.getDouble("DonGia"))),
                 new KhachHang(rs.getInt("MaKH"), rs.getString("TenKH")));
     }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + maHD;
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        HoaDonPhong other = (HoaDonPhong) obj;
-        if (maHD != other.maHD)
-            return false;
-        return true;
-    }
-
 }
