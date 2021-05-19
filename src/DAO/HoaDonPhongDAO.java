@@ -27,7 +27,7 @@ public class HoaDonPhongDAO {
                 int maHD = rs.getInt("MaHD");
                 Date ngayGioNhan = rs.getDate("NgayGioNhan");
                 Date ngayGioTra = rs.getDate("NgayGioTra");
-                Phong phong = new Phong(rs.getInt("MaPhong"));
+                Phong phong = new Phong(rs.getString("MaPhong"));
                 KhachHang khachHang = new KhachHang(rs.getInt("MaKH"));
 
                 // HoaDonPhong ctdv = new HoaDonPhong(rs);
@@ -138,13 +138,12 @@ public class HoaDonPhongDAO {
             ConnectDB.getInstance();
             Connection conn = ConnectDB.getConnection();
 
-            String sql = "insert into HoaDonPhong values(?, ?, ?, ?, ?)";
+            String sql = "insert into HoaDonPhong values(?, ?, ?, ?)";
             PreparedStatement statement = conn.prepareStatement(sql);
             statement.setInt(1, hdp.getKhachHang().getMaKH());
-            statement.setInt(2, 1);
-            statement.setString(3, hdp.getPhong().getMaPhong());
-            statement.setDate(4, hdp.getNgayGioNhan());
-            statement.setDate(5, hdp.getNgayGioTra());
+            statement.setString(2, hdp.getPhong().getMaPhong());
+            statement.setDate(3, hdp.getNgayGioNhan());
+            statement.setDate(4, hdp.getNgayGioTra());
             n = statement.executeUpdate();
         }catch(SQLException e){
             e.printStackTrace();
@@ -171,5 +170,29 @@ public class HoaDonPhongDAO {
             e.printStackTrace();
         }
         return dataList;
+    }
+
+    public int getLatestID() {
+        int id = 0;
+        ConnectDB.getInstance();
+        Statement stmt = null;
+        try {
+            Connection con = ConnectDB.getConnection();
+            String sql = "SELECT * FROM dbo.HoaDonPhong";
+            stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+
+            ResultSet rs = stmt.executeQuery(sql);
+            rs.last();
+            id = rs.getInt("MaHD");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return id;
     }
 }

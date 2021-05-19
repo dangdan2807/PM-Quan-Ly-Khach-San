@@ -17,11 +17,17 @@ public class TrangChu_UI extends JFrame implements ActionListener{
     public ArrayList<Phong> dsp;
     public ArrayList<LoaiPhong> dslp;
 
+    private int countAvail = 0;
+    private int countBooking = 0;
+    private int countUsing = 0;
+
     private JPanel pnPhongTrong;
-    ImageIcon icon_green_check = new ImageIcon("data/images/check.png", "check");
-    ImageIcon icon_red_close = new ImageIcon("data/images/close.png", "close");
-    private ImageIcon icon_pay = new ImageIcon("data/images/purse.png");
-    private ImageIcon icon_order = new ImageIcon("data/images/booking.png");
+    public ImageIcon icon_green_check = new ImageIcon("data/images/check.png", "check");
+    public ImageIcon icon_red_close = new ImageIcon("data/images/close.png", "close");
+    public ImageIcon icon_question = new ImageIcon("data/images/question_16.png");
+    public ImageIcon icon_pay = new ImageIcon("data/images/purse.png");
+    public ImageIcon icon_order = new ImageIcon("data/images/booking.png");
+    
 
     public JPanel pnMain;
     private DefaultComboBoxModel<String> modelLP;
@@ -34,6 +40,7 @@ public class TrangChu_UI extends JFrame implements ActionListener{
     public JButton[] btn_ThanhToan;
     public JButton[] btn_DatPhong;
     public JFrame popup;
+    private JLabel lbBooking;
 
     public TrangChu_UI(){
         // khởi tạo
@@ -83,6 +90,14 @@ public class TrangChu_UI extends JFrame implements ActionListener{
         lb_sec_avail.add(lbAvail);
         lbAvail.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         pnThongKe.add(space(5, 5));
+
+        // so phong đã được đặt
+        JPanel lb_sec_booking = new JPanel();
+        lb_sec_booking.setBorder(BorderFactory.createEtchedBorder());
+        pnThongKe.add(lb_sec_booking);
+        lbBooking = new JLabel("Đã đặt (20)", icon_red_close, JLabel.CENTER);
+        lb_sec_booking.add(lbBooking);
+        lbBooking.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         // so phong dang dung
         JPanel lb_sec_using = new JPanel();
@@ -158,6 +173,9 @@ public class TrangChu_UI extends JFrame implements ActionListener{
             if(phong.getTinhTrang() == 2){
                 btnPhong[i].setBackground(Color.red);
                 lbIcon = new JLabel(icon_red_close);
+            }else if(phong.getTinhTrang() == 1){
+                btnPhong[i].setBackground(Color.orange);
+                lbIcon = new JLabel(icon_question);
             }else{
                 btnPhong[i].setBackground(Color.green);
                 lbIcon = new JLabel(icon_green_check);
@@ -200,7 +218,12 @@ public class TrangChu_UI extends JFrame implements ActionListener{
                     // pn_p_top.setLayout(new BoxLayout(pn_p_top, BoxLayout.Y_AXIS));
                     pn_p_top.setBorder(BorderFactory.createTitledBorder("Chi tiết phòng"));
 
-                    String tinhTrang = phong.getTinhTrang() == 2 ? "Đang ở" : "Có thể sử dụng";
+                    String tinhTrang = "Có thể sử dụng";
+                    if(phong.getTinhTrang() == 1)
+                        tinhTrang = "Đã có người đặt";
+                    else if(phong.getTinhTrang() == 2)
+                        tinhTrang = "Đang ở";
+                        
                     pn_p_top.add(new JLabel("<html><p style='padding-left: 10px;'>Mã phòng: "+ phong.getMaPhong() +"</p></html>"));
                     pn_p_top.add(new JLabel("<html><p style='padding-left: 10px;'>Vị trí: "+ phong.getViTri() +"</p></html>"));
                     pn_p_top.add(new JLabel("<html><p style='padding-left: 10px;'>Số giường: "+ phong.getSoGiuong() +"</p></html>"));
@@ -225,9 +248,10 @@ public class TrangChu_UI extends JFrame implements ActionListener{
         pn_sec_available.revalidate();
         pn_sec_available.repaint();
 
-        int countAvail = this.getCountAvailable();
+        getCount();
         lbAvail.setText("Phòng trống (" + countAvail + ")");
-        lbUsing.setText("Đang ở (" + (dsp.size() - countAvail) + ")");
+        lbBooking.setText("Đã đặt (" + countBooking + ")");
+        lbUsing.setText("Đang ở (" + (dsp.size() - countUsing) + ")");
     }
 
     public void renderLoaiPhong(){
@@ -239,14 +263,19 @@ public class TrangChu_UI extends JFrame implements ActionListener{
         }
     }
 
-    public int getCountAvailable(){
-        int c = 0;
+    public void getCount(){
+        countAvail = 0;
+        countBooking = 0;
+        countUsing = 0;
         for(int i = 0; i<dsp.size(); i++){
             if(dsp.get(i).getTinhTrang() == 0){
-                c++;
+                countAvail++;
+            }else if(dsp.get(i).getTinhTrang() == 1){
+                countBooking++;
+            }else{
+                countUsing++;
             }
         }
-        return c;
     }
 
     public Font fontSize(int size){

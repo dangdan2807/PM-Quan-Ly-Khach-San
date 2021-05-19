@@ -71,7 +71,7 @@ GO
 
 CREATE TABLE HoaDonPhong
 (
-	MaHD Nvarchar(100) PRIMARY KEY,
+	MaHD int identity PRIMARY KEY,
 	MaKH int REFERENCES KhachHang(MaKH),
 	-- MaNV int REFERENCES NhanVien(MaNV),
 	MaPhong Nvarchar(100) REFERENCES Phong(MaPhong),
@@ -153,11 +153,11 @@ VALUES
 GO
 
 INSERT INTO dbo.HoaDonPhong
-	(MaHD, MaKH, MaPhong, NgayGioNhan, NgayGioTra)
+	(MaKH, MaPhong, NgayGioNhan, NgayGioTra)
 VALUES
-	(N'HD01', 2, N'P102', '2021-05-02 07:30:00', '2021-05-05 08:30:00'),
-	(N'HD02', 1, N'P101', '2021-05-16 18:30:00', '2021-05-16 21:30:00'),
-	(N'HD03', 3, N'P103', '2021-05-16 08:30:00', null)
+	(2, N'P102', '2021-05-02 07:30:00', '2021-05-05 08:30:00'),
+	(1, N'P101', '2021-05-16 18:30:00', '2021-05-16 21:30:00'),
+	(3, N'P103', '2021-05-16 08:30:00', null)
 GO
 
 

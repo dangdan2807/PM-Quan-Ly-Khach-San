@@ -365,8 +365,12 @@ public class DatPhong_UI extends JFrame implements ActionListener{
         if(obj == btnDatPhong){
             System.out.println("Dat phong");
             if(chkIsNotKH.isSelected()){
-                if(!txtTenKH.getText().matches("^[a-zA-Z ]+$")){
-                    renderError(txtTenKH, "Tên khách hàng chỉ được chứa chữ cái, khoảng trắng và không được để trống");
+                // if(!txtTenKH.getText().matches("^[a-zA-Z ]+$")){
+                //     renderError(txtTenKH, "Tên khách hàng chỉ được chứa chữ cái, khoảng trắng và không được để trống");
+                //     return;
+                // }
+                if(txtTenKH.getText().trim().equals("")){
+                    renderError(txtTenKH, "Tên khách hàng không được để trống");
                     return;
                 }
             }else{
@@ -423,10 +427,15 @@ public class DatPhong_UI extends JFrame implements ActionListener{
             
             // insert hóa đơn phòng
 
-            Phong phong = dsp_avail.get(cboMaPhong.getSelectedIndex());
+            Phong phong = dsp.get(cboMaPhong.getSelectedIndex());
             HoaDonPhong hdp = new HoaDonPhong(0, tuNgay, denNgay, phong, khachHang);
             if(hoaDonPhong_dao.insert(hdp)){
                 JOptionPane.showMessageDialog(pnMain, "Đặt phòng thành công!");
+                int lastest_id = hoaDonPhong_dao.getLatestID();
+                modelDatPhong.addRow(
+                new Object[]{lastest_id, khachHang.getMaKH(), khachHang.getTenKH(), 
+                    phong.getMaPhong(), phong.getLoaiPhong().getTenLoaiPhong(), 
+                    tuNgay, denNgay, "Đã đặt phòng"});
             }else{
                 JOptionPane.showMessageDialog(pnMain, "Đặt phòng thất bại!");
             }

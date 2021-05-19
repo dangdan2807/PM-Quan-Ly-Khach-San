@@ -77,7 +77,7 @@ public class PhongDAO {
         return dsp;
     }
 
-    public Phong getPhongByMaPhong(int maPhong){
+    public Phong getPhongByMaPhong(String maPhong){
         Phong phong = null;
         try{
             ConnectDB.getInstance();
@@ -85,7 +85,7 @@ public class PhongDAO {
 
             String sql = "Select * from Phong where MaPhong = ?";
             PreparedStatement statement = conn.prepareStatement(sql);
-            statement.setInt(1, maPhong);
+            statement.setString(1, maPhong);
             ResultSet rs = statement.executeQuery();
 
             if(!rs.next())
