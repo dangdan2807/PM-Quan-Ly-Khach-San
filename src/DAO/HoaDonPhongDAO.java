@@ -307,18 +307,47 @@ public class HoaDonPhongDAO {
         return id;
     }
 
-    public ArrayList<HoaDonPhong> getListHDPhongReservation(String maPhong, Date tuNgay, Date denNgay) {
+    public ArrayList<HoaDonPhong> getListHDPhongReservationLimit(String maPhong, Date tuNgay, Date denNgay) {
         ArrayList<HoaDonPhong> dataList = new ArrayList<HoaDonPhong>();
         ConnectDB.getInstance();
         PreparedStatement stmt = null;
         ResultSet rs = null;
         Connection con = ConnectDB.getConnection();
-        String sql = "UDP_GetListHDPhongReservation ?, ?, ? ";
+        String sql = "EXEC UDP_GetListHDPhongReservationLimit ?, ?, ? ";
         try {
             stmt = con.prepareStatement(sql);
             stmt.setString(1, maPhong);
             stmt.setDate(2, tuNgay);
             stmt.setDate(3, denNgay);
+
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                HoaDonPhong phong = new HoaDonPhong(rs, 1);
+                dataList.add(phong);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                stmt.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return dataList;
+    }
+
+    public ArrayList<HoaDonPhong> getListHDPhongReservation(String maPhong, Date tuNgay) {
+        ArrayList<HoaDonPhong> dataList = new ArrayList<HoaDonPhong>();
+        ConnectDB.getInstance();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        Connection con = ConnectDB.getConnection();
+        String sql = "EXEC UDP_GetListHDPhongReservation ?, ? ";
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setString(1, maPhong);
+            stmt.setDate(2, tuNgay);
 
             rs = stmt.executeQuery();
             while (rs.next()) {

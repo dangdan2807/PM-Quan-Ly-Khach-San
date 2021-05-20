@@ -4,7 +4,8 @@ import java.sql.*;
 
 public class HoaDonDV {
 	private int maHDDV;
-	private Date ngayGioDat;
+	private int tinhTrang;
+	private Date ngayGioLap;
 
 	private KhachHang khachHang;
 
@@ -12,16 +13,24 @@ public class HoaDonDV {
 		return maHDDV;
 	}
 
+	public int getTinhTrang() {
+		return tinhTrang;
+	}
+
+	public void setTinhTrang(int tinhTrang) {
+		this.tinhTrang = tinhTrang;
+	}
+
 	public void setMaHDDV(int maHDDV) {
 		this.maHDDV = maHDDV;
 	}
 
 	public Date getNgayGioDat() {
-		return ngayGioDat;
+		return ngayGioLap;
 	}
 
 	public void setNgayGioDat(Date ngayGioDat) {
-		this.ngayGioDat = ngayGioDat;
+		this.ngayGioLap = ngayGioDat;
 	}
 
 	public KhachHang getKhachHang() {
@@ -32,9 +41,10 @@ public class HoaDonDV {
 		this.khachHang = khachHang;
 	}
 
-	public HoaDonDV(int maHDDV, Date ngayGioDat, KhachHang khachHang) {
+	public HoaDonDV(int maHDDV, Date ngayGioDat, int tinhTrang, KhachHang khachHang) {
 		this.maHDDV = maHDDV;
-		this.ngayGioDat = ngayGioDat;
+		this.ngayGioLap = ngayGioDat;
+		this.tinhTrang = tinhTrang;
 		this.khachHang = khachHang;
 	}
 

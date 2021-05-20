@@ -504,7 +504,6 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener 
             String maPhong = txtMaPhong.getText().trim();
             if (maPhong.length() > 0) {
                 DialogLichDatPhong form = new DialogLichDatPhong();
-                form.setTitle(maPhong);
                 form.setMaPhong(maPhong);
                 form.setModal(true);
                 form.setVisible(true);

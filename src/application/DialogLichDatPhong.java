@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import javax.swing.*;
@@ -30,7 +31,7 @@ public class DialogLichDatPhong extends JDialog implements ActionListener {
             e.printStackTrace();
         }
         setTitle("Lịch Đặt Phòng ");
-        setSize(900, 450);
+        setSize(950, 450);
         setLocationRelativeTo(null);
 
         JPanel pnMain = new JPanel();
@@ -91,6 +92,12 @@ public class DialogLichDatPhong extends JDialog implements ActionListener {
         pnTable.add(scpTable, BorderLayout.CENTER);
 
         btnXem.addActionListener(this);
+        try {
+            hdPhong = getListHDPhongDatTruoc();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        DocDuLieuVaoTable();
     }
 
     public static void main(final String[] args) {
@@ -108,7 +115,7 @@ public class DialogLichDatPhong extends JDialog implements ActionListener {
                 if (validData()) {
                     try {
                         modelTable.getDataVector().removeAllElements();
-                        hdPhong = getListHDPhongDatTruoc();
+                        hdPhong = getListHDPhongDatTruocGioiHan();
                         if (hdPhong.size() <= 0) {
                             JOptionPane.showMessageDialog(this, "Không tìm thấy danh sách đặt phòng trước", "Thông báo",
                                     JOptionPane.INFORMATION_MESSAGE);
@@ -151,10 +158,16 @@ public class DialogLichDatPhong extends JDialog implements ActionListener {
         DocDuLieuVaoTable();
     }
 
-    private ArrayList<HoaDonPhong> getListHDPhongDatTruoc() throws ParseException {
+    private ArrayList<HoaDonPhong> getListHDPhongDatTruocGioiHan() throws ParseException {
         Date tuNgay = dpTuNgay.getFullDate();
         Date denNgay = dpDenNgay.getFullDate();
-        ArrayList<HoaDonPhong> dataList = dhPhongDAO.getListHDPhongReservation(maPhong, tuNgay, denNgay);
+        ArrayList<HoaDonPhong> dataList = dhPhongDAO.getListHDPhongReservationLimit(maPhong, tuNgay, denNgay);
+        return dataList;
+    }
+
+    private ArrayList<HoaDonPhong> getListHDPhongDatTruoc() throws ParseException {
+        Date tuNgay = dpTuNgay.getFullDate();
+        ArrayList<HoaDonPhong> dataList = dhPhongDAO.getListHDPhongReservation(maPhong, tuNgay);
         return dataList;
     }
 
@@ -170,10 +183,19 @@ public class DialogLichDatPhong extends JDialog implements ActionListener {
                 tinhTrangP = "Đã có người";
             LoaiPhong loaiPhong = phong.getLoaiPhong();
             KhachHang kh = item.getKhachHang();
-            modelTable.addRow(new Object[] { phong.getMaPhong(), phong.getSucChua(), phong.getSoGiuong(),
-                    phong.getViTri(), tinhTrangP, loaiPhong.getTenLoaiPhong(), loaiPhong.getDonGia(),
-                    item.getNgayGioNhan(), item.getNgayGioTra(), kh.getMaKH(), kh.getTenKH() });
+            String ngayGioNhan = formatDate(item.getNgayGioNhan());
+            String ngayGioTra = formatDate(item.getNgayGioTra());
+                modelTable.addRow(new Object[] { phong.getMaPhong(), phong.getSucChua(), phong.getSoGiuong(),
+                        phong.getViTri(), tinhTrangP, loaiPhong.getTenLoaiPhong(), loaiPhong.getDonGia(),
+                        ngayGioNhan, ngayGioTra, kh.getMaKH(), kh.getTenKH() });
         }
+    }
+    
+    private String formatDate(Date date) {
+        if (date == null)
+            return "Chưa cập nhật";
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        return sdf.format(date);
     }
 
     public boolean validData() throws ParseException {
