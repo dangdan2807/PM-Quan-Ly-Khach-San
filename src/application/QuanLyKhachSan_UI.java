@@ -29,7 +29,7 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener, ListSel
     private MauDangNhap_UI pageLogin = new MauDangNhap_UI();
     // private QuanLy pageQuanLy = new QuanLy();
 
-    private JPanel pnMain = pageTrangChu.pnMain;
+    private JPanel pnMain = new JPanel();
 
     // components
     private JMenuBar menuBar;
@@ -40,7 +40,7 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener, ListSel
     // private JPanel pnContainer;
     private ImageIcon icon_quest = new ImageIcon("data/images/question.png");
     public QuanLyKhachSan_UI() {
-        setTitle("Quan Ly Khach San");
+        setTitle("Quản Lý Khách Sạn");
         setSize(1000, 700);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -52,7 +52,7 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener, ListSel
     }
 
     public QuanLyKhachSan_UI(int index) {
-        setTitle("Quan Ly Khach San");
+        setTitle("Quản Lý Khách Sạn");
         setSize(1000, 700);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -84,12 +84,14 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener, ListSel
         }
         setSize(1000, 700);
         if (indx_nav == 0) {// trang chủ
+            pageTrangChu.start();
             pnMain = pageTrangChu.pnMain;
             handleEventTrangChu();
             handleEventThayDoiLoaiPhong();
         } else if (indx_nav == 1) { // trang đặt phòng
+            pageDatPhong.start();
             pnMain = pageDatPhong.pnMain;
-            pageDatPhong.renderDSPhong();
+            // pageDatPhong.renderDSPhong();
             handleEventTraPhong();
             // pageDatPhong.renderHoaDon();
         } else if (indx_nav == 2) { // hóa đơn phòng
@@ -123,44 +125,38 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener, ListSel
         // menuBar.setLayout(new BoxLayout(menuBar, BoxLayout.X_AXIS));
         this.setJMenuBar(menuBar);
         // trang chu
-        menuTrangChu = new JMenu("Trang chu");
+        menuTrangChu = new JMenu("Trang chủ");
         menuBar.add(menuTrangChu);
-        itemTrangChu = new JMenuItem("Trang chu");
+        itemTrangChu = new JMenuItem("Trang chủ");
         menuTrangChu.add(itemTrangChu);
 
         // trang chu
-        menuDatPhong = new JMenu("Dat phong");
+        menuDatPhong = new JMenu("Đặt phòng");
         menuBar.add(menuDatPhong);
-        itemDatPhong = new JMenuItem("Dat phong");
+        itemDatPhong = new JMenuItem("Đặt phòng");
         menuDatPhong.add(itemDatPhong);
 
         // quản lý hóa đơn
-        menuQLHoaDon = new JMenu("Quan ly Hoa Don");
+        menuQLHoaDon = new JMenu("Quản lý Hóa Đơn");
         menuBar.add(menuQLHoaDon);
-        itemQLHDPhong = new JMenuItem("Quan ly hoa don phong");
-        itemQLHDDichVu = new JMenuItem("Quan ly hoa don dich vu");
+        itemQLHDPhong = new JMenuItem("Quản lý hóa đơn phòng");
+        itemQLHDDichVu = new JMenuItem("Quản lý hóa đơn dịch vụ");
         menuQLHoaDon.add(itemQLHDPhong);
-        menuQLHoaDon.add(itemQLHDDichVu);
+        // menuQLHoaDon.add(itemQLHDDichVu);
 
         // quản lý dịch vụ
-        menuQLDichVu = new JMenu("Quan ly dich vu");
+        menuQLDichVu = new JMenu("Quản lý dịch vụ");
         menuBar.add(menuQLDichVu);
-        itemQLPhong = new JMenuItem("Quan ly phong");
-        itemQLDichVu = new JMenuItem("Quan ly dich vu");
+        itemQLPhong = new JMenuItem("Quản lý phòng");
+        itemQLDichVu = new JMenuItem("Quản lý dịch vụ");
         menuQLDichVu.add(itemQLPhong);
         menuQLDichVu.add(itemQLDichVu);
 
         // quản lý khách hàng
-        menuQLKhachHang = new JMenu("Quan ly khach hang");
+        menuQLKhachHang = new JMenu("Quản lý khách hàng");
         menuBar.add(menuQLKhachHang);
-        itemQLKhachHang = new JMenuItem("Quan ly khach hang");
+        itemQLKhachHang = new JMenuItem("Quản lý khách hàng");
         menuQLKhachHang.add(itemQLKhachHang);
-
-        // quản lý dịch vụ
-        menuQLNhanVien = new JMenu("Quan ly nhan vien");
-        menuBar.add(menuQLNhanVien);
-        itemQLNhanVien = new JMenuItem("Quan ly nhan vien");
-        menuQLNhanVien.add(itemQLNhanVien);
 
         // báo cáo
         menuThongKe = new JMenu("Thống kê");
@@ -178,7 +174,6 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener, ListSel
         itemQLPhong.addActionListener(this);
         itemQLDichVu.addActionListener(this);
         itemQLKhachHang.addActionListener(this);
-        itemQLNhanVien.addActionListener(this);
         itemThongKeDV.addActionListener(this);
         itemThongKeKH.addActionListener(this);
 
@@ -224,9 +219,7 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener, ListSel
             // System.out.println(pageTrangChu.btn_ThanhToan[i]);
             pageTrangChu.btn_ThanhToan[j].addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e) {
-                    
-                    
-                    
+        
                     System.out.println("-> Hoa don");
                     indx_nav = 2;
                     createGUI();
@@ -237,10 +230,6 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener, ListSel
             pageTrangChu.btn_DatPhong[j].addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e) {
                     pageTrangChu.popup.dispose();
-                    // int choose = JOptionPane.showOptionDialog(pnMain, "Khách hàng đã có tài khoản chưa ?"
-                    //     , "Đặt phòng", 1, 1, (Icon)icon_quest, new Object[]{"Chưa có", "Đã có"}, (Object)"");
-                    // System.out.println(choose);
-                    // pageDatPhong.isKH = choose;
                     System.out.println("-> Dat phong");
                     indx_nav = 1;
                     pageDatPhong.maPhong = pageTrangChu.dsp.get(j).getMaPhong();
@@ -271,6 +260,7 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener, ListSel
     private void handleEventBtnLogin() {
         pageLogin.btnLogin.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                System.out.println(pageLogin.txtPassword.getPassword());
                 if(pageLogin.txtUsername.getText().equals("admin") 
                 && pageLogin.txtPassword.getText().equals("admin")){
                     setSize(1000, 700);
@@ -280,6 +270,7 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener, ListSel
                     createGUI();
                 }else{
                     JOptionPane.showMessageDialog(pnMain, "Sai tài khoản hoặc mật khẩu");;
+                    pageLogin.txtUsername.requestFocus();
                 }
             }
         });

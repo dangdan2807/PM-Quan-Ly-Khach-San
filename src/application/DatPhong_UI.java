@@ -77,14 +77,20 @@ public class DatPhong_UI extends JFrame implements ActionListener, ListSelection
         hoaDonPhong_dao = new HoaDonPhongDAO();
         khachHang_dao = new KhachHangDAO();
 
+        
+    }
+
+    public void start(){
         dsp = phong_dao.getAllPhong();
         dsp_avail = phong_dao.getPhongAvail();
         dslp = loaiPhong_dao.getAllLoaiPhong();
         dshdp = hoaDonPhong_dao.getAllHDPhong();
         dskh = khachHang_dao.getListKhachHang();
+        
         pnMain = renderGUI();
         renderHoaDon();
         renderKhachHang();
+        renderDSPhong();
     }
 
     public JPanel renderGUI() {
