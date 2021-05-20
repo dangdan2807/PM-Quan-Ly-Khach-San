@@ -15,7 +15,7 @@ import connectDB.ConnectDB;
 import entity.*;
 import entity.HoaDonPhong;
 
-public class ThongKeKhachHang_UI extends JFrame implements ActionListener {
+public class ThongKeKhachHang_UI extends JFrame implements ActionListener, KeyListener {
     JPanel pnMain;
     private JTextField txtMaKH, txtTenKH, txtThanhTien;
     private kDatePicker dpTuNgay, dpDenNgay;
@@ -120,11 +120,12 @@ public class ThongKeKhachHang_UI extends JFrame implements ActionListener {
 
         txtThanhTien = new JTextField();
         txtThanhTien.setBounds(100, 10, 205, 20);
-        pnThongKe.add(txtThanhTien);
         txtThanhTien.setHorizontalAlignment(SwingConstants.RIGHT);
         txtThanhTien.setText("0.0");
         txtThanhTien.setEditable(false);
         txtThanhTien.setColumns(10);
+        txtThanhTien.setBackground(new Color(127, 255, 212));
+        pnThongKe.add(txtThanhTien);
 
         // JLabel lbA = new JLabel("345678", blueAddIcon, JLabel.LEFT);
         JLabel lbVND = new JLabel("VND");
@@ -178,6 +179,28 @@ public class ThongKeKhachHang_UI extends JFrame implements ActionListener {
                 showMessage("Không tìm thấy danh sách thống kê theo yêu cầu", ERROR);
             }
         }
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        Object o = e.getSource();
+        Object key = e.getKeyCode();
+        // bắt sự kiện nhấn phím enter tự nhấn btnLogin
+        if (o.equals(txtMaKH) | o.equals(txtTenKH)) {
+            if (key.equals(KeyEvent.VK_ENTER)) {
+                btnThongKe.doClick();
+            }
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
     }
 
     private ArrayList<HoaDonPhong> getListSearchByDate() throws ParseException {
