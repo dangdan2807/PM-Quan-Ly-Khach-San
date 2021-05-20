@@ -13,7 +13,7 @@ public class HoaDonPhongDAO {
         return instance;
     }
 
-    public ArrayList<HoaDonPhong> getAllHDPhong() {
+    public ArrayList<HoaDonPhong> getListHDPhong() {
         ArrayList<HoaDonPhong> dataList = new ArrayList<HoaDonPhong>();
         ConnectDB.getInstance();
         PreparedStatement stmt = null;
@@ -32,7 +32,7 @@ public class HoaDonPhongDAO {
                 KhachHang khachHang = new KhachHang(rs.getInt("MaKH"));
 
                 // HoaDonPhong ctdv = new HoaDonPhong(rs);
-                HoaDonPhong hdp = new HoaDonPhong(maHD, tinhTrang,ngayGioNhan, ngayGioTra, phong, khachHang);
+                HoaDonPhong hdp = new HoaDonPhong(maHD, tinhTrang, ngayGioNhan, ngayGioTra, phong, khachHang);
                 dataList.add(hdp);
             }
         } catch (SQLException e) {
@@ -133,9 +133,9 @@ public class HoaDonPhongDAO {
         return dataList;
     }
 
-    public boolean insert(HoaDonPhong hdp){
+    public boolean insert(HoaDonPhong hdp) {
         int n = 0;
-        try{
+        try {
             ConnectDB.getInstance();
             Connection conn = ConnectDB.getConnection();
 
@@ -146,10 +146,10 @@ public class HoaDonPhongDAO {
             ResultSet rs = stmt.executeQuery();
             boolean flag = true;
             while (rs.next()) {
-                if(compareDate(hdp.getNgayGioTra(), rs.getDate("NgayGioNhan")) == -1){
+                if (compareDate(hdp.getNgayGioTra(), rs.getDate("NgayGioNhan")) == -1) {
                     continue;
                 }
-                if(compareDate(hdp.getNgayGioNhan(), rs.getDate("NgayGioTra")) == 1){
+                if (compareDate(hdp.getNgayGioNhan(), rs.getDate("NgayGioTra")) == 1) {
                     continue;
                 }
                 flag = false;
@@ -159,7 +159,7 @@ public class HoaDonPhongDAO {
                 System.out.println(rs.getDate("NgayGioTra"));
             }
 
-            if(!flag){
+            if (!flag) {
                 return false;
             }
             sql = "insert into HoaDonPhong values(?, ?, ?, ?, ?)";
@@ -172,14 +172,14 @@ public class HoaDonPhongDAO {
             n = statement.executeUpdate();
 
             // insert thành công
-            if(n > 0){
+            if (n > 0) {
                 // update tình trạng phòng
                 PhongDAO phong_dao = new PhongDAO();
                 Phong phong = hdp.getPhong();
                 phong.setTinhTrang(1);// đã đặt
                 phong_dao.update(phong);
             }
-        }catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return n > 0;
@@ -252,13 +252,13 @@ public class HoaDonPhongDAO {
         return n > 0;
     }
 
-    public int compareDate(Date d1, Date d2){
-        if(d1.toString().equals(d2.toString()))
+    public int compareDate(Date d1, Date d2) {
+        if (d1.toString().equals(d2.toString()))
             return 0;
-        
-        if(d1.before(d2))
+
+        if (d1.before(d2))
             return -1;
-        
+
         return 1;
     }
 
@@ -305,5 +305,35 @@ public class HoaDonPhongDAO {
             }
         }
         return id;
+    }
+
+    public ArrayList<HoaDonPhong> getListHDPhongReservation(String maPhong, Date tuNgay, Date denNgay) {
+        ArrayList<HoaDonPhong> dataList = new ArrayList<HoaDonPhong>();
+        ConnectDB.getInstance();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        Connection con = ConnectDB.getConnection();
+        String sql = "UDP_GetListHDPhongReservation ?, ?, ? ";
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setString(1, maPhong);
+            stmt.setDate(2, tuNgay);
+            stmt.setDate(3, denNgay);
+
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                HoaDonPhong phong = new HoaDonPhong(rs, 1);
+                dataList.add(phong);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                stmt.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return dataList;
     }
 }

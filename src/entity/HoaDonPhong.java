@@ -35,6 +35,14 @@ public class HoaDonPhong {
                 new KhachHang(rs.getInt("MaKH"), rs.getString("TenKH")));
     }
 
+    public HoaDonPhong(ResultSet rs, int type) throws SQLException {
+        this(rs.getInt("MaHD"), rs.getInt("TinhTrangHD"), rs.getDate("NgayGioNhan"), rs.getDate("NgayGioTra"),
+                new Phong(rs.getString("MaPhong"), rs.getInt("SucChua"), rs.getInt("SoGiuong"), rs.getString("ViTri"),
+                        rs.getInt("TinhTrangP"),
+                        new LoaiPhong(rs.getInt("MaLoaiPhong"), rs.getString("TenLoaiPhong"), rs.getDouble("DonGia"))),
+                new KhachHang(rs.getInt("MaKH"), rs.getString("TenKH")));
+    }
+
     public int getMaHD() {
         return maHD;
     }

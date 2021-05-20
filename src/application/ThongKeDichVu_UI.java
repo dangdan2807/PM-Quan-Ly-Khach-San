@@ -13,7 +13,7 @@ import DAO.ChiTietDVDAO;
 import connectDB.ConnectDB;
 import entity.*;
 
-public class ThongKeDichVu_UI extends JFrame implements ActionListener {
+public class ThongKeDichVu_UI extends JFrame implements ActionListener, KeyListener {
 
     public JPanel pnMain;
     private JTextField txtMaKH, txtTenKH, txtThanhTien;
@@ -122,6 +122,7 @@ public class ThongKeDichVu_UI extends JFrame implements ActionListener {
         txtThanhTien.setText("0.0");
         txtThanhTien.setEditable(false);
         txtThanhTien.setColumns(10);
+        txtThanhTien.setBackground(new Color(127, 255, 212));
 
         // JLabel lbA = new JLabel("345678", blueAddIcon, JLabel.LEFT);
         JLabel lbVND = new JLabel("VND");
@@ -176,6 +177,28 @@ public class ThongKeDichVu_UI extends JFrame implements ActionListener {
                 showMessage("Không tìm thấy danh sách thống kê theo yêu cầu", ERROR);
             }
         }
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        Object o = e.getSource();
+        Object key = e.getKeyCode();
+        // bắt sự kiện nhấn phím enter tự nhấn btnLogin
+        if (o.equals(txtMaKH) | o.equals(txtTenKH)) {
+            if (key.equals(KeyEvent.VK_ENTER)) {
+                btnThongKe.doClick();
+            }
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
     }
 
     private ArrayList<ChiTietDV> getListSearchByDate() throws ParseException {

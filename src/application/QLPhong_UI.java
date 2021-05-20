@@ -20,7 +20,7 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener 
     private JTable tableLP, tableP;
     private JLabel lbShowMessagesDSP, lbShowMessagesDSLP, lbShowMessagesP, lbShowMessagesLP;
     private JButton btnThemLP, btnSuaLP, btnXoaLP, btnLamLaiLP, btnThemP, btnSuaP, btnXoaP, btnLamLaiP, btnTimLP,
-            btnTimP;
+            btnTimP, btnXemLich;
     private SpinnerNumberModel modelSpinSC, modelSpinSG;
     private JSpinner spinSoGiuong, spinSucChua;
     private final int SUCCESS = 1, ERROR = 0;
@@ -30,6 +30,7 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener 
     ImageIcon deleteIcon = new ImageIcon("data/images/trash2_16.png");
     ImageIcon refreshIcon = new ImageIcon("data/images/refresh_16.png");
     ImageIcon searchIcon = new ImageIcon("data/images/search_16.png");
+    ImageIcon calendarIcon = new ImageIcon("data/images/calender_16.png");
     ImageIcon checkIcon = new ImageIcon("data/images/check2_16.png");
     ImageIcon errorIcon = new ImageIcon("data/images/cancel_16.png");
     LoaiPhongDAO LPhongDAO = new LoaiPhongDAO();
@@ -184,7 +185,7 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener 
         pnBL.add(btnSuaP);
 
         btnLamLaiP = new JButton("Làm lại", refreshIcon);
-        btnLamLaiP.setBounds(117, 255, 98, 26);
+        btnLamLaiP.setBounds(10, 255, 98, 26);
         pnBL.add(btnLamLaiP);
 
         JLabel lbLoaiPhong = new JLabel("Loại phòng: ");
@@ -194,6 +195,10 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener 
         cboLoaiPhong = new JComboBox<String>();
         cboLoaiPhong.setBounds(90, 159, 235, 20);
         pnBL.add(cboLoaiPhong);
+        
+        btnXemLich = new JButton("Xem lịch đặt phòng", calendarIcon);
+        btnXemLich.setBounds(117, 255, 208, 26);
+        pnBL.add(btnXemLich);
 
         JPanel pnTR = new JPanel();
         pnTR.setBorder(
@@ -286,6 +291,7 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener 
         btnLamLaiP.addActionListener(this);
         btnTimLP.addActionListener(this);
         btnTimP.addActionListener(this);
+        btnXemLich.addActionListener(this);
 
         tableLP.addMouseListener(this);
         tableP.addMouseListener(this);
@@ -493,6 +499,17 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener 
                 } catch (Exception e4) {
                     showMessage("Không tìm thấy", ERROR, lbShowMessagesDSP);
                 }
+            }
+        } else if (o.equals(btnXemLich)) {
+            String maPhong = txtMaPhong.getText().trim();
+            if (maPhong.length() > 0) {
+                DialogLichDatPhong form = new DialogLichDatPhong();
+                form.setTitle(maPhong);
+                form.setMaPhong(maPhong);
+                form.setModal(true);
+                form.setVisible(true);
+            } else{
+                showMessage("Vui lòng chọn một phòng bất kỳ", ERROR, lbShowMessagesP);
             }
         }
     }

@@ -15,7 +15,7 @@ import connectDB.ConnectDB;
 import entity.*;
 import entity.HoaDonPhong;
 
-public class ThongKeKhachHang_UI extends JFrame implements ActionListener {
+public class ThongKeKhachHang_UI extends JFrame implements ActionListener, KeyListener {
     JPanel pnMain;
     private JTextField txtMaKH, txtTenKH, txtThanhTien;
     private kDatePicker dpTuNgay, dpDenNgay;
@@ -94,7 +94,7 @@ public class ThongKeKhachHang_UI extends JFrame implements ActionListener {
         pnTable.setLayout(new BorderLayout(0, 0));
 
         // mã hóa đơn phòng
-        String[] cols = { "Mã HD", "Mã phòng", "Loại phòng", "Giá phòng", "Ngày đến", "Ngày Trả", "Số Ngày",
+        String[] cols = { "Mã HD", "Mã phòng", "Loại phòng", "Giá phòng", "Ngày CheckIn", "Ngày CheckOut", "Số Ngày",
                 "Thành tiền", "Mã KH", "Tên KH" };
         modelTable = new DefaultTableModel(cols, 0) {
             // khóa sửa dữ liệu trực tiếp trên table
@@ -105,9 +105,9 @@ public class ThongKeKhachHang_UI extends JFrame implements ActionListener {
         };
 
         table = new JTable(modelTable);
-        JScrollPane scpTableBCDV = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+        JScrollPane scpTableDV = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
                 JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-        pnTable.add(scpTableBCDV, BorderLayout.CENTER);
+        pnTable.add(scpTableDV, BorderLayout.CENTER);
 
         JPanel pnThongKe = new JPanel();
         pnThongKe.setBounds(10, 589, 972, 40);
@@ -120,11 +120,12 @@ public class ThongKeKhachHang_UI extends JFrame implements ActionListener {
 
         txtThanhTien = new JTextField();
         txtThanhTien.setBounds(100, 10, 205, 20);
-        pnThongKe.add(txtThanhTien);
         txtThanhTien.setHorizontalAlignment(SwingConstants.RIGHT);
         txtThanhTien.setText("0.0");
         txtThanhTien.setEditable(false);
         txtThanhTien.setColumns(10);
+        txtThanhTien.setBackground(new Color(127, 255, 212));
+        pnThongKe.add(txtThanhTien);
 
         // JLabel lbA = new JLabel("345678", blueAddIcon, JLabel.LEFT);
         JLabel lbVND = new JLabel("VND");
@@ -178,6 +179,28 @@ public class ThongKeKhachHang_UI extends JFrame implements ActionListener {
                 showMessage("Không tìm thấy danh sách thống kê theo yêu cầu", ERROR);
             }
         }
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        Object o = e.getSource();
+        Object key = e.getKeyCode();
+        // bắt sự kiện nhấn phím enter tự nhấn btnLogin
+        if (o.equals(txtMaKH) | o.equals(txtTenKH)) {
+            if (key.equals(KeyEvent.VK_ENTER)) {
+                btnThongKe.doClick();
+            }
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
     }
 
     private ArrayList<HoaDonPhong> getListSearchByDate() throws ParseException {

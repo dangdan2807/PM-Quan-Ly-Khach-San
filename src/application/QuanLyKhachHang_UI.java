@@ -84,7 +84,7 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
         pnThongTinKH.add(txtTenKH);
         txtTenKH.setColumns(10);
 
-        JLabel lbLoaiKhach = new JLabel("Loại khách hàng:");
+        JLabel lbLoaiKhach = new JLabel("Quốc tịch:");
         lbLoaiKhach.setBounds(10, 124, 105, 14);
         pnThongTinKH.add(lbLoaiKhach);
 

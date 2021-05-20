@@ -26,13 +26,6 @@ CREATE TABLE DichVu
 )
 GO
 
--- CREATE TABLE NhanVien
--- (
--- 	MaNV int identity PRIMARY KEY,
--- 	TenNV NVARCHAR(100),
--- )
--- GO
-
 CREATE TABLE LoaiPhong
 (
 	MaLoaiPhong int identity PRIMARY KEY,
@@ -47,6 +40,7 @@ CREATE TABLE Phong
 	SucChua INT CHECK(SucChua > 0),
 	SoGiuong INT CHECK(SoGiuong > 0),
 	ViTri NVARCHAR(100),
+	-- 0. trống | 1. đã đặt | 2.có người ở
 	TinhTrang int,
 	MaLoaiPhong int REFERENCES LoaiPhong(MaLoaiPhong)
 )
@@ -56,7 +50,6 @@ CREATE TABLE HoaDonDV
 (
 	MaHDDV int identity PRIMARY KEY,
 	MaKH int REFERENCES KhachHang(MaKH),
-	-- MaNV int REFERENCES NhanVien(MaNV),
 	ngayGioDat DATETIME,
 )
 GO
@@ -73,9 +66,8 @@ CREATE TABLE HoaDonPhong
 (
 	MaHD int identity PRIMARY KEY,
 	MaKH int REFERENCES KhachHang(MaKH),
-	-- MaNV int REFERENCES NhanVien(MaNV),
 	MaPhong Nvarchar(100) REFERENCES Phong(MaPhong),
-	-- 0. trống | 1. đã đặt | 2.có người ở
+	-- 0. đã đặt | 1. đã nhận | 2. đã trả
 	tinhTrang int,
 	NgayGioNhan DATETIME,
 	NgayGioTra DATETIME
@@ -91,14 +83,6 @@ VALUES
 	(N'John Wick', N'123123123', '20240513', N'Nước ngoài', 0),
 	(N'Tony Stark', N'123123123', '20240206', N'Nước ngoài', 1)
 GO
-
--- INSERT INTO dbo.NhanVien
--- 	(TenNV)
--- VALUES
--- 	(N'Thor'),
--- 	(N'Cậu Vàng'),
--- 	(N'Chị Dậu')
--- GO
 
 -- Insert rows into table 'dbo.DichVu'
 INSERT INTO dbo.DichVu
@@ -157,9 +141,9 @@ GO
 INSERT INTO dbo.HoaDonPhong
 	(MaKH, MaPhong, tinhTrang, NgayGioNhan, NgayGioTra)
 VALUES
-	(2, N'P102', 0, '2021-05-02 07:30:00', '2021-05-05 08:30:00'),
-	(1, N'P101', 1, '2021-05-16 18:30:00', '2021-05-16 21:30:00'),
-	(3, N'P103', 2, '2021-05-16 08:30:00', null)
+	(2, N'P102', 0, '2021-05-02', '2021-05-05'),
+	(1, N'P101', 1, '2021-05-16', '2021-05-16'),
+	(3, N'P103', 2, '2021-05-16', null)
 GO
 
 
@@ -302,3 +286,19 @@ BEGIN
 	WHERE hd.MaHD = @MaHD
 END
 GO
+
+CREATE PROC UDP_GetListHDPhongReservation
+	@MaPhong NVARCHAR(100),
+	@tuNgay DATETIME,
+	@denNgay DATETIME
+AS
+BEGIN
+	SELECT hd.MaHD, p.MaPhong, p.SoGiuong, p.SucChua, p.ViTri, p.TinhTrang as TinhTrangP, lp.MaLoaiPhong, lp.TenLoaiPhong, lp.DonGia, hd.NgayGioNhan, hd.NgayGioTra, kh.MaKH, kh.TenKH, hd.tinhTrang as TinhTrangHD
+	FROM dbo.HoaDonPhong hd
+		JOIN dbo.Phong p ON hd.MaPhong = p.MaPhong
+		JOIN dbo.LoaiPhong lp ON p.MaLoaiPhong = lp.MaLoaiPhong
+		JOIN dbo.KhachHang kh ON kh.MaKH = hd.MaKH
+	WHERE p.MaPhong = @MaPhong and hd.tinhTrang = 0 and hd.NgayGioNhan BETWEEN @tuNgay AND @denNgay
+END
+GO
+
