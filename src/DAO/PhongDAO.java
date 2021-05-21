@@ -98,7 +98,7 @@ public class PhongDAO {
         return phong;
     }
 
-    public ArrayList<Phong> getAllListLoaiPhong() {
+    public ArrayList<Phong> getListPhong() {
         ArrayList<Phong> dataList = new ArrayList<Phong>();
         ConnectDB.getInstance();
         Statement stmt = null;
@@ -124,7 +124,7 @@ public class PhongDAO {
         return dataList;
     }
 
-    public ArrayList<Phong> getListLoaiPhongByID(String ID) {
+    public ArrayList<Phong> getListPhongByID(String ID) {
         ArrayList<Phong> dataList = new ArrayList<Phong>();
         PreparedStatement stmt = null;
         ConnectDB.getInstance();
