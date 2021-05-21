@@ -97,5 +97,13 @@ public class Phong {
         this.loaiPhong = loaiPhong;
     }
 
-    
+    public KhachHang getKHDangSuDungPhong(){
+        PhongDAO phong_dao = new PhongDAO();
+        return phong_dao.getKHDangSuDungPhong(this.maPhong);
+    }
+
+    public HoaDonPhong getHoaDonPhong(){
+        HoaDonPhongDAO hoaDonPhong_dao = new HoaDonPhongDAO();
+        return hoaDonPhong_dao.getHDPByMaPhongAndDate(this.maPhong);
+    }
 }

@@ -4,11 +4,12 @@ import java.sql.*;
 import java.util.ArrayList;
 
 import connectDB.ConnectDB;
+import entity.KhachHang;
 import entity.Phong;
 
 public class PhongDAO {
     private static PhongDAO instance = new PhongDAO();
-
+    
     public static PhongDAO getInstance() {
         return instance;
     }
@@ -230,5 +231,32 @@ public class PhongDAO {
             }
         }
         return n > 0;
+    }
+
+    public KhachHang getKHDangSuDungPhong(String maPhong){
+        long ml=System.currentTimeMillis(); 
+        ml = ml/86400000*86400000;
+        Date now = new Date(ml);
+        KhachHang khachHang = null;
+        try{
+            ConnectDB.getInstance();
+            Connection conn = ConnectDB.getConnection();
+
+            String sql = "Select * from HoaDonPhong where MaPhong = ? and NgayGioNhan <= ? and NgayGioTra >= ? and TinhTrang = 1";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setString(1, maPhong);
+            statement.setDate(2, now);
+            statement.setDate(3, now);
+            System.out.println(statement);
+            ResultSet rs = statement.executeQuery();
+
+            if(!rs.next())
+                return null;
+            
+            khachHang = new KhachHang(rs.getInt("MaKH"));
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return khachHang;
     }
 }

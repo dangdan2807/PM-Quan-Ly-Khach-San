@@ -1,12 +1,25 @@
 package entity;
 
 import java.sql.*;
+import java.util.ArrayList;
+import DAO.*;
 
 public class HoaDonDV {
 	private int maHDDV;
 	private Date ngayGioDat;
 
 	private KhachHang khachHang;
+
+
+	public HoaDonDV(int maHDDV, Date ngayGioDat, KhachHang khachHang) {
+		this.maHDDV = maHDDV;
+		this.ngayGioDat = ngayGioDat;
+		this.khachHang = khachHang;
+	}
+
+	public HoaDonDV() {
+	
+	}
 
 	public int getMaHDDV() {
 		return maHDDV;
@@ -32,11 +45,7 @@ public class HoaDonDV {
 		this.khachHang = khachHang;
 	}
 
-	public HoaDonDV(int maHDDV, Date ngayGioDat, KhachHang khachHang) {
-		this.maHDDV = maHDDV;
-		this.ngayGioDat = ngayGioDat;
-		this.khachHang = khachHang;
-	}
+	
 
 	@Override
 	public int hashCode() {
@@ -58,6 +67,26 @@ public class HoaDonDV {
 		if (maHDDV != other.maHDDV)
 			return false;
 		return true;
+	}
+
+	public ArrayList<HoaDonDV> getHDDVByMaKH(int maKH){
+		HoaDonDVDAO hoaDonDV_dao = new HoaDonDVDAO();
+		return hoaDonDV_dao.getHDDVByMaKH(maKH);
+	}
+
+	public ArrayList<ChiTietDV> getChiTietDV(){
+		ChiTietDVDAO chiTietDV_dao = new ChiTietDVDAO();
+        return chiTietDV_dao.getChiTietDVByMaHDDV(this.maHDDV);
+	}
+
+	public double tinhTong(){
+		ArrayList<ChiTietDV> dsctdv = getChiTietDV();
+		double tong = 0;
+		for(int i=0; i<dsctdv.size(); i++){
+			DichVu dv = dsctdv.get(i).getDichVu();
+			tong += dv.getDonGia()*dsctdv.get(i).getSoLuong();
+		}
+		return tong;
 	}
 
 }
