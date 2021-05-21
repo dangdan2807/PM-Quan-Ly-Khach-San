@@ -1,14 +1,16 @@
 package application;
 
 import java.awt.*;
+import java.awt.event.*;
 import java.util.ArrayList;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import entity.*;
+import DAO.*;
 
 
-public class ThanhToan_UI extends JFrame {
+public class ThanhToan_UI extends JFrame{
 
     private ImageIcon icon_pay = new ImageIcon("data/images/purse.png");
     private ImageIcon icon_in = new ImageIcon("data/images/printer.png");
@@ -25,6 +27,10 @@ public class ThanhToan_UI extends JFrame {
     private JButton btnThanhToan;
     private JButton btnIn;
 
+    private HoaDonPhongDAO hoaDonPhong_dao = new HoaDonPhongDAO();
+    private HoaDonDVDAO hoaDonDV_dao = new HoaDonDVDAO();
+    private PhongDAO phong_dao = new PhongDAO();
+
     public ThanhToan_UI(){
         
     }
@@ -36,10 +42,8 @@ public class ThanhToan_UI extends JFrame {
             renderData();
         }else{
             // pnMain
-            pnMain.add(new JLabel("Vui lòng chòn hóa đơn để thanh toán !"));
+            pnMain.add(new JLabel("Vui lòng chọn hóa đơn để thanh toán !"));
         }
-        
-
     }
 
     public JPanel renderGUI() {
@@ -149,6 +153,37 @@ public class ThanhToan_UI extends JFrame {
         p_sec_action.add(pBtn);
         btnThanhToan = new JButton("Thanh toán", icon_pay);
         btnIn = new JButton("In hóa đơn", icon_in);
+
+        // thanh toán
+        btnThanhToan.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // if(hdp.getTinhTrang() != 1)
+                //     return;
+
+                if(hdp.updateTinhTrang(2)){
+                    if(hddv != null){
+                        hoaDonDV_dao.thanhToan(hddv.getMaHDDV());
+                    }
+                    
+                    // cập nhật phòng trống
+                    hdp.getPhong().updateTinhTrang(0); 
+                    btnThanhToan.setEnabled(false);
+                    // modelDatPhong.setValueAt("Đã trả phòng", idx, 7);
+                    JOptionPane.showMessageDialog(pnMain, "Thanh toán thành công");
+                }else{
+                    JOptionPane.showMessageDialog(pnMain, "Có lỗi xảy ra");
+                }
+            }
+        });
+
+        btnIn.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO Auto-generated method stub
+                JOptionPane.showMessageDialog(pnMain, "Đã in hóa đơn");
+            }
+        });
         pBtn.add(btnThanhToan);
         pBtn.add(btnIn);
 
@@ -202,6 +237,7 @@ public class ThanhToan_UI extends JFrame {
         space.setBorder(BorderFactory.createEmptyBorder(h/2, w/2, h/2, w/2));
         return space;
     }
+
     
 }
 

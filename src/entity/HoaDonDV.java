@@ -86,6 +86,12 @@ public class HoaDonDV {
 		return hoaDonDV_dao.getHDDVByMaKH(maKH);
 	}
 
+	public ArrayList<HoaDonDV> getHDDVByMaKHAndDate(int maKH, Date tuNgay, Date denNgay){
+		HoaDonDVDAO hoaDonDV_dao = new HoaDonDVDAO();
+		return hoaDonDV_dao.getHDDVByMaKHAndDate(maKH, tuNgay, denNgay);
+	}
+
+
 	public ArrayList<ChiTietDV> getChiTietDV() {
 		ChiTietDVDAO chiTietDV_dao = new ChiTietDVDAO();
 		return chiTietDV_dao.getChiTietDVByMaHDDV(this.maHDDV);

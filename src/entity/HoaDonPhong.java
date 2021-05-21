@@ -2,6 +2,8 @@ package entity;
 
 import java.sql.*;
 
+import DAO.HoaDonPhongDAO;
+
 public class HoaDonPhong {
     private int maHD;
     private int tinhTrang;
@@ -100,4 +102,27 @@ public class HoaDonPhong {
         return (int)d/86400000 + 1;
     }
     
+    public boolean updateTinhTrang(int tinhTrang){
+        long ml=System.currentTimeMillis(); 
+        ml = ml/86400000*86400000;
+        Date now = new Date(ml);
+
+        if(tinhTrang == 1){
+            if(compareDate(now, ngayGioNhan) == -1)
+                return false;
+        }
+        this.setTinhTrang(tinhTrang);
+        HoaDonPhongDAO hoaDonPhong_dao = new HoaDonPhongDAO();
+        return hoaDonPhong_dao.updateTinhTrang(this.maHD, tinhTrang);
+    }
+
+    public int compareDate(Date d1, Date d2) {
+        if (d1.toString().equals(d2.toString()))
+            return 0;
+
+        if (d1.before(d2))
+            return -1;
+
+        return 1;
+    }
 }

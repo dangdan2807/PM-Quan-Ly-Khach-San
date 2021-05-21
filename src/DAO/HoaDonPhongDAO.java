@@ -165,9 +165,10 @@ public class HoaDonPhongDAO {
             PreparedStatement statement = conn.prepareStatement(sql);
             statement.setInt(1, hdp.getKhachHang().getMaKH());
             statement.setString(2, hdp.getPhong().getMaPhong());
-            statement.setDate(3, hdp.getNgayGioNhan());
-            statement.setDate(4, hdp.getNgayGioTra());
-            statement.setInt(5, hdp.getTinhTrang());
+            statement.setInt(3, hdp.getTinhTrang());
+            statement.setDate(4, hdp.getNgayGioNhan());
+            statement.setDate(5, hdp.getNgayGioTra());
+            
             n = statement.executeUpdate();
 
             // insert thành công
@@ -175,8 +176,8 @@ public class HoaDonPhongDAO {
                 // update tình trạng phòng
                 PhongDAO phong_dao = new PhongDAO();
                 Phong phong = hdp.getPhong();
-                phong.setTinhTrang(1);// đã đặt
-                phong_dao.update(phong);
+                phong.updateTinhTrang(1);// đã đặt
+                // phong_dao.update(phong);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -207,39 +208,16 @@ public class HoaDonPhongDAO {
         return n > 0;
     }
 
-    public boolean nhanPhong(int maHD) {
+    public boolean updateTinhTrang(int maHD, int tinhTrang) {
         int n = 0;
         PreparedStatement stmt = null;
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
-        String query = "update dbo.HoaDonPhong set tinhTrang = 1 Where MaHD = ?";
+        String query = "update dbo.HoaDonPhong set tinhTrang = ? Where MaHD = ?";
         try {
             stmt = con.prepareStatement(query);
-            stmt.setInt(1, maHD);
-            n = stmt.executeUpdate();
-            //     String sql = ""
-            // }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                stmt.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return n > 0;
-    }
-
-    public boolean traPhong(int maHD) {
-        int n = 0;
-        PreparedStatement stmt = null;
-        ConnectDB.getInstance();
-        Connection con = ConnectDB.getConnection();
-        String query = "update dbo.HoaDonPhong set tinhTrang = 2 Where MaHD = ?";
-        try {
-            stmt = con.prepareStatement(query);
-            stmt.setInt(1, maHD);
+            stmt.setInt(1, tinhTrang);
+            stmt.setInt(2, maHD);
             n = stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -287,20 +265,25 @@ public class HoaDonPhongDAO {
     public HoaDonPhong getHDPByMaPhongAndDate(String maPhong){
         
         long ml=System.currentTimeMillis(); 
+        System.out.print("truoc ");
+        System.out.println(ml);
         ml = ml/86400000*86400000;
+        System.out.print("sau ");
+        System.out.println(ml);
         Date now = new Date(ml);
         HoaDonPhong hdp = null;
         try{
             ConnectDB.getInstance();
             Connection conn = ConnectDB.getConnection();
 
-            String sql = "Select * from HoaDonPhong where MaPhong = ? and NgayGioNhan <= ? and NgayGioTra >= ? and TinhTrang = 1";
+            String sql = "Select * from HoaDonPhong where MaPhong = ? and NgayGioNhan <= ? and NgayGioTra >= ? and TinhTrang != 2";
             PreparedStatement statement = conn.prepareStatement(sql);
             statement.setString(1, maPhong);
             statement.setDate(2, now);
             statement.setDate(3, now);
             ResultSet rs = statement.executeQuery();
-
+            System.out.println(maPhong);
+            System.out.println(now);
             if(!rs.next())
                 return null;
             
