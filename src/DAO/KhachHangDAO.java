@@ -113,20 +113,20 @@ public class KhachHangDAO {
         return khachHang;
     }
 
-    public boolean create(KhachHang dv) {
+    public boolean create(KhachHang kh) {
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
         PreparedStatement stmt = null;
         int n = 0;
         try {
-            String sql = "insert into dbo.KhachHang (TenKH, cmnd, ngayHetHan, LoaiKH, soLanDatPhong)"
+            String sql = "insert into dbo.KhachHang (TenKH, CMND, NgayHetHan, LoaiKH, soLanDatPhong)"
                     + " values (?, ?, ?, ?, ?)";
             stmt = con.prepareStatement(sql);
-            stmt.setString(1, dv.getTenKH());
-            stmt.setString(2, dv.getCmnd());
-            stmt.setDate(3, dv.getNgayHetHan());
-            stmt.setString(4, dv.getLoaiKH());
-            stmt.setInt(5, dv.getSoLanDatPhong());
+            stmt.setString(1, kh.getTenKH());
+            stmt.setString(2, kh.getCmnd());
+            stmt.setDate(3, kh.getNgayHetHan());
+            stmt.setString(4, kh.getLoaiKH());
+            stmt.setInt(5, kh.getSoLanDatPhong());
             n = stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -147,7 +147,7 @@ public class KhachHangDAO {
         int n = 0;
         try {
             String sql = "update dbo.KhachHang "
-                    + " set tenKH = ?, cmnd = ?, ngayHetHan = ?, LoaiKH = ?, soLanDatPhong = ? " + " where maKH = ?";
+                    + " set tenKH = ?, CMND = ?, NgayHetHan = ?, LoaiKH = ?, soLanDatPhong = ? " + " where maKH = ?";
             stmt = con.prepareStatement(sql);
             stmt.setString(1, dv.getTenKH());
             stmt.setString(2, dv.getCmnd());

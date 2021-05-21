@@ -4,8 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import DAO.*;
 
-    
-
 public class Phong {
     private String maPhong;
     private int sucChua;

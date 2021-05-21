@@ -4,17 +4,19 @@ GO
 CREATE DATABASE KhachSan
 GO
 
+Drop TABLE KhachSan
+
 USE KhachSan
 GO
 
 CREATE TABLE KhachHang
 (
-	MaKH int identity PRIMARY KEY,
+	MaKH INT IDENTITY PRIMARY KEY,
 	TenKH NVARCHAR(100) NOT NULL,
-	cmnd VARCHAR(20),
-	ngayHetHan DATETIME,
+	CMND VARCHAR(50),
+	NgayHetHan DATETIME,
 	LoaiKH NVARCHAR(100),
-	soLanDatPhong INT CHECK(soLanDatPhong >= 0)
+	SoLanDatPhong INT CHECK(SoLanDatPhong >= 0)
 )
 GO
 
@@ -22,43 +24,47 @@ CREATE TABLE DichVu
 (
 	MaDV int identity PRIMARY KEY,
 	TenDV NVARCHAR(100) NOT NULL,
-	DonGia DECIMAL CHECK(DonGia >= 0)
+	DonGia DECIMAL CHECK(DonGia >= 0) 
 )
 GO
 
 CREATE TABLE LoaiPhong
 (
 	MaLoaiPhong int identity PRIMARY KEY,
-	TenLoaiPhong NVARCHAR(50),
+	TenLoaiPhong NVARCHAR(100),
 	DonGia DECIMAL CHECK(DonGia >= 0)
 )
 GO
 
 CREATE TABLE Phong
 (
-	MaPhong Nvarchar(100) PRIMARY KEY,
+	MaPhong NVARCHAR(100) PRIMARY KEY,
 	SucChua INT CHECK(SucChua > 0),
 	SoGiuong INT CHECK(SoGiuong > 0),
 	ViTri NVARCHAR(100),
 	-- 0. trống | 1. đã đặt | 2.có người ở
-	TinhTrang int,
-	MaLoaiPhong int REFERENCES LoaiPhong(MaLoaiPhong)
+	TinhTrang INT,
+	MaLoaiPhong INT REFERENCES LoaiPhong(MaLoaiPhong)
 )
 GO
 
 CREATE TABLE HoaDonDV
 (
-	MaHDDV int identity PRIMARY KEY,
-	MaKH int REFERENCES KhachHang(MaKH),
-	ngayGioDat DATETIME,
+	MaHDDV INT IDENTITY PRIMARY KEY,
+	MaKH INT REFERENCES KhachHang(MaKH),
+	-- 0. chưa thanh toán | 1. đã thanh toán
+	TinhTrang INT,
+	NgayGioLap DATETIME DEFAULT(GETDATE())
 )
 GO
+
 
 CREATE TABLE ChiTietDV
 (
 	MaHDDV int REFERENCES HoaDonDV(MaHDDV),
 	MaDV int REFERENCES DichVu(MaDV),
-	SoLuong INT CHECK(Soluong >= 0)
+	SoLuong INT CHECK(Soluong >= 0),
+	NgayGioDat DATETIME DEFAULT(GETDATE())
 )
 GO
 
@@ -68,8 +74,8 @@ CREATE TABLE HoaDonPhong
 	MaKH int REFERENCES KhachHang(MaKH),
 	MaPhong Nvarchar(100) REFERENCES Phong(MaPhong),
 	-- 0. đã đặt | 1. đã nhận | 2. đã trả
-	tinhTrang int,
-	NgayGioNhan DATETIME,
+	TinhTrang int,
+	NgayGioNhan DATETIME DEFAULT(GETDATE()),
 	NgayGioTra DATETIME
 )
 GO
@@ -101,23 +107,23 @@ VALUES
 GO
 
 INSERT INTO dbo.HoaDonDV
-	(maKH, ngayGioDat)
+	(maKH, ngayGioLap, TinhTrang)
 VALUES
-	(1, '2021-05-19'),
-	(2, '2021-05-15'),
-	(3, '2021-05-19')
+	(1, '2021-05-19', 1),
+	(2, '2021-05-15', 1),
+	(3, '2021-05-19', 0)
 
 INSERT INTO dbo.ChiTietDV
-	(MaHDDV, MaDV, SoLuong)
+	(MaHDDV, MaDV, SoLuong, NgayGioDat)
 VALUES
-	(1, 1, 1),
-	(1, 2, 2),
-	(1, 4, 2),
-	(2, 4, 1),
-	(2, 5, 1),
-	(2, 6, 2),
-	(3, 8, 2),
-	(3, 10, 2)
+	(1, 1, 1, '2021-05-16'),
+	(1, 2, 2, '2021-05-16'),
+	(1, 4, 2, '2021-05-16'),
+	(2, 4, 1, '2021-05-02'),
+	(2, 5, 1, '2021-05-03'),
+	(2, 6, 2, '2021-05-05'),
+	(3, 8, 2, '2021-05-18'),
+	(3, 10, 2, '2021-05-19')
 GO
 
 INSERT INTO dbo.LoaiPhong
@@ -141,9 +147,10 @@ GO
 INSERT INTO dbo.HoaDonPhong
 	(MaKH, MaPhong, tinhTrang, NgayGioNhan, NgayGioTra)
 VALUES
-	(2, N'P102', 0, '2021-05-02', '2021-05-05'),
 	(1, N'P101', 1, '2021-05-16', '2021-05-16'),
-	(3, N'P103', 2, '2021-05-16', null)
+	(2, N'P102', 0, '2021-05-02', '2021-05-07'),
+	(3, N'P103', 2, '2021-05-16', null),
+	(5, N'P201', 0, '2021-05-30', null)
 GO
 
 
@@ -155,15 +162,17 @@ CREATE PROC UDP_SearchCTHDByDate
 	@denNgay DATETIME
 AS
 BEGIN
-	SELECT hd.MaHDDV, hd.MaKH, hd.ngayGioDat, ct.MaDV, dv.TenDV, ct.SoLuong, dv.DonGia, kh.TenKH
-	FROM dbo.HoaDonDV hd JOIN dbo.ChiTietDV ct
-		ON hd.MaHDDV = ct.MaHDDV
+	SELECT hd.MaHDDV, hd.NgayGioLap , hd.TinhTrang ,
+		kh.MaKH ,kh.TenKH, kh.CMND, kh.NgayHetHan, kh.LoaiKH, kh.SoLanDatPhong,
+		ct.SoLuong, ct.NgayGioDat,
+		dv.MaDV, dv.TenDV, dv.DonGia
+	FROM dbo.HoaDonDV hd
+		JOIN dbo.ChiTietDV ct ON hd.MaHDDV = ct.MaHDDV
 		JOIN dbo.DichVu dv ON ct.MaDV = dv.MaDV
 		JOIN dbo.KhachHang kh ON hd.MaKH = kh.MaKH
-	WHERE hd.ngayGioDat BETWEEN @tuNgay AND @denNgay
+	WHERE hd.ngayGioLap BETWEEN @tuNgay AND @denNgay
 END
 GO
-
 
 CREATE PROC UDP_SearchCTHDByMaHK
 	@MaKH INT,
@@ -171,12 +180,15 @@ CREATE PROC UDP_SearchCTHDByMaHK
 	@denNgay DATETIME
 AS
 BEGIN
-	SELECT hd.MaHDDV, hd.MaKH, hd.ngayGioDat, ct.MaDV, dv.TenDV, ct.SoLuong, dv.DonGia, kh.TenKH
+	SELECT hd.MaHDDV, hd.NgayGioLap , hd.TinhTrang ,
+		kh.MaKH ,kh.TenKH, kh.CMND, kh.NgayHetHan, kh.LoaiKH, kh.SoLanDatPhong,
+		ct.SoLuong, ct.NgayGioDat,
+		dv.MaDV, dv.TenDV, dv.DonGia
 	FROM dbo.HoaDonDV hd
 		JOIN dbo.ChiTietDV ct ON hd.MaHDDV = ct.MaHDDV
 		JOIN dbo.DichVu dv ON ct.MaDV = dv.MaDV
 		JOIN dbo.KhachHang kh ON hd.MaKH = kh.MaKH
-	WHERE hd.MaKH = @MaKH AND hd.ngayGioDat BETWEEN @tuNgay AND @denNgay
+	WHERE hd.MaKH = @MaKH AND hd.ngayGioLap BETWEEN @tuNgay AND @denNgay
 END
 GO
 
@@ -188,12 +200,15 @@ AS
 BEGIN
 
 	SET @TenKH = '%' + @TenKH +'%'
-	SELECT hd.MaHDDV, hd.MaKH, hd.ngayGioDat, ct.MaDV, dv.TenDV, ct.SoLuong, dv.DonGia, kh.TenKH
+	SELECT hd.MaHDDV, hd.NgayGioLap , hd.TinhTrang ,
+		kh.MaKH ,kh.TenKH, kh.CMND, kh.NgayHetHan, kh.LoaiKH, kh.SoLanDatPhong,
+		ct.SoLuong, ct.NgayGioDat,
+		dv.MaDV, dv.TenDV, dv.DonGia
 	FROM dbo.HoaDonDV hd 
 		JOIN dbo.ChiTietDV ct ON hd.MaHDDV = ct.MaHDDV
 		JOIN dbo.DichVu dv ON ct.MaDV = dv.MaDV
 		JOIN dbo.KhachHang kh ON hd.MaKH = kh.MaKH
-	WHERE kh.TenKH like @TenKH AND hd.ngayGioDat BETWEEN @tuNgay AND @denNgay
+	WHERE kh.TenKH like @TenKH AND hd.ngayGioLap BETWEEN @tuNgay AND @denNgay
 END
 GO
 
@@ -205,12 +220,15 @@ CREATE PROC UDP_SearchCTHDByMaKHAndTenKH
 AS
 BEGIN
 	SET @TenKH = '%' + @TenKH +'%'
-	SELECT hd.MaHDDV, hd.MaKH, hd.ngayGioDat, ct.MaDV, dv.TenDV, ct.SoLuong, dv.DonGia, kh.TenKH
+	SELECT hd.MaHDDV, hd.NgayGioLap , hd.TinhTrang ,
+		kh.MaKH ,kh.TenKH, kh.CMND, kh.NgayHetHan, kh.LoaiKH, kh.SoLanDatPhong,
+		ct.SoLuong, ct.NgayGioDat,
+		dv.MaDV, dv.TenDV, dv.DonGia
 	FROM dbo.HoaDonDV hd
 		JOIN dbo.ChiTietDV ct ON hd.MaHDDV = ct.MaHDDV
 		JOIN dbo.DichVu dv ON ct.MaDV = dv.MaDV
 		JOIN dbo.KhachHang kh ON hd.MaKH = kh.MaKH
-	WHERE hd.MaKH = @MaKH AND kh.tenKH LIKE @TenKH AND hd.ngayGioDat BETWEEN @tuNgay AND @denNgay
+	WHERE hd.MaKH = @MaKH AND kh.tenKH LIKE @TenKH AND hd.ngayGioLap BETWEEN @tuNgay AND @denNgay
 END
 GO
 
@@ -220,7 +238,10 @@ CREATE PROC UDP_SearchHDPhongByDate
 	@denNgay DATETIME
 AS
 BEGIN
-	SELECT hd.MaHD, hd.TinhTrang, hd.NgayGioNhan, hd.NgayGioTra, hd.MaPhong, lp.MaLoaiPhong, lp.TenLoaiPhong, lp.DonGia, kh.MaKH, kh.TenKH
+	SELECT hd.MaHD, hd.TinhTrang as TinhTrangHD, hd.NgayGioNhan, hd.NgayGioTra,
+		p.MaPhong, p.SucChua, p.SoGiuong, p.ViTri, p.TinhTrang as TinhTrangP,
+		lp.MaLoaiPhong, lp.TenLoaiPhong, lp.DonGia, 
+		kh.MaKH, kh.TenKH, kh.CMND, kh.NgayHetHan, kh.LoaiKH, kh.SoLanDatPhong
 	FROM dbo.HoaDonPhong hd
 		JOIN dbo.Phong p ON hd.MaPhong = p.MaPhong
 		JOIN dbo.LoaiPhong lp ON lp.MaLoaiPhong = p.MaLoaiPhong
@@ -235,7 +256,10 @@ CREATE PROC UDP_SearchHDPhongByMaKH
 	@denNgay DATETIME
 AS
 BEGIN
-	SELECT hd.MaHD, hd.TinhTrang, hd.NgayGioNhan, hd.NgayGioTra, hd.MaPhong, lp.MaLoaiPhong, lp.TenLoaiPhong, lp.DonGia, kh.MaKH, kh.TenKH
+	SELECT hd.MaHD, hd.TinhTrang as TinhTrangHD, hd.NgayGioNhan, hd.NgayGioTra,
+		p.MaPhong, p.SucChua, p.SoGiuong, p.ViTri, p.TinhTrang as TinhTrangP,
+		lp.MaLoaiPhong, lp.TenLoaiPhong, lp.DonGia, 
+		kh.MaKH, kh.TenKH, kh.CMND, kh.NgayHetHan, kh.LoaiKH, kh.SoLanDatPhong
 	FROM dbo.HoaDonPhong hd
 		JOIN dbo.Phong p ON hd.MaPhong = p.MaPhong
 		JOIN dbo.LoaiPhong lp ON lp.MaLoaiPhong = p.MaLoaiPhong
@@ -251,7 +275,10 @@ CREATE PROC UDP_SearchHDPhongByTenKH
 AS
 BEGIN
 	SET @TenKH = '%' + @TenKH +'%'
-	SELECT hd.MaHD, hd.TinhTrang, hd.NgayGioNhan, hd.NgayGioTra, hd.MaPhong, lp.MaLoaiPhong, lp.TenLoaiPhong, lp.DonGia, kh.MaKH, kh.TenKH
+	SELECT hd.MaHD, hd.TinhTrang as TinhTrangHD, hd.NgayGioNhan, hd.NgayGioTra,
+		p.MaPhong, p.SucChua, p.SoGiuong, p.ViTri, p.TinhTrang as TinhTrangP,
+		lp.MaLoaiPhong, lp.TenLoaiPhong, lp.DonGia, 
+		kh.MaKH, kh.TenKH, kh.CMND, kh.NgayHetHan, kh.LoaiKH, kh.SoLanDatPhong
 	FROM dbo.HoaDonPhong hd
 		JOIN dbo.Phong p ON hd.MaPhong = p.MaPhong
 		JOIN dbo.LoaiPhong lp ON lp.MaLoaiPhong = p.MaLoaiPhong
@@ -268,7 +295,10 @@ CREATE PROC UDP_SearchHDPhongByMaKHAndTenKH
 AS
 BEGIN
 	SET @TenKH = '%' + @TenKH +'%'
-	SELECT hd.MaHD, hd.TinhTrang, hd.NgayGioNhan, hd.NgayGioTra, hd.MaPhong, lp.MaLoaiPhong, lp.TenLoaiPhong, lp.DonGia, kh.MaKH, kh.TenKH
+	SELECT hd.MaHD, hd.TinhTrang as TinhTrangHD, hd.NgayGioNhan, hd.NgayGioTra,
+		p.MaPhong, p.SucChua, p.SoGiuong, p.ViTri, p.TinhTrang as TinhTrangP,
+		lp.MaLoaiPhong, lp.TenLoaiPhong, lp.DonGia, 
+		kh.MaKH, kh.TenKH, kh.CMND, kh.NgayHetHan, kh.LoaiKH, kh.SoLanDatPhong
 	FROM dbo.HoaDonPhong hd
 		JOIN dbo.Phong p ON hd.MaPhong = p.MaPhong
 		JOIN dbo.LoaiPhong lp ON lp.MaLoaiPhong = p.MaLoaiPhong
@@ -289,11 +319,31 @@ GO
 
 CREATE PROC UDP_GetListHDPhongReservation
 	@MaPhong NVARCHAR(100),
+	@tuNgay DATETIME
+AS
+BEGIN
+	SELECT hd.MaHD, hd.TinhTrang as TinhTrangHD, hd.NgayGioNhan, hd.NgayGioTra,
+		p.MaPhong, p.SucChua, p.SoGiuong, p.ViTri, p.TinhTrang as TinhTrangP,
+		lp.MaLoaiPhong, lp.TenLoaiPhong, lp.DonGia, 
+		kh.MaKH, kh.TenKH, kh.CMND, kh.NgayHetHan, kh.LoaiKH, kh.SoLanDatPhong
+	FROM dbo.HoaDonPhong hd
+		JOIN dbo.Phong p ON hd.MaPhong = p.MaPhong
+		JOIN dbo.LoaiPhong lp ON p.MaLoaiPhong = lp.MaLoaiPhong
+		JOIN dbo.KhachHang kh ON kh.MaKH = hd.MaKH
+	WHERE p.MaPhong = @MaPhong and hd.tinhTrang = 0 and hd.NgayGioNhan > @tuNgay
+END
+GO
+
+CREATE PROC UDP_GetListHDPhongReservationLimit
+	@MaPhong NVARCHAR(100),
 	@tuNgay DATETIME,
 	@denNgay DATETIME
 AS
 BEGIN
-	SELECT hd.MaHD, p.MaPhong, p.SoGiuong, p.SucChua, p.ViTri, p.TinhTrang as TinhTrangP, lp.MaLoaiPhong, lp.TenLoaiPhong, lp.DonGia, hd.NgayGioNhan, hd.NgayGioTra, kh.MaKH, kh.TenKH, hd.tinhTrang as TinhTrangHD
+	SELECT hd.MaHD, hd.TinhTrang as TinhTrangHD, hd.NgayGioNhan, hd.NgayGioTra,
+		p.MaPhong, p.SucChua, p.SoGiuong, p.ViTri, p.TinhTrang as TinhTrangP,
+		lp.MaLoaiPhong, lp.TenLoaiPhong, lp.DonGia, 
+		kh.MaKH, kh.TenKH, kh.CMND, kh.NgayHetHan, kh.LoaiKH, kh.SoLanDatPhong
 	FROM dbo.HoaDonPhong hd
 		JOIN dbo.Phong p ON hd.MaPhong = p.MaPhong
 		JOIN dbo.LoaiPhong lp ON p.MaLoaiPhong = lp.MaLoaiPhong
@@ -301,4 +351,3 @@ BEGIN
 	WHERE p.MaPhong = @MaPhong and hd.tinhTrang = 0 and hd.NgayGioNhan BETWEEN @tuNgay AND @denNgay
 END
 GO
-

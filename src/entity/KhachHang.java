@@ -16,7 +16,6 @@ public class KhachHang {
 		setTenKH(tenKH);
 		setCmnd(cmnd);
 		this.ngayHetHan = ngayHetHan;
-		// setLoaiKH(loaiKH);
 		this.loaiKH = loaiKH;
 		setSoLanDatPhong(soLanDatPhong);
 	}
@@ -37,8 +36,8 @@ public class KhachHang {
 	}
 
 	public KhachHang(ResultSet rs) throws SQLException {
-		this(rs.getInt("MaKH"), rs.getString("TenKH"), rs.getString("cmnd"), rs.getDate("ngayHetHan"),
-				rs.getString("LoaiKH"), rs.getInt("soLanDatPhong"));
+		this(rs.getInt("MaKH"), rs.getString("TenKH"), rs.getString("CMND"), rs.getDate("NgayHetHan"),
+				rs.getString("LoaiKH"), rs.getInt("SoLanDatPhong"));
 	}
 
 

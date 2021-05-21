@@ -92,7 +92,7 @@ public class ThongKeDichVu_UI extends JFrame implements ActionListener, KeyListe
         pnMain.add(pnTable);
         pnTable.setLayout(new BorderLayout(0, 0));
         // mã HDDV
-        String[] cols = { "Mã HD", "Mã DV", "Tên DV", "Số lượng", "Đơn giá", "Thành Tiền", "Ngày Đặt", "Mã KH",
+        String[] cols = { "Mã HD", "Mã DV", "Tên DV", "Số lượng", "Đơn giá", "Thành Tiền", "Ngày Đặt", "Tình trạng HD", "Mã KH",
                 "Tên KH" };
         modelTable = new DefaultTableModel(cols, 0) {
             // khóa sửa dữ liệu trực tiếp trên table
@@ -242,8 +242,13 @@ public class ThongKeDichVu_UI extends JFrame implements ActionListener, KeyListe
             String date = formatDate(hoaDonDv.getNgayGioDat());
             Double thanhTien = item.getSoLuong() * item.getDichVu().getDonGia();
             sum += thanhTien;
+            String tinhTrang = "";
+            if (hoaDonDv.getTinhTrang() == 0)
+                tinhTrang = "Chưa thanh toán";
+            else if(hoaDonDv.getTinhTrang() == 1)
+                tinhTrang = "Đã thanh toán";
             modelTable.addRow(new Object[] { hoaDonDv.getMaHDDV(), dv.getMaDV(), dv.getTenDV(), item.getSoLuong(),
-                    dv.getDonGia(), thanhTien, date, kh.getMaKH(), kh.getTenKH() });
+                    dv.getDonGia(), thanhTien, date, tinhTrang, kh.getMaKH(), kh.getTenKH() });
         }
         txtThanhTien.setText(sum.toString());
     }

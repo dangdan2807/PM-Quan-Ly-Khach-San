@@ -184,7 +184,7 @@ public class QuanLyDichVu_UI extends JFrame implements ActionListener, MouseList
             if (validData()) {
                 DichVu dv = getDataInTable();
                 try {
-                    boolean result = dvDAO.create(dv);
+                    boolean result = dvDAO.insert(dv);
                     int maDV = dvDAO.getLatestID();
                     if (result == true) {
                         txtMaDV.setText(String.valueOf(maDV));

@@ -1,13 +1,21 @@
 package entity;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import DAO.*;
-public class ChiTietDV {
-    private int soLuong;
+import java.sql.*;
 
-    private HoaDonDV hoaDonDV;
+public class ChiTietDV {
     private DichVu dichVu;
+    private HoaDonDV hoaDonDV;
+    private int soLuong;
+    private Date ngayGioDat;
+
+    public Date getNgayGioDat() {
+        return ngayGioDat;
+    }
+
+    public void setNgayGioDat(Date ngayGioDat) {
+        this.ngayGioDat = ngayGioDat;
+    }
 
     public ChiTietDV(int soLuong, HoaDonDV hoaDonDV, DichVu dichVu) {
         setSoLuong(soLuong);
@@ -24,12 +32,12 @@ public class ChiTietDV {
         
     }
 
-    public ChiTietDV(ResultSet rs) throws SQLException {
-        this(rs.getInt("SoLuong"),
-                new HoaDonDV(rs.getInt("MaHDDV"), rs.getDate("ngayGioDat"),
-                        new KhachHang(rs.getInt("MaKH"), rs.getString("TenKH"))),
-                new DichVu(rs.getInt("MaDV"), rs.getString("tenDV"), rs.getDouble("donGia")));
-    }
+    // public ChiTietDV(ResultSet rs) throws SQLException {
+    //     this(rs.getInt("SoLuong"),
+    //             new HoaDonDV(rs.getInt("MaHDDV"), rs.getDate("ngayGioDat"),
+    //                     new KhachHang(rs.getInt("MaKH"), rs.getString("TenKH"))),
+    //             new DichVu(rs.getInt("MaDV"), rs.getString("tenDV"), rs.getDouble("donGia")));
+    // }
 
     public DichVu getDichVu() {
         return dichVu;
@@ -43,10 +51,10 @@ public class ChiTietDV {
         return soLuong;
     }
 
-    public void setSoLuong(int sl) {
-        if(sl < 0)
-            sl = 0;
-        this.soLuong = sl;
+    public void setSoLuong(int soLuong) {
+        if (soLuong < 0)
+            soLuong = 0;
+        this.soLuong = soLuong;
     }
 
     public HoaDonDV getHoaDonDV() {
@@ -57,8 +65,19 @@ public class ChiTietDV {
         this.hoaDonDV = hoaDonDV;
     }
 
-    
+    public ChiTietDV(int soLuong, Date ngayGioDat, HoaDonDV hoaDonDV, DichVu dichVu) {
+        setSoLuong(soLuong);
+        this.ngayGioDat = ngayGioDat;
+        this.hoaDonDV = hoaDonDV;
+        this.dichVu = dichVu;
+    }
 
-    
+    public ChiTietDV(ResultSet rs) throws SQLException {
+        this(rs.getInt("SoLuong"), rs.getDate("NgayGioDat"),
+                new HoaDonDV(rs.getInt("MaHDDV"), rs.getDate("ngayGioLap"), rs.getInt("tinhTrang"),
+                        new KhachHang(rs.getInt("MaKH"), rs.getString("TenKH"), rs.getString("CMND"),
+                                rs.getDate("NgayHetHan"), rs.getString("LoaiKH"), rs.getInt("SoLanDatPhong"))),
+                new DichVu(rs.getInt("MaDV"), rs.getString("tenDV"), rs.getDouble("donGia")));
+    }
 
 }

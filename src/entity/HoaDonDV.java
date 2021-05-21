@@ -6,8 +6,8 @@ import DAO.*;
 
 public class HoaDonDV {
 	private int maHDDV;
+	private int tinhTrang;
 	private Date ngayGioDat;
-
 	private KhachHang khachHang;
 
 
@@ -23,6 +23,14 @@ public class HoaDonDV {
 
 	public int getMaHDDV() {
 		return maHDDV;
+	}
+
+	public int getTinhTrang() {
+		return tinhTrang;
+	}
+
+	public void setTinhTrang(int tinhTrang) {
+		this.tinhTrang = tinhTrang;
 	}
 
 	public void setMaHDDV(int maHDDV) {
@@ -45,7 +53,12 @@ public class HoaDonDV {
 		this.khachHang = khachHang;
 	}
 
-	
+	public HoaDonDV(int maHDDV, Date ngayGioDat, int tinhTrang, KhachHang khachHang) {
+		this.maHDDV = maHDDV;
+		this.ngayGioDat = ngayGioDat;
+		this.tinhTrang = tinhTrang;
+		this.khachHang = khachHang;
+	}
 
 	@Override
 	public int hashCode() {
