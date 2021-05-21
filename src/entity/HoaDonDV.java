@@ -10,7 +10,6 @@ public class HoaDonDV {
 	private Date ngayGioDat;
 	private KhachHang khachHang;
 
-
 	public HoaDonDV(int maHDDV, Date ngayGioDat, KhachHang khachHang) {
 		this.maHDDV = maHDDV;
 		this.ngayGioDat = ngayGioDat;
@@ -18,7 +17,7 @@ public class HoaDonDV {
 	}
 
 	public HoaDonDV() {
-	
+
 	}
 
 	public int getMaHDDV() {
@@ -82,7 +81,7 @@ public class HoaDonDV {
 		return true;
 	}
 
-	public ArrayList<HoaDonDV> getHDDVByMaKH(int maKH){
+	public ArrayList<HoaDonDV> getHDDVByMaKH(int maKH) {
 		HoaDonDVDAO hoaDonDV_dao = new HoaDonDVDAO();
 		return hoaDonDV_dao.getHDDVByMaKH(maKH);
 	}
@@ -92,17 +91,18 @@ public class HoaDonDV {
 		return hoaDonDV_dao.getHDDVByMaKHAndDate(maKH, tuNgay, denNgay);
 	}
 
-	public ArrayList<ChiTietDV> getChiTietDV(){
+
+	public ArrayList<ChiTietDV> getChiTietDV() {
 		ChiTietDVDAO chiTietDV_dao = new ChiTietDVDAO();
-        return chiTietDV_dao.getChiTietDVByMaHDDV(this.maHDDV);
+		return chiTietDV_dao.getChiTietDVByMaHDDV(this.maHDDV);
 	}
 
-	public double tinhTong(){
+	public double tinhTong() {
 		ArrayList<ChiTietDV> dsctdv = getChiTietDV();
 		double tong = 0;
-		for(int i=0; i<dsctdv.size(); i++){
+		for (int i = 0; i < dsctdv.size(); i++) {
 			DichVu dv = dsctdv.get(i).getDichVu();
-			tong += dv.getDonGia()*dsctdv.get(i).getSoLuong();
+			tong += dv.getDonGia() * dsctdv.get(i).getSoLuong();
 		}
 		return tong;
 	}

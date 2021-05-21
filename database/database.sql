@@ -4,7 +4,7 @@ GO
 CREATE DATABASE KhachSan
 GO
 
-Drop TABLE KhachSan
+-- Drop DATABASE KhachSan
 
 USE KhachSan
 GO
@@ -13,10 +13,10 @@ CREATE TABLE KhachHang
 (
 	MaKH INT IDENTITY PRIMARY KEY,
 	TenKH NVARCHAR(100) NOT NULL,
-	CMND VARCHAR(50),
-	NgayHetHan DATETIME,
+	CMND VARCHAR(50) NOT NULL,
+	NgayHetHan DATETIME NOT NULL,
 	LoaiKH NVARCHAR(100),
-	SoLanDatPhong INT CHECK(SoLanDatPhong >= 0)
+	SoLanDatPhong INT CHECK(SoLanDatPhong >= 0) DEFAULT(0)
 )
 GO
 
@@ -24,23 +24,23 @@ CREATE TABLE DichVu
 (
 	MaDV int identity PRIMARY KEY,
 	TenDV NVARCHAR(100) NOT NULL,
-	DonGia DECIMAL CHECK(DonGia >= 0) 
+	DonGia DECIMAL CHECK(DonGia >= 0) DEFAULT(0)
 )
 GO
 
 CREATE TABLE LoaiPhong
 (
 	MaLoaiPhong int identity PRIMARY KEY,
-	TenLoaiPhong NVARCHAR(100),
-	DonGia DECIMAL CHECK(DonGia >= 0)
+	TenLoaiPhong NVARCHAR(100) NOT NULL,
+	DonGia DECIMAL CHECK(DonGia >= 0) DEFAULT(0)
 )
 GO
 
 CREATE TABLE Phong
 (
 	MaPhong NVARCHAR(100) PRIMARY KEY,
-	SucChua INT CHECK(SucChua > 0),
-	SoGiuong INT CHECK(SoGiuong > 0),
+	SucChua INT CHECK(SucChua > 0) DEFAULT(1),
+	SoGiuong INT CHECK(SoGiuong > 0) DEFAULT(1),
 	ViTri NVARCHAR(100),
 	-- 0. trống | 1. đã đặt | 2.có người ở
 	TinhTrang INT,
@@ -51,7 +51,7 @@ GO
 CREATE TABLE HoaDonDV
 (
 	MaHDDV INT IDENTITY PRIMARY KEY,
-	MaKH INT REFERENCES KhachHang(MaKH),
+	MaKH INT NOT NULL REFERENCES KhachHang(MaKH),
 	-- 0. chưa thanh toán | 1. đã thanh toán
 	TinhTrang INT,
 	NgayGioLap DATETIME DEFAULT(GETDATE())
@@ -63,7 +63,7 @@ CREATE TABLE ChiTietDV
 (
 	MaHDDV int REFERENCES HoaDonDV(MaHDDV),
 	MaDV int REFERENCES DichVu(MaDV),
-	SoLuong INT CHECK(Soluong >= 0),
+	SoLuong INT CHECK(Soluong >= 1) DEFAULT(1),
 	NgayGioDat DATETIME DEFAULT(GETDATE())
 )
 GO
@@ -75,7 +75,7 @@ CREATE TABLE HoaDonPhong
 	MaPhong Nvarchar(100) REFERENCES Phong(MaPhong),
 	-- 0. đã đặt | 1. đã nhận | 2. đã trả
 	TinhTrang int,
-	NgayGioNhan DATETIME DEFAULT(GETDATE()),
+	NgayGioNhan DATETIME NOT NULL DEFAULT(GETDATE()),
 	NgayGioTra DATETIME
 )
 GO

@@ -180,7 +180,7 @@ public class DialogLichDatPhong extends JDialog implements ActionListener {
             else if (phong.getTinhTrang() == 1)
                 tinhTrangP = "Đã được đặt";
             else if (phong.getTinhTrang() == 2)
-                tinhTrangP = "Đã có người";
+                tinhTrangP = "Đã cho thuê";
             LoaiPhong loaiPhong = phong.getLoaiPhong();
             KhachHang kh = item.getKhachHang();
             String ngayGioNhan = formatDate(item.getNgayGioNhan());

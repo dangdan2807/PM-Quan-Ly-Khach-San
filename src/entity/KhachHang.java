@@ -92,7 +92,7 @@ public class KhachHang {
 	}
 
 	public void setLoaiKH(String loaiKH) {
-		if (!(loaiKH.equals("Việt Nam")) || !(loaiKH.equals("Nước ngoài")))
+		if (!(loaiKH.equalsIgnoreCase("Việt Nam")) || !(loaiKH.equalsIgnoreCase("Nước ngoài")))
 			loaiKH = "Việt Nam";
 		this.loaiKH = loaiKH;
 	}
