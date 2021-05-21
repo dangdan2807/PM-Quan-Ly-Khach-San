@@ -232,11 +232,11 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener, ListSel
         
                     Phong phong = pageTrangChu.dsp.get(j);
                     
-                    HoaDonPhong hdp = phong.getHoaDonPhong();
+                    HoaDonPhong hdp = phong.getHDPByMaPhongAndDate();
                     // KhachHang kh = phong.getKHDangSuDungPhong();
                     // return;
                     System.out.println(hdp.getKhachHang().getTenKH());
-                    dshddv = new HoaDonDV().getHDDVByMaKH(hdp.getKhachHang().getMaKH());
+                    dshddv = new HoaDonDV().getHDDVByMaKHAndDate(hdp.getKhachHang().getMaKH(), hdp.getNgayGioNhan(), hdp.getNgayGioTra());
                     
                     chonHDDV(hdp);
                     
@@ -267,7 +267,7 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener, ListSel
                             int idx = pageDatPhong.tblDatPhong.getSelectedRow();
                             HoaDonPhong hdp = pageDatPhong.dshdp.get(idx);
                             // Phong phong = hdp.getPhong();
-                            dshddv = new HoaDonDV().getHDDVByMaKH(hdp.getKhachHang().getMaKH());
+                            dshddv = new HoaDonDV().getHDDVByMaKHAndDate(hdp.getKhachHang().getMaKH(), hdp.getNgayGioNhan(), hdp.getNgayGioTra());
                             // System.out.println(x);
                             chonHDDV(hdp);
                         }
@@ -278,6 +278,8 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener, ListSel
     }
 
     public void chonHDDV(HoaDonPhong hdp){
+        pageThanhToan.hdp = null;
+        pageThanhToan.hddv = null;
         popup.dispose();
         popup = new JFrame();
         popup.setTitle("Chọn hóa đơn dịch vụ");
@@ -298,6 +300,8 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener, ListSel
         pn_p_top.add(txtMaHddv);
         pn_p_top.add(btnTimHDDV);
 
+        
+
         JPanel pn_p_center = new JPanel();
         pn_p_main.add(pn_p_center);
         String[] cols = {"Mã hóa đơn", "Tên khách hàng", "Ngày giờ đặt"};
@@ -311,6 +315,28 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener, ListSel
         pn_p_bottom.add(btnOke);
         JButton btnSkip = new JButton("Bỏ qua");
         pn_p_bottom.add(btnSkip);
+
+        // tìm kiếm
+        btnTimHDDV.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int maHDDV = 0;
+                try{
+                    maHDDV = Integer.parseInt(txtMaHddv.getText());
+                }catch(Exception e2){
+                    JOptionPane.showMessageDialog(pnMain, "Mã hóa đơn phải là số");
+                }
+                // TODO Auto-generated method stub
+                for(int i=0; i<dshddv.size(); i++){
+                    if(dshddv.get(i).getMaHDDV() == maHDDV){
+                        tblHDDV.addRowSelectionInterval(i, i);
+                        return;
+                    }
+                }
+            }
+            
+        });
+
         // render data
         
         for(int i=0; i<dshddv.size(); i++){

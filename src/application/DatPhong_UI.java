@@ -245,6 +245,21 @@ public class DatPhong_UI extends JFrame implements ActionListener, ListSelection
         String[] cols_avail = {"Mã phòng", "Loại phòng", "Sức chứa", "Số giường", "Vị trí", "Giá phòng"};
         modelAvail = new DefaultTableModel(cols_avail, 0);
         tblAvail = new JTable(modelAvail);
+
+
+        tblAvail.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                int idx = tblAvail.getSelectedRow();
+
+
+                DialogLichDatPhong form = new DialogLichDatPhong();
+                form.setMaPhong(dsp.get(idx).getMaPhong());
+                form.setModal(true);
+                form.setVisible(true);
+            }
+        });
         // tblAvail.setLayout(new FlowLayout());
         // tblAvail.setPreferredSize(new Dimension(2000, 150));
         p_sec_DS.add(new JScrollPane(tblAvail));
@@ -497,17 +512,15 @@ public class DatPhong_UI extends JFrame implements ActionListener, ListSelection
             int idx = tblDatPhong.getSelectedRow();
             HoaDonPhong hdp = dshdp.get(idx);
             // cập nhật thành đã nhận phòng
-            if(hoaDonPhong_dao.nhanPhong(hdp.getMaHD())){
-                hdp.setTinhTrang(1);
+            if(hdp.updateTinhTrang(1)){
                 // cập nhật tình trạng phòng đang có người ở
                 Phong phong = hdp.getPhong();
-                phong.setTinhTrang(2);
-                phong_dao.update(phong);
+                phong.updateTinhTrang(2);
 
                 modelDatPhong.setValueAt("Đã nhận phòng", idx, 7);
                 JOptionPane.showMessageDialog(pnMain, "Đã nhận phòng");
             }else{
-                JOptionPane.showMessageDialog(pnMain, "Có lỗi xảy ra");
+                JOptionPane.showMessageDialog(pnMain, "Chưa tới thời hạn nhận phòng");
             }
             
         }else if(obj == btn_HuyPhong){

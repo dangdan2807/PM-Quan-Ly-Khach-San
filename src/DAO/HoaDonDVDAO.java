@@ -63,41 +63,61 @@ public class HoaDonDVDAO {
         return dataList;
     }
 
-    // public HoaDonPhong getHDDVByMaKHAndDate(int MaKH, Date tuNgay, Date denNgay){
-        
-    //     long ml=System.currentTimeMillis(); 
-    //     ml = ml/86400000*86400000;
-    //     Date now = new Date(ml);
-    //     HoaDonPhong hdp = null;
-    //     try{
-    //         ConnectDB.getInstance();
-    //         Connection conn = ConnectDB.getConnection();
+    public ArrayList<HoaDonDV> getHDDVByMaKHAndDate(int MaKH, Date tuNgay, Date denNgay){
+        ArrayList<HoaDonDV> dataList = new ArrayList<HoaDonDV>();
+        // tuNgay.setTime(tuNgay.getTime()-86400000);
+        // denNgay.setTime(denNgay.getTime()+86400000);
+        try{
+            ConnectDB.getInstance();
+            Connection conn = ConnectDB.getConnection();
 
-    //         String sql = "Select * from HoaDonDV where maKH = ? and NgayGioNhan <= ? and NgayGioTra >= ? and TinhTrang = 1 order by MaHDDV DESC";
-    //         PreparedStatement statement = conn.prepareStatement(sql);
-    //         statement.setString(1, MaKH);
-    //         statement.setDate(2, now);
-    //         statement.setDate(3, now);
-    //         ResultSet rs = statement.executeQuery();
+            String sql = "Select * from HoaDonDV where maKH = ? and NgayGioDat >= ? and NgayGioDat <= ? and TinhTrang = 0 order by MaHDDV DESC";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setInt(1, MaKH);
+            statement.setDate(2, tuNgay);
+            statement.setDate(3, denNgay);
+            System.out.println(MaKH);
+            System.out.println(tuNgay);
+            System.out.println(denNgay);
+            ResultSet rs = statement.executeQuery();
 
-    //         if(!rs.next())
-    //             return null;
             
-    //         int maHD = rs.getInt("MaHD");
-    //         int tinhTrang = rs.getInt("TinhTrang");
-    //         Date ngayGioNhan = rs.getDate("NgayGioNhan");
-    //         Date ngayGioTra = rs.getDate("NgayGioTra");
-    //         Phong phong = new Phong(rs.getString("MaPhong"));
-    //         KhachHang khachHang = new KhachHang(rs.getInt("MaKH"));
-
-    //         // HoaDonPhong ctdv = new HoaDonPhong(rs);
-    //         hdp = new HoaDonPhong(maHD, tinhTrang, ngayGioNhan, ngayGioTra, phong, khachHang);
-    //     }catch(SQLException e){
-    //         e.printStackTrace();
-    //     }
-    //     return hdp;
+            while (rs.next()) {
+                int MaHDDV = rs.getInt("MaHDDV");
+                Date ngayGioDat = rs.getDate("NgayGioDat");
+                KhachHang khachHang = new KhachHang(rs.getInt("MaKH"));
+                // HoaDonPhong ctdv = new HoaDonPhong(rs);
+                HoaDonDV hddv = new HoaDonDV(MaHDDV, ngayGioDat, khachHang);
+                dataList.add(hddv);
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return dataList;
         
-    // }
+    }
+
+    public boolean thanhToan(int maHDDV) {
+        int n = 0;
+        PreparedStatement stmt = null;
+        ConnectDB.getInstance();
+        Connection con = ConnectDB.getConnection();
+        String query = "update dbo.HoaDonDV set tinhTrang = 1 Where MaHDDV = ?";
+        try {
+            stmt = con.prepareStatement(query);
+            stmt.setInt(1, maHDDV);
+            n = stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                stmt.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return n > 0;
+    }
 
     public int getLatestID() {
         int id = 0;
