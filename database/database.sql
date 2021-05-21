@@ -4,8 +4,6 @@ GO
 CREATE DATABASE KhachSan
 GO
 
-Drop TABLE KhachSan
-
 USE KhachSan
 GO
 

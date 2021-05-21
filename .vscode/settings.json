@@ -2,5 +2,10 @@
     "java.project.sourcePaths": [
         "src"
     ],
+    "cSpell.words": [
+        "HDDV",
+        "NVTK",
+        "QLKS"
+    ],
     
 }
