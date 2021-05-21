@@ -38,9 +38,12 @@ public class Phong {
     }
 
     public Phong(ResultSet rs) throws SQLException {
-        this(rs.getString("MaPhong"), rs.getInt("SucChua"), rs.getInt("SoGiuong"), rs.getString("ViTri"),
-                rs.getInt("TinhTrang"),
-                new LoaiPhong(rs.getInt("MaLoaiPhong")));
+        this.maPhong = rs.getString("MaPhong");
+        this.sucChua = rs.getInt("SucChua");
+        this.soGiuong = rs.getInt("SoGiuong");
+        this.viTri = rs.getString("ViTri");
+        this.tinhTrang = rs.getInt("TinhTrang");
+        this.loaiPhong = new LoaiPhong(rs.getInt("MaLoaiPhong"));
     }
 
     public String getMaPhong() {

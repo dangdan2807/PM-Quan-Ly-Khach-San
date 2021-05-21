@@ -29,12 +29,19 @@ public class HoaDonPhong {
     }
 
     public HoaDonPhong(ResultSet rs) throws SQLException {
-        this(rs.getInt("MaHD"), rs.getInt("TinhTrangHD"), rs.getDate("NgayGioNhan"), rs.getDate("NgayGioTra"),
-                new Phong(rs.getString("MaPhong"), rs.getInt("SucChua"), rs.getInt("SoGiuong"), rs.getString("ViTri"),
-                        rs.getInt("TinhTrangP"),
-                        new LoaiPhong(rs.getInt("MaLoaiPhong"), rs.getString("TenLoaiPhong"), rs.getDouble("DonGia"))),
-                new KhachHang(rs.getInt("MaKH"), rs.getString("TenKH"), rs.getString("CMND"), rs.getDate("NgayHetHan"),
-                        rs.getString("LoaiKH"), rs.getInt("SoLanDatPhong")));
+        LoaiPhong loaiPhong = new LoaiPhong(rs.getInt("MaLoaiPhong"), rs.getString("TenLoaiPhong"),
+                rs.getDouble("DonGia"));
+        Phong tempPhong = new Phong(rs.getString("MaPhong"), rs.getInt("SucChua"), rs.getInt("SoGiuong"),
+                rs.getString("ViTri"), rs.getInt("TinhTrangP"), loaiPhong);
+        KhachHang kh = new KhachHang(rs.getInt("MaKH"), rs.getString("TenKH"), rs.getString("CMND"),
+                rs.getDate("NgayHetHan"), rs.getString("LoaiKH"), rs.getInt("SoLanDatPhong"));
+
+        this.maHD = rs.getInt("MaHD");
+        this.tinhTrang = rs.getInt("TinhTrangHD");
+        this.ngayGioNhan = rs.getDate("NgayGioNhan");
+        this.ngayGioTra = rs.getDate("NgayGioTra");
+        this.phong = tempPhong;
+        this.khachHang = kh;
     }
 
     public int getMaHD() {
