@@ -164,7 +164,7 @@ public class HoaDonDichVu_UI extends JFrame implements ActionListener, MouseList
 		txtTimTenDV.setColumns(10);
 		
 		JButton btnTimTenDV = new JButton("Tìm");
-		btnTimTenDV.setIcon(new ImageIcon("T:\\TAILIEU\\nam2\\HK2\\THUCHANH\\JAVA\\BTLON\\PM-Quan-Ly-Khach-San\\data\\images\\search_16.png"));
+		btnTimTenDV.setIcon(new ImageIcon("data\\images\\search_16.png"));
 		btnTimTenDV.setBounds(233, 25, 89, 23);
 		panel.add(btnTimTenDV);
 		
@@ -191,7 +191,7 @@ public class HoaDonDichVu_UI extends JFrame implements ActionListener, MouseList
 		txtTimMaHDDV.setColumns(10);
 		
 		JButton btnTimMaHDDV = new JButton("Tìm");
-		btnTimMaHDDV.setIcon(new ImageIcon("T:\\TAILIEU\\nam2\\HK2\\THUCHANH\\JAVA\\BTLON\\PM-Quan-Ly-Khach-San\\data\\images\\search_16.png"));
+		btnTimMaHDDV.setIcon(new ImageIcon("data\\images\\search_16.png"));
 		btnTimMaHDDV.setBounds(270, 28, 89, 23);
 		panel_1.add(btnTimMaHDDV);
 		
