@@ -53,7 +53,7 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener 
         pnMain.setLayout(null);
         getContentPane().add(pnMain, BorderLayout.CENTER);
 
-        JLabel lbTitle = new JLabel("Quản Lý Khách Hàng và Loại Phòng");
+        JLabel lbTitle = new JLabel("Quản Lý Phòng và Loại Phòng");
         lbTitle.setHorizontalAlignment(SwingConstants.CENTER);
         lbTitle.setFont(new Font("Dialog", Font.BOLD, 20));
         lbTitle.setBounds(0, 0, 984, 30);
@@ -471,8 +471,8 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener 
                 ArrayList<LoaiPhong> ds = LPhongDAO.getAllListLoaiPhong();
                 DocDuLieuVaoTableLPhong(ds);
             } else {
+                modelTableLP.getDataVector().removeAllElements();
                 try {
-                    modelTableLP.getDataVector().removeAllElements();
                     ArrayList<LoaiPhong> ds = LPhongDAO.getListLoaiPhongByName(tenLP);
                     if (ds.size() <= 0) {
                         showMessage("Không tìm thấy", ERROR, lbShowMessagesDSLP);

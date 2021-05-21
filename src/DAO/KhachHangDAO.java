@@ -113,7 +113,7 @@ public class KhachHangDAO {
         return khachHang;
     }
 
-    public boolean create(KhachHang kh) {
+    public boolean insert(KhachHang kh) {
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
         PreparedStatement stmt = null;
@@ -140,7 +140,7 @@ public class KhachHangDAO {
         return n > 0;
     }
 
-    public boolean update(KhachHang dv) {
+    public boolean update(KhachHang kh) {
         PreparedStatement stmt = null;
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
@@ -149,12 +149,12 @@ public class KhachHangDAO {
             String sql = "update dbo.KhachHang "
                     + " set tenKH = ?, CMND = ?, NgayHetHan = ?, LoaiKH = ?, soLanDatPhong = ? " + " where maKH = ?";
             stmt = con.prepareStatement(sql);
-            stmt.setString(1, dv.getTenKH());
-            stmt.setString(2, dv.getCmnd());
-            stmt.setDate(3, dv.getNgayHetHan());
-            stmt.setString(4, dv.getLoaiKH());
-            stmt.setInt(5, dv.getSoLanDatPhong());
-            stmt.setInt(6, dv.getMaKH());
+            stmt.setString(1, kh.getTenKH());
+            stmt.setString(2, kh.getCmnd());
+            stmt.setDate(3, kh.getNgayHetHan());
+            stmt.setString(4, kh.getLoaiKH());
+            stmt.setInt(5, kh.getSoLanDatPhong());
+            stmt.setInt(6, kh.getMaKH());
             n = stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

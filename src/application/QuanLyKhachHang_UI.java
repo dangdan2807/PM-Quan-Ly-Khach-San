@@ -218,7 +218,7 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
                     e2.printStackTrace();
                 }
                 try {
-                    boolean result = khDAO.create(kh);
+                    boolean result = khDAO.insert(kh);
                     int maKH = khDAO.getLatestID();
                     if (result == true) {
                         txtMaKH.setText(String.valueOf(maKH));
