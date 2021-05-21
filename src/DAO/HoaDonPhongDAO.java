@@ -217,6 +217,8 @@ public class HoaDonPhongDAO {
             stmt = con.prepareStatement(query);
             stmt.setInt(1, maHD);
             n = stmt.executeUpdate();
+            //     String sql = ""
+            // }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -281,6 +283,42 @@ public class HoaDonPhongDAO {
     //     }
     //     return dataList;
     // }
+
+    public HoaDonPhong getHDPByMaPhongAndDate(String maPhong){
+        
+        long ml=System.currentTimeMillis(); 
+        ml = ml/86400000*86400000;
+        Date now = new Date(ml);
+        HoaDonPhong hdp = null;
+        try{
+            ConnectDB.getInstance();
+            Connection conn = ConnectDB.getConnection();
+
+            String sql = "Select * from HoaDonPhong where MaPhong = ? and NgayGioNhan <= ? and NgayGioTra >= ? and TinhTrang = 1";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setString(1, maPhong);
+            statement.setDate(2, now);
+            statement.setDate(3, now);
+            ResultSet rs = statement.executeQuery();
+
+            if(!rs.next())
+                return null;
+            
+            int maHD = rs.getInt("MaHD");
+            int tinhTrang = rs.getInt("TinhTrang");
+            Date ngayGioNhan = rs.getDate("NgayGioNhan");
+            Date ngayGioTra = rs.getDate("NgayGioTra");
+            Phong phong = new Phong(rs.getString("MaPhong"));
+            KhachHang khachHang = new KhachHang(rs.getInt("MaKH"));
+
+            // HoaDonPhong ctdv = new HoaDonPhong(rs);
+            hdp = new HoaDonPhong(maHD, tinhTrang, ngayGioNhan, ngayGioTra, phong, khachHang);
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return hdp;
+        
+    }
 
     public int getLatestID() {
         int id = 0;

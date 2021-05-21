@@ -77,4 +77,20 @@ public class HoaDonPhong {
         this.khachHang = khachHang;
     }
 
+    public double tinhTongTien(){
+        double tongTien = phong.getLoaiPhong().getDonGia()*tinhSoNgay();
+        System.out.println(tongTien);
+        tongTien = tongTien - khachHang.getSoLanDatPhong()*3*(tongTien/100);
+        return tongTien;
+    }
+
+    public int tinhSoNgay(){
+        // System.out.print(ngayGioTra.getTime());
+        // System.out.print(ngayGioNhan.getTime());
+        long d = ngayGioTra.getTime() - ngayGioNhan.getTime();
+        System.out.println(ngayGioTra.compareTo(ngayGioNhan));
+        
+        return (int)d/86400000 + 1;
+    }
+    
 }

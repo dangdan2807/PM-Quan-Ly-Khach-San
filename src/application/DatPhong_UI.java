@@ -77,14 +77,20 @@ public class DatPhong_UI extends JFrame implements ActionListener, ListSelection
         hoaDonPhong_dao = new HoaDonPhongDAO();
         khachHang_dao = new KhachHangDAO();
 
+        
+    }
+
+    public void start(){
         dsp = phong_dao.getAllPhong();
         dsp_avail = phong_dao.getPhongAvail();
         dslp = loaiPhong_dao.getAllLoaiPhong();
         dshdp = hoaDonPhong_dao.getListHDPhong();
         dskh = khachHang_dao.getListKhachHang();
+        
         pnMain = renderGUI();
         renderHoaDon();
         renderKhachHang();
+        renderDSPhong();
     }
 
     public JPanel renderGUI() {
@@ -490,8 +496,14 @@ public class DatPhong_UI extends JFrame implements ActionListener, ListSelection
             popup.dispose();
             int idx = tblDatPhong.getSelectedRow();
             HoaDonPhong hdp = dshdp.get(idx);
+            // cập nhật thành đã nhận phòng
             if(hoaDonPhong_dao.nhanPhong(hdp.getMaHD())){
                 hdp.setTinhTrang(1);
+                // cập nhật tình trạng phòng đang có người ở
+                Phong phong = hdp.getPhong();
+                phong.setTinhTrang(2);
+                phong_dao.update(phong);
+
                 modelDatPhong.setValueAt("Đã nhận phòng", idx, 7);
                 JOptionPane.showMessageDialog(pnMain, "Đã nhận phòng");
             }else{
@@ -555,7 +567,7 @@ public class DatPhong_UI extends JFrame implements ActionListener, ListSelection
     @Override
     public void valueChanged(ListSelectionEvent e) {
         // TODO Auto-generated method stub
-        System.out.println(e.getValueIsAdjusting());
+        // System.out.println(e.getValueIsAdjusting());
         if(e.getValueIsAdjusting()){
             int idx = tblDatPhong.getSelectedRow();
             HoaDonPhong hdp = dshdp.get(idx);

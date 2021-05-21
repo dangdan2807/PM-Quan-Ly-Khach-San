@@ -1,6 +1,6 @@
 package entity;
 
-import java.sql.ResultSet;
+import DAO.*;
 import java.sql.*;
 
 public class ChiTietDV {
@@ -16,6 +16,28 @@ public class ChiTietDV {
     public void setNgayGioDat(Date ngayGioDat) {
         this.ngayGioDat = ngayGioDat;
     }
+
+    public ChiTietDV(int soLuong, HoaDonDV hoaDonDV, DichVu dichVu) {
+        setSoLuong(soLuong);
+        this.hoaDonDV = hoaDonDV;
+        this.dichVu = dichVu;
+    }
+
+    public ChiTietDV(DichVu dichVu, int soLuong) {
+        
+        
+        
+        this.dichVu = dichVu;
+        setSoLuong(soLuong);
+        
+    }
+
+    // public ChiTietDV(ResultSet rs) throws SQLException {
+    //     this(rs.getInt("SoLuong"),
+    //             new HoaDonDV(rs.getInt("MaHDDV"), rs.getDate("ngayGioDat"),
+    //                     new KhachHang(rs.getInt("MaKH"), rs.getString("TenKH"))),
+    //             new DichVu(rs.getInt("MaDV"), rs.getString("tenDV"), rs.getDouble("donGia")));
+    // }
 
     public DichVu getDichVu() {
         return dichVu;

@@ -53,8 +53,14 @@ public class TrangChu_UI extends JFrame implements ActionListener{
         loaiPhong_dao = new LoaiPhongDAO();
         dsp = phong_dao.getAllPhong();
         dslp = loaiPhong_dao.getAllLoaiPhong();
-        pnMain = renderGUI();
+        
         // renderData();
+    }
+
+    public void start(){
+        pnMain = renderGUI();
+        renderDSPhong();
+        renderLoaiPhong();
     }
 
     public JPanel renderGUI() {
@@ -95,7 +101,7 @@ public class TrangChu_UI extends JFrame implements ActionListener{
         JPanel lb_sec_booking = new JPanel();
         lb_sec_booking.setBorder(BorderFactory.createEtchedBorder());
         pnThongKe.add(lb_sec_booking);
-        lbBooking = new JLabel("Đã đặt (20)", icon_red_close, JLabel.CENTER);
+        lbBooking = new JLabel("Đã đặt (20)", icon_question, JLabel.CENTER);
         lb_sec_booking.add(lbBooking);
         lbBooking.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
@@ -130,8 +136,7 @@ public class TrangChu_UI extends JFrame implements ActionListener{
         grid_Phong.setHgap(10);
         grid_Phong.setVgap(10);
         pnPhongTrong.setLayout(grid_Phong);
-        renderDSPhong();
-        renderLoaiPhong();
+        
         return pnMain;
     }
 
@@ -250,7 +255,7 @@ public class TrangChu_UI extends JFrame implements ActionListener{
         pn_sec_available.repaint();
 
         getCount();
-        lbAvail.setText("Phòng trống (" + countAvail + ")");
+        lbAvail.setText("Phòng trống (" + (countAvail+countBooking) + ")");
         lbBooking.setText("Đã đặt (" + countBooking + ")");
         lbUsing.setText("Đang ở (" + countUsing + ")");
     }
