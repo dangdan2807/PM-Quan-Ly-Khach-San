@@ -100,8 +100,8 @@ public class HoaDonPhongDAO {
 
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                HoaDonPhong ctdv = new HoaDonPhong(rs);
-                dataList.add(ctdv);
+                HoaDonPhong hdP = new HoaDonPhong(rs);
+                dataList.add(hdP);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -124,8 +124,8 @@ public class HoaDonPhongDAO {
 
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                HoaDonPhong ctdv = new HoaDonPhong(rs);
-                dataList.add(ctdv);
+                HoaDonPhong hdP = new HoaDonPhong(rs);
+                dataList.add(hdP);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -262,26 +262,26 @@ public class HoaDonPhongDAO {
         return 1;
     }
 
-    public ArrayList<Timestamp> getDateTimeHDPhongByMaHD(int maHD) {
-        ArrayList<Timestamp> dataList = new ArrayList<Timestamp>();
-        ConnectDB.getInstance();
-        PreparedStatement stmt = null;
-        try {
-            Connection con = ConnectDB.getConnection();
-            String sql = "EXEC UDP_GetDateTimeHDPhongByMaHD ? ";
-            stmt = con.prepareStatement(sql);
-            stmt.setInt(1, maHD);
+    // public ArrayList<Timestamp> getDateTimeHDPhongByMaHD(int maHD) {
+    //     ArrayList<Timestamp> dataList = new ArrayList<Timestamp>();
+    //     ConnectDB.getInstance();
+    //     PreparedStatement stmt = null;
+    //     try {
+    //         Connection con = ConnectDB.getConnection();
+    //         String sql = "EXEC UDP_GetDateTimeHDPhongByMaHD ? ";
+    //         stmt = con.prepareStatement(sql);
+    //         stmt.setInt(1, maHD);
 
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                dataList.add(rs.getTimestamp("NgayGioNhan"));
-                dataList.add(rs.getTimestamp("NgayGioTra"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return dataList;
-    }
+    //         ResultSet rs = stmt.executeQuery();
+    //         while (rs.next()) {
+    //             dataList.add(rs.getTimestamp("NgayGioNhan"));
+    //             dataList.add(rs.getTimestamp("NgayGioTra"));
+    //         }
+    //     } catch (SQLException e) {
+    //         e.printStackTrace();
+    //     }
+    //     return dataList;
+    // }
 
     public int getLatestID() {
         int id = 0;
@@ -322,7 +322,7 @@ public class HoaDonPhongDAO {
 
             rs = stmt.executeQuery();
             while (rs.next()) {
-                HoaDonPhong phong = new HoaDonPhong(rs, 1);
+                HoaDonPhong phong = new HoaDonPhong(rs);
                 dataList.add(phong);
             }
         } catch (Exception e) {
@@ -351,7 +351,7 @@ public class HoaDonPhongDAO {
 
             rs = stmt.executeQuery();
             while (rs.next()) {
-                HoaDonPhong phong = new HoaDonPhong(rs, 1);
+                HoaDonPhong phong = new HoaDonPhong(rs);
                 dataList.add(phong);
             }
         } catch (Exception e) {

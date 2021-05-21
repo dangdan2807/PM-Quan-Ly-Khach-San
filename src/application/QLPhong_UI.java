@@ -312,7 +312,7 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener 
                 LoaiPhong loaiPhong = null;
                 loaiPhong = getDataInFormLPhong();
                 try {
-                    boolean result = LPhongDAO.create(loaiPhong);
+                    boolean result = LPhongDAO.insert(loaiPhong);
                     int maLPhong = LPhongDAO.getLatestID();
                     if (result == true) {
                         txtMaLPhong.setText(String.valueOf(maLPhong));
@@ -332,7 +332,7 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener 
                 Phong phong = null;
                 phong = getDataInFormPhong();
                 try {
-                    boolean result = phongDAO.create(phong);
+                    boolean result = phongDAO.insert(phong);
                     if (result == true) {
                         String tinhTrang = "";
                         if (phong.getTinhTrang() == 1)

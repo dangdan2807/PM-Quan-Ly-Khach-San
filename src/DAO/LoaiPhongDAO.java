@@ -130,7 +130,7 @@ public class LoaiPhongDAO {
         return id;
     }
 
-    public boolean create(LoaiPhong loaiPhong) {
+    public boolean insert(LoaiPhong loaiPhong) {
         int n = 0;
         ConnectDB.getInstance();
         PreparedStatement stmt = null;

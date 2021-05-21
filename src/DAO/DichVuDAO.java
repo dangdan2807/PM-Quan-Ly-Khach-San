@@ -74,7 +74,7 @@ public class DichVuDAO {
         return dataList;
     }
 
-    public boolean create(DichVu dv) {
+    public boolean insert(DichVu dv) {
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
         PreparedStatement stmt = null;

@@ -1,4 +1,5 @@
 package entity;
+
 import DAO.LoaiPhongDAO;
 
 import java.sql.ResultSet;
@@ -23,12 +24,16 @@ public class LoaiPhong {
         this.donGia = loaiPhong.getDonGia();
     }
 
+    public LoaiPhong(ResultSet rs) throws SQLException {
+        this(rs.getInt("MaLoaiPhong"), rs.getString("TenLoaiPhong"), rs.getDouble("DonGia"));
+    }
+
     public int getMaLoaiPhong() {
         return maLoaiPhong;
     }
 
     public void setMaLoaiPhong(int maLoaiPhong) {
-        
+
         this.maLoaiPhong = maLoaiPhong;
     }
 
@@ -48,12 +53,6 @@ public class LoaiPhong {
         if (donGia < 0)
             donGia = 0.0;
         this.donGia = donGia;
-    }
-
-    
-
-    public LoaiPhong(ResultSet rs) throws SQLException {
-        this(rs.getInt("MaLoaiPhong"), rs.getString("TenLoaiPhong"), rs.getDouble("DonGia"));
     }
 
     @Override

@@ -6,7 +6,6 @@ public class HoaDonDV {
 	private int maHDDV;
 	private int tinhTrang;
 	private Date ngayGioLap;
-
 	private KhachHang khachHang;
 
 	public int getMaHDDV() {

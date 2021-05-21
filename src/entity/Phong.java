@@ -4,8 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import DAO.*;
 
-    
-
 public class Phong {
     private String maPhong;
     private int sucChua;
@@ -42,7 +40,7 @@ public class Phong {
     public Phong(ResultSet rs) throws SQLException {
         this(rs.getString("MaPhong"), rs.getInt("SucChua"), rs.getInt("SoGiuong"), rs.getString("ViTri"),
                 rs.getInt("TinhTrang"),
-                new LoaiPhong(rs.getInt("MaLoaiPhong")));
+                new LoaiPhong(rs.getInt("MaLoaiPhong"), rs.getString("TenLoaiPhong"), rs.getDouble("DonGia")));
     }
 
     public String getMaPhong() {
@@ -97,5 +95,4 @@ public class Phong {
         this.loaiPhong = loaiPhong;
     }
 
-    
 }

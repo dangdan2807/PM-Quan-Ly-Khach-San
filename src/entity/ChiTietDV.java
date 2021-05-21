@@ -4,6 +4,8 @@ import java.sql.ResultSet;
 import java.sql.*;
 
 public class ChiTietDV {
+    private DichVu dichVu;
+    private HoaDonDV hoaDonDV;
     private int soLuong;
     private Date ngayGioDat;
 
@@ -14,9 +16,6 @@ public class ChiTietDV {
     public void setNgayGioDat(Date ngayGioDat) {
         this.ngayGioDat = ngayGioDat;
     }
-
-    private HoaDonDV hoaDonDV;
-    private DichVu dichVu;
 
     public DichVu getDichVu() {
         return dichVu;
@@ -54,7 +53,8 @@ public class ChiTietDV {
     public ChiTietDV(ResultSet rs) throws SQLException {
         this(rs.getInt("SoLuong"), rs.getDate("NgayGioDat"),
                 new HoaDonDV(rs.getInt("MaHDDV"), rs.getDate("ngayGioLap"), rs.getInt("tinhTrang"),
-                        new KhachHang(rs.getInt("MaKH"), rs.getString("TenKH"))),
+                        new KhachHang(rs.getInt("MaKH"), rs.getString("TenKH"), rs.getString("CMND"),
+                                rs.getDate("NgayHetHan"), rs.getString("LoaiKH"), rs.getInt("SoLanDatPhong"))),
                 new DichVu(rs.getInt("MaDV"), rs.getString("tenDV"), rs.getDouble("donGia")));
     }
 

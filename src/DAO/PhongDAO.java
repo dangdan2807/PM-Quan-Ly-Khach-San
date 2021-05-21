@@ -151,7 +151,7 @@ public class PhongDAO {
         return dataList;
     }
 
-    public boolean create(Phong phong) {
+    public boolean insert(Phong phong) {
         int n = 0;
         ConnectDB.getInstance();
         PreparedStatement stmt = null;
