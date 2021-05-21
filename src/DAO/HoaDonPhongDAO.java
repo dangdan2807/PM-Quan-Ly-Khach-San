@@ -31,7 +31,6 @@ public class HoaDonPhongDAO {
                 Phong phong = new Phong(rs.getString("MaPhong"));
                 KhachHang khachHang = new KhachHang(rs.getInt("MaKH"));
 
-                // HoaDonPhong ctdv = new HoaDonPhong(rs);
                 HoaDonPhong hdp = new HoaDonPhong(maHD, tinhTrang, ngayGioNhan, ngayGioTra, phong, khachHang);
                 dataList.add(hdp);
             }

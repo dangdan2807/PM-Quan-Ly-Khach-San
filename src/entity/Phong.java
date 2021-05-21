@@ -40,7 +40,7 @@ public class Phong {
     public Phong(ResultSet rs) throws SQLException {
         this(rs.getString("MaPhong"), rs.getInt("SucChua"), rs.getInt("SoGiuong"), rs.getString("ViTri"),
                 rs.getInt("TinhTrang"),
-                new LoaiPhong(rs.getInt("MaLoaiPhong"), rs.getString("TenLoaiPhong"), rs.getDouble("DonGia")));
+                new LoaiPhong(rs.getInt("MaLoaiPhong")));
     }
 
     public String getMaPhong() {
