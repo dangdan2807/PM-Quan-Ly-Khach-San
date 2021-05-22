@@ -109,6 +109,7 @@ public class DialogLichDatPhong extends JDialog implements ActionListener {
         Object o = e.getSource();
         if (o.equals(btnXem)) {
             modelTable.getDataVector().removeAllElements();
+            modelTable.fireTableDataChanged();
             try {
                 Date tuNgay = dpTuNgay.getFullDate();
                 Date denNgay = dpDenNgay.getFullDate();

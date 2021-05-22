@@ -290,11 +290,13 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
                 String tenKH = txtTim.getText().trim();
                 if (tenKH.isEmpty()) {
                     modelTable.getDataVector().removeAllElements();
+                    modelTable.fireTableDataChanged();
                     dsKH = khDAO.getListKhachHang();
                     DocDuLieuVaoTable();
                 } else {
                     try {
                         modelTable.getDataVector().removeAllElements();
+                        modelTable.fireTableDataChanged();
                         dsKH = khDAO.getListKhachHangByName(tenKH);
                         if (dsKH.size() <= 0) {
                             showMessage("Không tìm thấy khách hàng", ERROR);

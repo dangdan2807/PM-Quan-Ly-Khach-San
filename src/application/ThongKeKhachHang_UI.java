@@ -13,7 +13,6 @@ import javax.swing.table.*;
 import DAO.HoaDonPhongDAO;
 import connectDB.ConnectDB;
 import entity.*;
-import entity.HoaDonPhong;
 
 public class ThongKeKhachHang_UI extends JFrame implements ActionListener, KeyListener {
     JPanel pnMain;
@@ -156,6 +155,8 @@ public class ThongKeKhachHang_UI extends JFrame implements ActionListener, KeyLi
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
         if (o.equals(btnThongKe)) {
+            modelTable.getDataVector().removeAllElements();
+            modelTable.fireTableDataChanged();
             String maKH = txtMaKH.getText().trim();
             String tenKH = txtTenKH.getText().trim();
             ArrayList<HoaDonPhong> dataList = null;
@@ -183,10 +184,9 @@ public class ThongKeKhachHang_UI extends JFrame implements ActionListener, KeyLi
             } catch (ParseException e1) {
                 e1.printStackTrace();
             }
-            if (dataList.size() > 0) {
-                modelTable.getDataVector().removeAllElements();
-                DocDuLieuVaoTable(dataList);
-            } else {
+
+            DocDuLieuVaoTable(dataList);
+            if (dataList.size() < 0) {
                 showMessage("Không tìm thấy danh sách thống kê theo yêu cầu", ERROR);
             }
         }

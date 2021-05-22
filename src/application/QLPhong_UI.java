@@ -13,9 +13,9 @@ import DAO.*;
 import connectDB.ConnectDB;
 import entity.*;
 
-public class QLPhong_UI extends JFrame implements ActionListener, MouseListener {
+public class QLPhong_UI extends JFrame implements ActionListener, MouseListener, KeyListener {
     public JPanel pnMain;
-    private JTextField txtMaLPhong, txtTenLPhong, txtDonGia, txtMaPhong, txtViTri, txtTimLP, txtTimPhong;
+    private JTextField txtMaLPhong, txtTenLPhong, txtDonGia, txtMaPhong, txtViTri, txtTimLP, txtTimP;
     private DefaultTableModel modelTableLP, modelTableP;
     private JTable tableLP, tableP;
     private JLabel lbShowMessagesDSP, lbShowMessagesDSLP, lbShowMessagesP, lbShowMessagesLP;
@@ -196,7 +196,7 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener 
         cboLoaiPhong = new JComboBox<String>();
         cboLoaiPhong.setBounds(90, 159, 235, 20);
         pnBL.add(cboLoaiPhong);
-        
+
         btnXemLich = new JButton("Xem lịch đặt phòng", calendarIcon);
         btnXemLich.setBounds(117, 255, 208, 26);
         pnBL.add(btnXemLich);
@@ -252,10 +252,10 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener 
         lbTimPhong.setBounds(12, 21, 75, 16);
         pnBR.add(lbTimPhong);
 
-        txtTimPhong = new JTextField();
-        txtTimPhong.setBounds(85, 19, 150, 20);
-        pnBR.add(txtTimPhong);
-        txtTimPhong.setColumns(10);
+        txtTimP = new JTextField();
+        txtTimP.setBounds(85, 19, 150, 20);
+        pnBR.add(txtTimP);
+        txtTimP.setColumns(10);
 
         btnTimP = new JButton("Tìm", searchIcon);
         btnTimP.setBounds(240, 16, 98, 26);
@@ -296,6 +296,10 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener 
 
         tableLP.addMouseListener(this);
         tableP.addMouseListener(this);
+
+        txtTimLP.addKeyListener(this);
+        txtTimP.addKeyListener(this);
+
         loadCboLoaiPhong();
         loadListPhong();
         DocDuLieuVaoTableLPhong();
@@ -470,10 +474,12 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener 
             String tenLP = txtTimLP.getText().trim();
             if (tenLP.isEmpty()) {
                 modelTableLP.getDataVector().removeAllElements();
+                modelTableLP.fireTableDataChanged();
                 dsLoaiPhong = LPhongDAO.getListLoaiPhong();
                 DocDuLieuVaoTableLPhong();
             } else {
                 modelTableLP.getDataVector().removeAllElements();
+                modelTableLP.fireTableDataChanged();
                 try {
                     dsLoaiPhong = LPhongDAO.getListLoaiPhongByName(tenLP);
                     if (dsLoaiPhong.size() <= 0) {
@@ -485,14 +491,16 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener 
                 }
             }
         } else if (o.equals(btnTimP)) {
-            String maPhong = txtTimPhong.getText().trim();
+            String maPhong = txtTimP.getText().trim();
             if (maPhong.isEmpty()) {
                 modelTableP.getDataVector().removeAllElements();
+                modelTableP.fireTableDataChanged();
                 dsPhong = phongDAO.getListPhong();
                 DocDuLieuVaoTablePhong();
             } else {
                 try {
                     modelTableP.getDataVector().removeAllElements();
+                    modelTableP.fireTableDataChanged();
                     dsPhong = phongDAO.getListPhongByID(maPhong);
                     if (dsPhong.size() <= 0) {
                         showMessage("Không tìm thấy", ERROR, lbShowMessagesDSP);
@@ -509,7 +517,7 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener 
                 form.setMaPhong(maPhong);
                 form.setModal(true);
                 form.setVisible(true);
-            } else{
+            } else {
                 showMessage("Vui lòng chọn một phòng bất kỳ", ERROR, lbShowMessagesP);
             }
         }
@@ -551,6 +559,32 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener 
 
     @Override
     public void mouseExited(MouseEvent e) {
+
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        Object o = e.getSource();
+        Object key = e.getKeyCode();
+        // bắt sự kiện nhấn phím enter
+        if (o.equals(txtTimLP)) {
+            if (key.equals(KeyEvent.VK_ENTER)) {
+                btnTimLP.doClick();
+            }
+        } else if (o.equals(txtTimP)) {
+            if (key.equals(KeyEvent.VK_ENTER)) {
+                btnTimP.doClick();
+            }
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
 
     }
 

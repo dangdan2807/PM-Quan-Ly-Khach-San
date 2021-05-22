@@ -154,6 +154,8 @@ public class ThongKeDichVu_UI extends JFrame implements ActionListener, KeyListe
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
         if (o.equals(btnThongKe)) {
+            modelTable.getDataVector().removeAllElements();
+            modelTable.fireTableDataChanged();
             String maKH = txtMaKH.getText().trim();
             String tenKH = txtTenKH.getText().trim();
             ArrayList<ChiTietDV> dataList = null;
@@ -180,10 +182,8 @@ public class ThongKeDichVu_UI extends JFrame implements ActionListener, KeyListe
             } catch (ParseException e1) {
                 e1.printStackTrace();
             }
-            if (dataList.size() > 0) {
-                modelTable.getDataVector().removeAllElements();
-                DocDuLieuVaoTable(dataList);
-            } else {
+            DocDuLieuVaoTable(dataList);
+            if (dataList.size() < 0) {
                 showMessage("Không tìm thấy danh sách thống kê theo yêu cầu", ERROR);
             }
         }
