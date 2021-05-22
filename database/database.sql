@@ -53,8 +53,9 @@ CREATE TABLE HoaDonDV
 	MaHDDV INT IDENTITY PRIMARY KEY,
 	MaKH INT REFERENCES KhachHang(MaKH),
 	-- 0. chưa thanh toán | 1. đã thanh toán
-	TinhTrang INT,
-	NgayGioLap DATETIME DEFAULT(GETDATE())
+	NgayGioLap DATETIME DEFAULT(GETDATE()),
+	TongTien money check(TongTien >=0),
+	TinhTrang INT
 )
 GO
 
@@ -152,6 +153,9 @@ VALUES
 	(5, N'P201', 0, '2021-05-30', null)
 GO
 
+insert into HoaDonDV 
+	(MaKH,NgayGioLap,TinhTrang)
+values (1, '2021-05-16',0)
 
 -- drop database KhachSan
 
@@ -230,6 +234,19 @@ BEGIN
 	WHERE hd.MaKH = @MaKH AND kh.tenKH LIKE @TenKH AND hd.ngayGioLap BETWEEN @tuNgay AND @denNgay
 END
 GO
+
+-- Hoá đơn dịch vụ
+
+Create proc UDP_SearchHDDVByID @id int
+as
+begin
+	select MaHDDV, kh.MaKH, hd.NgayGioLap, hd.TinhTrang
+	from HoaDonDV hd INNER JOIN KhachHang kh ON hd.MaKH = kh.MaKH
+	where MaHDDV = @id
+end
+go
+
+--exec UDP_SearchHDDVByID 1
 
 -- Hóa đơn phòng
 CREATE PROC UDP_SearchHDPhongByDate

@@ -53,7 +53,7 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener 
         pnMain.setLayout(null);
         getContentPane().add(pnMain, BorderLayout.CENTER);
 
-        JLabel lbTitle = new JLabel("Quản Lý Khách Hàng và Loại Phòng");
+        JLabel lbTitle = new JLabel("Quản Lý Phòng");
         lbTitle.setHorizontalAlignment(SwingConstants.CENTER);
         lbTitle.setFont(new Font("Dialog", Font.BOLD, 20));
         lbTitle.setBounds(0, 0, 984, 30);

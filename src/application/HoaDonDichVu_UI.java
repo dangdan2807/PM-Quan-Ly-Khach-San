@@ -16,8 +16,8 @@ import javax.swing.border.EtchedBorder;
 
 public class HoaDonDichVu_UI extends JFrame implements ActionListener, MouseListener{
 	private DefaultTableModel model1;
-	String[] cols1 = { "Mã hoá đơn dịch vụ", "Mã khách hàng", "Thời gian đặt"};
-	String[] cols2 = { "Mã dịch vụ", "Tên dịch vụ", "Đơn giá","Số lượng","Tổng tiền"};
+	String[] cols1 = { "Mã hoá đơn dịch vụ", "Mã khách hàng", "Thời gian đặt","Tổng tiền","Tình trạng"};
+	String[] cols2 = { "Mã dịch vụ", "Tên dịch vụ", "Đơn giá","Số lượng","Tổng tiền","Thời gian đặt"};
 	public JPanel pnMain;
 	private JTable tableHDDV;
 	private TableModel model2;
@@ -31,8 +31,8 @@ public class HoaDonDichVu_UI extends JFrame implements ActionListener, MouseList
 	private JComboBox cboDV;
 	private JPanel panel;
 	private JPanel panel_1;
-	private JTextField txtTimTenDV;
 	private JTextField txtTimMaHDDV;
+	private JTextField txtMaHD;
 
 	public HoaDonDichVu_UI() {
 		setTitle("Hoá đơn dịch vụ");
@@ -45,10 +45,9 @@ public class HoaDonDichVu_UI extends JFrame implements ActionListener, MouseList
 		pnMain.setBounds(0, 0, 584, 411);
 		getContentPane().add(pnMain);
 		
-		JLabel lbTitle = new JLabel("Hoá đơn thanh toán dịch vụ");
+		JLabel lbTitle = new JLabel("Hoá Đơn Thanh Toán Dịch Vụ");
 		lbTitle.setBounds(335, 11, 348, 30);
-		lbTitle.setForeground(Color.BLUE);
-		lbTitle.setFont(new Font("Tahoma", Font.BOLD, 24));
+		lbTitle.setFont(new Font("Tahoma", Font.BOLD, 20));
 		pnMain.add(lbTitle);
 		
 		model1 = new DefaultTableModel(cols1, 0) {
@@ -80,66 +79,81 @@ public class HoaDonDichVu_UI extends JFrame implements ActionListener, MouseList
 		
 		JPanel pn = new JPanel();
 		pn.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "\u0110\u1EB7t d\u1ECBch v\u1EE5", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		pn.setBounds(10, 65, 342, 251);
+		pn.setBounds(10, 65, 342, 286);
 		pnMain.add(pn);
 		pn.setLayout(null);
 		
 		JLabel lbMaKH = new JLabel("Mã khách hàng:");
 		lbMaKH.setFont(new Font("Tahoma", Font.BOLD, 11));
-		lbMaKH.setBounds(10, 25, 93, 22);
+		lbMaKH.setBounds(10, 66, 93, 22);
 		pn.add(lbMaKH);
 		
 		cboMaKH = new JComboBox();
 		cboMaKH.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		cboMaKH.setBounds(122, 25, 205, 22);
+		cboMaKH.setBounds(122, 66, 205, 22);
 		pn.add(cboMaKH);
 		
 		JLabel lbDV = new JLabel("Dịch vụ:");
 		lbDV.setFont(new Font("Tahoma", Font.BOLD, 11));
-		lbDV.setBounds(10, 58, 93, 22);
+		lbDV.setBounds(10, 99, 93, 22);
 		pn.add(lbDV);
 		
 		cboDV = new JComboBox();
 		cboDV.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		cboDV.setBounds(122, 58, 205, 22);
+		cboDV.setBounds(122, 99, 205, 22);
 		pn.add(cboDV);
 		
 		JLabel lbGia = new JLabel("Đơn giá:");
 		lbGia.setFont(new Font("Tahoma", Font.BOLD, 11));
-		lbGia.setBounds(10, 124, 93, 22);
+		lbGia.setBounds(10, 165, 93, 22);
 		pn.add(lbGia);
 		
 		lbShowGia = new JLabel("");
 		lbShowGia.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		lbShowGia.setBounds(122, 124, 195, 22);
+		lbShowGia.setBounds(122, 165, 205, 22);
 		pn.add(lbShowGia);
 		
 		
 		JLabel lbSoLuong = new JLabel("Số lượng:");
 		lbSoLuong.setFont(new Font("Tahoma", Font.BOLD, 11));
-		lbSoLuong.setBounds(10, 91, 93, 22);
+		lbSoLuong.setBounds(10, 132, 93, 22);
 		pn.add(lbSoLuong);
 		
 		txtSoLuong = new JTextField();
 		txtSoLuong.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		txtSoLuong.setBounds(122, 91, 205, 22);
+		txtSoLuong.setBounds(122, 132, 205, 22);
 		pn.add(txtSoLuong);
 		txtSoLuong.setColumns(10);
 		
 		btnXoa = new JButton("Xoá");
 		btnXoa.setIcon(new ImageIcon("data\\images\\trash2_16.png"));
-		btnXoa.setBounds(111, 175, 95, 33);
+		btnXoa.setBounds(122, 198, 99, 33);
 		pn.add(btnXoa);
 		
 		btnThem = new JButton("Thêm");
 		btnThem.setIcon(new ImageIcon("data\\images\\blueAdd_16.png"));
-		btnThem.setBounds(10, 175, 93, 33);
+		btnThem.setBounds(10, 198, 93, 33);
 		pn.add(btnThem);
 		
+		JButton btnSua = new JButton("Sửa");
+		btnSua.setIcon(new ImageIcon("T:\\TAILIEU\\nam2\\HK2\\THUCHANH\\JAVA\\BTLON\\PM-Quan-Ly-Khach-San\\data\\images\\edit2_16.png"));
+		btnSua.setBounds(238, 198, 89, 33);
+		pn.add(btnSua);
+		
 		btnXacNhan = new JButton("Xác nhận");
-		btnXacNhan.setIcon(new ImageIcon("data\\images\\check.png"));
-		btnXacNhan.setBounds(216, 175, 111, 33);
+		btnXacNhan.setBounds(103, 242, 137, 33);
 		pn.add(btnXacNhan);
+		btnXacNhan.setIcon(new ImageIcon("data\\images\\check.png"));
+		
+		JLabel lbMaHD = new JLabel("Mã hoá đơn");
+		lbMaHD.setBounds(10, 33, 93, 22);
+		pn.add(lbMaHD);
+		
+		txtMaHD = new JTextField();
+		txtMaHD.setEditable(false);
+		txtMaHD.setBounds(122, 34, 205, 20);
+		pn.add(txtMaHD);
+		txtMaHD.setColumns(10);
 		
 		panel = new JPanel();
 		panel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "D\u1ECBch v\u1EE5 kh\u00E1ch h\u00E0ng \u0111\u00E3 \u0111\u1EB7t", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
@@ -150,23 +164,8 @@ public class HoaDonDichVu_UI extends JFrame implements ActionListener, MouseList
 		tableDV = new JTable(model2);
 		JScrollPane scrollPane2 = new JScrollPane(tableDV, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		scrollPane2.setBounds(10, 54, 594, 186);
+		scrollPane2.setBounds(10, 29, 594, 211);
 		panel.add(scrollPane2);
-		
-		JLabel lbTimTenDV = new JLabel("Tên dịch vụ: ");
-		lbTimTenDV.setFont(new Font("Tahoma", Font.BOLD, 11));
-		lbTimTenDV.setBounds(10, 29, 78, 14);
-		panel.add(lbTimTenDV);
-		
-		txtTimTenDV = new JTextField();
-		txtTimTenDV.setBounds(98, 26, 125, 20);
-		panel.add(txtTimTenDV);
-		txtTimTenDV.setColumns(10);
-		
-		JButton btnTimTenDV = new JButton("Tìm");
-		btnTimTenDV.setIcon(new ImageIcon("data\\images\\search_16.png"));
-		btnTimTenDV.setBounds(233, 25, 89, 23);
-		panel.add(btnTimTenDV);
 		
 		panel_1 = new JPanel();
 		panel_1.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Danh s\u00E1ch ho\u00E1 \u0111\u01A1n d\u1ECBch v\u1EE5", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
