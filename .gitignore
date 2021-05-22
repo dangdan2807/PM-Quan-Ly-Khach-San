@@ -5,3 +5,4 @@ bin
 test
 .vscode/*.json
 src/application/testTinh2Ngay.java
+.vscode/settings.json

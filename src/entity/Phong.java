@@ -38,9 +38,12 @@ public class Phong {
     }
 
     public Phong(ResultSet rs) throws SQLException {
-        this(rs.getString("MaPhong"), rs.getInt("SucChua"), rs.getInt("SoGiuong"), rs.getString("ViTri"),
-                rs.getInt("TinhTrang"),
-                new LoaiPhong(rs.getInt("MaLoaiPhong")));
+        this.maPhong = rs.getString("MaPhong");
+        this.sucChua = rs.getInt("SucChua");
+        this.soGiuong = rs.getInt("SoGiuong");
+        this.viTri = rs.getString("ViTri");
+        this.tinhTrang = rs.getInt("TinhTrang");
+        this.loaiPhong = new LoaiPhong(rs.getInt("MaLoaiPhong"));
     }
 
     public String getMaPhong() {
@@ -95,4 +98,36 @@ public class Phong {
         this.loaiPhong = loaiPhong;
     }
 
+    public KhachHang getKHDaDatPhong(){
+        PhongDAO phong_dao = new PhongDAO();
+        return phong_dao.getKHDaDatPhong(this.maPhong);
+    }
+
+    public KhachHang getKHDangSuDungPhong(){
+        PhongDAO phong_dao = new PhongDAO();
+        return phong_dao.getKHDangSuDungPhong(this.maPhong);
+    }
+
+    public HoaDonPhong getHDPByMaPhongAndDate(){
+        HoaDonPhongDAO hoaDonPhong_dao = new HoaDonPhongDAO();
+        return hoaDonPhong_dao.getHDPByMaPhongAndDate(this.maPhong);
+    }
+
+    public boolean updateTinhTrang(int tinhTrang){
+        PhongDAO phong_dao = new PhongDAO();
+        // trường hợp cập nhật thành phòng đã được đặt trước
+        // nhưng phòng đang được sử dụng nên không cập nhật
+        if(tinhTrang == 1 && this.tinhTrang == 2){
+            return true;
+        }
+
+        // trường hợp cập nhật thành phòng trống
+        if(tinhTrang == 0 && !phong_dao.check_status_avail(maPhong)){
+            System.out.print("thay doi: ");
+            tinhTrang = 1;
+        }
+        
+        this.tinhTrang = tinhTrang;
+        return phong_dao.updateTinhTrang(maPhong, tinhTrang);
+    }
 }

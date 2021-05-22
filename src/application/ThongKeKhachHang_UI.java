@@ -13,7 +13,6 @@ import javax.swing.table.*;
 import DAO.HoaDonPhongDAO;
 import connectDB.ConnectDB;
 import entity.*;
-import entity.HoaDonPhong;
 
 public class ThongKeKhachHang_UI extends JFrame implements ActionListener, KeyListener {
     JPanel pnMain;
@@ -156,26 +155,38 @@ public class ThongKeKhachHang_UI extends JFrame implements ActionListener, KeyLi
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
         if (o.equals(btnThongKe)) {
+            modelTable.getDataVector().removeAllElements();
+            modelTable.fireTableDataChanged();
             String maKH = txtMaKH.getText().trim();
             String tenKH = txtTenKH.getText().trim();
             ArrayList<HoaDonPhong> dataList = null;
             try {
-                if (!maKH.isEmpty() && tenKH.isEmpty()) {
-                    dataList = getListSearchByMaKH();
-                } else if (!tenKH.isEmpty() && maKH.isEmpty()) {
-                    dataList = getListSearchByTenKH();
-                } else if (maKH.isEmpty() && tenKH.isEmpty()) {
-                    dataList = getListSearchByDate();
-                } else if (!(maKH.isEmpty() && tenKH.isEmpty())) {
-                    dataList = getListSearchByMaKHAndTenKH();
+                Date tuNgay = dpTuNgay.getFullDate();
+                Date denNgay = dpDenNgay.getFullDate();
+
+                if (validData()) {
+                    if (!maKH.isEmpty() && tenKH.isEmpty()) {
+                        dataList = getListSearchByMaKH();
+                    } else if (!tenKH.isEmpty() && maKH.isEmpty()) {
+                        dataList = getListSearchByTenKH();
+                    } else if (maKH.isEmpty() && tenKH.isEmpty()) {
+                        dataList = getListSearchByDate();
+                    } else if (!(maKH.isEmpty() && tenKH.isEmpty())) {
+                        dataList = getListSearchByMaKHAndTenKH();
+                    }
+                } else {
+                    if (denNgay.before(tuNgay)) {
+                        dpDenNgay.setValueToDay();
+                        JOptionPane.showMessageDialog(this, "Ngày kết thúc phải lớn hơn hoặc bằng ngày bắt đầu",
+                                "Cảnh báo", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             } catch (ParseException e1) {
                 e1.printStackTrace();
             }
-            if (dataList.size() > 0) {
-                modelTable.getDataVector().removeAllElements();
-                DocDuLieuVaoTable(dataList);
-            } else {
+
+            DocDuLieuVaoTable(dataList);
+            if (dataList.size() < 0) {
                 showMessage("Không tìm thấy danh sách thống kê theo yêu cầu", ERROR);
             }
         }
@@ -284,5 +295,14 @@ public class ThongKeKhachHang_UI extends JFrame implements ActionListener, KeyLi
         cal2.setTime(denNgay);
         long result = (cal2.getTime().getTime() - cal1.getTime().getTime()) / (24 * 3600 * 1000);
         return result <= 0 ? 1 : result;
+    }
+
+    public boolean validData() throws ParseException {
+        Date tuNgay = dpTuNgay.getFullDate();
+        Date denNgay = dpDenNgay.getFullDate();
+        if (denNgay.before(tuNgay)) {
+            return false;
+        }
+        return true;
     }
 }

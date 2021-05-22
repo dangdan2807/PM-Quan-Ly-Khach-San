@@ -108,23 +108,23 @@ public class DialogLichDatPhong extends JDialog implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
         if (o.equals(btnXem)) {
+            modelTable.getDataVector().removeAllElements();
+            modelTable.fireTableDataChanged();
             try {
                 Date tuNgay = dpTuNgay.getFullDate();
                 Date denNgay = dpDenNgay.getFullDate();
                 Date toDay = dpTuNgay.getValueToDay();
                 if (validData()) {
                     try {
-                        modelTable.getDataVector().removeAllElements();
                         hdPhong = getListHDPhongDatTruocGioiHan();
                         if (hdPhong.size() <= 0) {
                             JOptionPane.showMessageDialog(this, "Không tìm thấy danh sách đặt phòng trước", "Thông báo",
                                     JOptionPane.INFORMATION_MESSAGE);
-                        } else
-                            DocDuLieuVaoTable();
+                        }
                     } catch (Exception e4) {
-                        JOptionPane.showMessageDialog(this, "Không tìm thấy danh sách đặt phòng trước", "Thông báo",
-                                JOptionPane.INFORMATION_MESSAGE);
+                        e4.printStackTrace();
                     }
+                    DocDuLieuVaoTable();
                 } else {
                     if (tuNgay.before(toDay)) {
                         dpTuNgay.setValueToDay();
@@ -180,17 +180,17 @@ public class DialogLichDatPhong extends JDialog implements ActionListener {
             else if (phong.getTinhTrang() == 1)
                 tinhTrangP = "Đã được đặt";
             else if (phong.getTinhTrang() == 2)
-                tinhTrangP = "Đã có người";
+                tinhTrangP = "Đã cho thuê";
             LoaiPhong loaiPhong = phong.getLoaiPhong();
             KhachHang kh = item.getKhachHang();
             String ngayGioNhan = formatDate(item.getNgayGioNhan());
             String ngayGioTra = formatDate(item.getNgayGioTra());
-                modelTable.addRow(new Object[] { phong.getMaPhong(), phong.getSucChua(), phong.getSoGiuong(),
-                        phong.getViTri(), tinhTrangP, loaiPhong.getTenLoaiPhong(), loaiPhong.getDonGia(),
-                        ngayGioNhan, ngayGioTra, kh.getMaKH(), kh.getTenKH() });
+            modelTable.addRow(new Object[] { phong.getMaPhong(), phong.getSucChua(), phong.getSoGiuong(),
+                    phong.getViTri(), tinhTrangP, loaiPhong.getTenLoaiPhong(), loaiPhong.getDonGia(), ngayGioNhan,
+                    ngayGioTra, kh.getMaKH(), kh.getTenKH() });
         }
     }
-    
+
     private String formatDate(Date date) {
         if (date == null)
             return "Chưa cập nhật";

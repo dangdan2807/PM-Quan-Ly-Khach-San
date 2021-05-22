@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import connectDB.ConnectDB;
 import entity.ChiTietDV;
+import entity.DichVu;
 
 public class ChiTietDVDAO {
     private static ChiTietDVDAO instance = new ChiTietDVDAO();
@@ -13,7 +14,7 @@ public class ChiTietDVDAO {
         return instance;
     }
 
-    public ArrayList<ChiTietDV> getListChiTietDVDate(Date tuNgay, Date denNgay) {
+    public ArrayList<ChiTietDV> getListChiTietDVByDate(Date tuNgay, Date denNgay) {
         ArrayList<ChiTietDV> dataList = new ArrayList<ChiTietDV>();
         ConnectDB.getInstance();
         PreparedStatement stmt = null;
@@ -97,6 +98,35 @@ public class ChiTietDVDAO {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 ChiTietDV ctdv = new ChiTietDV(rs);
+                dataList.add(ctdv);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return dataList;
+    }
+
+    public ArrayList<ChiTietDV> getChiTietDVByMaHDDV(int maHDDV){
+        ArrayList<ChiTietDV> dataList = new ArrayList<ChiTietDV>();
+        ConnectDB.getInstance();
+        PreparedStatement stmt = null;
+        try {
+            Connection con = ConnectDB.getConnection();
+            String sql = "select * from ChiTietDV join DichVu on chiTietDV.maDV = DichVu.maDV where maHDDV = ?";
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, maHDDV);
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                
+                int soLuong = rs.getInt("SoLuong");
+                
+                int maDV = rs.getInt("maDV");
+                String tenDV = rs.getString("tenDV");
+                double donGia = rs.getDouble("DonGia");
+                DichVu dv = new DichVu(maDV, tenDV, donGia);
+                ChiTietDV ctdv = new ChiTietDV(dv, soLuong);
+                
                 dataList.add(ctdv);
             }
         } catch (SQLException e) {

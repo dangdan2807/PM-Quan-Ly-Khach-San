@@ -62,7 +62,7 @@ public class LoaiPhongDAO {
     }
 
     
-    public ArrayList<LoaiPhong> getAllListLoaiPhong() {
+    public ArrayList<LoaiPhong> getListLoaiPhong() {
         ArrayList<LoaiPhong> dataList = new ArrayList<LoaiPhong>();
         Statement stmt = null;
         ResultSet rs = null;

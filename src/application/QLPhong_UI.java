@@ -13,9 +13,9 @@ import DAO.*;
 import connectDB.ConnectDB;
 import entity.*;
 
-public class QLPhong_UI extends JFrame implements ActionListener, MouseListener {
+public class QLPhong_UI extends JFrame implements ActionListener, MouseListener, KeyListener {
     public JPanel pnMain;
-    private JTextField txtMaLPhong, txtTenLPhong, txtDonGia, txtMaPhong, txtViTri, txtTimLP, txtTimPhong;
+    private JTextField txtMaLPhong, txtTenLPhong, txtDonGia, txtMaPhong, txtViTri, txtTimLP, txtTimP;
     private DefaultTableModel modelTableLP, modelTableP;
     private JTable tableLP, tableP;
     private JLabel lbShowMessagesDSP, lbShowMessagesDSLP, lbShowMessagesP, lbShowMessagesLP;
@@ -36,6 +36,7 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener 
     LoaiPhongDAO LPhongDAO = new LoaiPhongDAO();
     PhongDAO phongDAO = new PhongDAO();
     private ArrayList<LoaiPhong> dsLoaiPhong;
+    private ArrayList<Phong> dsPhong;
 
     public QLPhong_UI() {
         try {
@@ -53,7 +54,11 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener 
         pnMain.setLayout(null);
         getContentPane().add(pnMain, BorderLayout.CENTER);
 
+<<<<<<< HEAD
         JLabel lbTitle = new JLabel("Quản Lý Phòng");
+=======
+        JLabel lbTitle = new JLabel("Quản Lý Phòng và Loại Phòng");
+>>>>>>> 2bdb0bcb6ae820de2da145c79c1fbd191a421418
         lbTitle.setHorizontalAlignment(SwingConstants.CENTER);
         lbTitle.setFont(new Font("Dialog", Font.BOLD, 20));
         lbTitle.setBounds(0, 0, 984, 30);
@@ -195,7 +200,7 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener 
         cboLoaiPhong = new JComboBox<String>();
         cboLoaiPhong.setBounds(90, 159, 235, 20);
         pnBL.add(cboLoaiPhong);
-        
+
         btnXemLich = new JButton("Xem lịch đặt phòng", calendarIcon);
         btnXemLich.setBounds(117, 255, 208, 26);
         pnBL.add(btnXemLich);
@@ -251,10 +256,10 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener 
         lbTimPhong.setBounds(12, 21, 75, 16);
         pnBR.add(lbTimPhong);
 
-        txtTimPhong = new JTextField();
-        txtTimPhong.setBounds(85, 19, 150, 20);
-        pnBR.add(txtTimPhong);
-        txtTimPhong.setColumns(10);
+        txtTimP = new JTextField();
+        txtTimP.setBounds(85, 19, 150, 20);
+        pnBR.add(txtTimP);
+        txtTimP.setColumns(10);
 
         btnTimP = new JButton("Tìm", searchIcon);
         btnTimP.setBounds(240, 16, 98, 26);
@@ -295,9 +300,14 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener 
 
         tableLP.addMouseListener(this);
         tableP.addMouseListener(this);
+
+        txtTimLP.addKeyListener(this);
+        txtTimP.addKeyListener(this);
+
         loadCboLoaiPhong();
-        DocDuLieuVaoTableLPhong(dsLoaiPhong);
-        DocDuLieuVaoTablePhong(phongDAO.getAllListLoaiPhong());
+        loadListPhong();
+        DocDuLieuVaoTableLPhong();
+        DocDuLieuVaoTablePhong();
     }
 
     public static void main(String[] args) {
@@ -468,34 +478,38 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener 
             String tenLP = txtTimLP.getText().trim();
             if (tenLP.isEmpty()) {
                 modelTableLP.getDataVector().removeAllElements();
-                ArrayList<LoaiPhong> ds = LPhongDAO.getAllListLoaiPhong();
-                DocDuLieuVaoTableLPhong(ds);
+                modelTableLP.fireTableDataChanged();
+                dsLoaiPhong = LPhongDAO.getListLoaiPhong();
+                DocDuLieuVaoTableLPhong();
             } else {
+                modelTableLP.getDataVector().removeAllElements();
+                modelTableLP.fireTableDataChanged();
                 try {
-                    modelTableLP.getDataVector().removeAllElements();
-                    ArrayList<LoaiPhong> ds = LPhongDAO.getListLoaiPhongByName(tenLP);
-                    if (ds.size() <= 0) {
+                    dsLoaiPhong = LPhongDAO.getListLoaiPhongByName(tenLP);
+                    if (dsLoaiPhong.size() <= 0) {
                         showMessage("Không tìm thấy", ERROR, lbShowMessagesDSLP);
                     } else
-                        DocDuLieuVaoTableLPhong(ds);
+                        DocDuLieuVaoTableLPhong();
                 } catch (Exception e4) {
                     showMessage("Không tìm thấy", ERROR, lbShowMessagesDSLP);
                 }
             }
         } else if (o.equals(btnTimP)) {
-            String maPhong = txtTimPhong.getText().trim();
+            String maPhong = txtTimP.getText().trim();
             if (maPhong.isEmpty()) {
                 modelTableP.getDataVector().removeAllElements();
-                ArrayList<Phong> ds = phongDAO.getAllListLoaiPhong();
-                DocDuLieuVaoTablePhong(ds);
+                modelTableP.fireTableDataChanged();
+                dsPhong = phongDAO.getListPhong();
+                DocDuLieuVaoTablePhong();
             } else {
                 try {
                     modelTableP.getDataVector().removeAllElements();
-                    ArrayList<Phong> ds = phongDAO.getListLoaiPhongByID(maPhong);
-                    if (ds.size() <= 0) {
+                    modelTableP.fireTableDataChanged();
+                    dsPhong = phongDAO.getListPhongByID(maPhong);
+                    if (dsPhong.size() <= 0) {
                         showMessage("Không tìm thấy", ERROR, lbShowMessagesDSP);
                     } else
-                        DocDuLieuVaoTablePhong(ds);
+                        DocDuLieuVaoTablePhong();
                 } catch (Exception e4) {
                     showMessage("Không tìm thấy", ERROR, lbShowMessagesDSP);
                 }
@@ -507,7 +521,7 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener 
                 form.setMaPhong(maPhong);
                 form.setModal(true);
                 form.setVisible(true);
-            } else{
+            } else {
                 showMessage("Vui lòng chọn một phòng bất kỳ", ERROR, lbShowMessagesP);
             }
         }
@@ -549,6 +563,32 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener 
 
     @Override
     public void mouseExited(MouseEvent e) {
+
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        Object o = e.getSource();
+        Object key = e.getKeyCode();
+        // bắt sự kiện nhấn phím enter
+        if (o.equals(txtTimLP)) {
+            if (key.equals(KeyEvent.VK_ENTER)) {
+                btnTimLP.doClick();
+            }
+        } else if (o.equals(txtTimP)) {
+            if (key.equals(KeyEvent.VK_ENTER)) {
+                btnTimP.doClick();
+            }
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
 
     }
 
@@ -637,15 +677,15 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener 
         return phong;
     }
 
-    private void DocDuLieuVaoTablePhong(ArrayList<Phong> dataList) {
-        for (Phong item : dataList) {
+    private void DocDuLieuVaoTablePhong() {
+        for (Phong item : dsPhong) {
             String tinhTrang = "";
             if (item.getTinhTrang() == 0)
                 tinhTrang = "Trống";
             else if (item.getTinhTrang() == 1)
                 tinhTrang = "Đã được đặt";
             else if (item.getTinhTrang() == 2)
-                tinhTrang = "Đã có người";
+                tinhTrang = "Đã Cho thuê";
             int maLPhong = item.getLoaiPhong().getMaLoaiPhong();
             String tenLPhong = "";
             for (LoaiPhong i : dsLoaiPhong) {
@@ -659,16 +699,20 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener 
         }
     }
 
-    private void DocDuLieuVaoTableLPhong(ArrayList<LoaiPhong> dataList) {
-        for (LoaiPhong item : dataList) {
+    private void DocDuLieuVaoTableLPhong() {
+        for (LoaiPhong item : dsLoaiPhong) {
             modelTableLP.addRow(new Object[] { item.getMaLoaiPhong(), item.getTenLoaiPhong(), item.getDonGia() });
         }
     }
 
     private void loadCboLoaiPhong() {
-        dsLoaiPhong = LPhongDAO.getAllListLoaiPhong();
+        dsLoaiPhong = LPhongDAO.getListLoaiPhong();
         for (LoaiPhong item : dsLoaiPhong) {
             cboLoaiPhong.addItem(item.getTenLoaiPhong());
         }
+    }
+
+    private void loadListPhong() {
+        dsPhong = phongDAO.getListPhong();
     }
 }

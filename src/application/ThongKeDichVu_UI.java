@@ -92,8 +92,8 @@ public class ThongKeDichVu_UI extends JFrame implements ActionListener, KeyListe
         pnMain.add(pnTable);
         pnTable.setLayout(new BorderLayout(0, 0));
         // mã HDDV
-        String[] cols = { "Mã HD", "Mã DV", "Tên DV", "Số lượng", "Đơn giá", "Thành Tiền", "Ngày Đặt", "Tình trạng HD", "Mã KH",
-                "Tên KH" };
+        String[] cols = { "Mã HD", "Mã DV", "Tên DV", "Số lượng", "Đơn giá", "Thành Tiền", "Ngày Đặt", "Tình trạng HD",
+                "Mã KH", "Tên KH" };
         modelTable = new DefaultTableModel(cols, 0) {
             // khóa sửa dữ liệu trực tiếp trên table
             @Override
@@ -154,26 +154,36 @@ public class ThongKeDichVu_UI extends JFrame implements ActionListener, KeyListe
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
         if (o.equals(btnThongKe)) {
+            modelTable.getDataVector().removeAllElements();
+            modelTable.fireTableDataChanged();
             String maKH = txtMaKH.getText().trim();
             String tenKH = txtTenKH.getText().trim();
             ArrayList<ChiTietDV> dataList = null;
             try {
-                if (!maKH.isEmpty() && tenKH.isEmpty()) {
-                    dataList = getListSearchByMaKH();
-                } else if (!tenKH.isEmpty() && maKH.isEmpty()) {
-                    dataList = getListSearchByTenKH();
-                } else if (maKH.isEmpty() && tenKH.isEmpty()) {
-                    dataList = getListSearchByDate();
-                } else if (!(maKH.isEmpty() && tenKH.isEmpty())) {
-                    dataList = getListSearchByMaKHAndTenKH();
+                Date tuNgay = dpTuNgay.getFullDate();
+                Date denNgay = dpDenNgay.getFullDate();
+                if (validData()) {
+                    if (!maKH.isEmpty() && tenKH.isEmpty()) {
+                        dataList = getListSearchByMaKH();
+                    } else if (!tenKH.isEmpty() && maKH.isEmpty()) {
+                        dataList = getListSearchByTenKH();
+                    } else if (maKH.isEmpty() && tenKH.isEmpty()) {
+                        dataList = getListSearchByDate();
+                    } else if (!(maKH.isEmpty() && tenKH.isEmpty())) {
+                        dataList = getListSearchByMaKHAndTenKH();
+                    }
+                } else {
+                    if (denNgay.before(tuNgay)) {
+                        dpDenNgay.setValueToDay();
+                        JOptionPane.showMessageDialog(this, "Ngày kết thúc phải lớn hơn hoặc bằng ngày bắt đầu",
+                                "Cảnh báo", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             } catch (ParseException e1) {
                 e1.printStackTrace();
             }
-            if (dataList.size() > 0) {
-                modelTable.getDataVector().removeAllElements();
-                DocDuLieuVaoTable(dataList);
-            } else {
+            DocDuLieuVaoTable(dataList);
+            if (dataList.size() < 0) {
                 showMessage("Không tìm thấy danh sách thống kê theo yêu cầu", ERROR);
             }
         }
@@ -204,7 +214,7 @@ public class ThongKeDichVu_UI extends JFrame implements ActionListener, KeyListe
     private ArrayList<ChiTietDV> getListSearchByDate() throws ParseException {
         Date tuNgay = dpTuNgay.getFullDate();
         Date denNgay = dpDenNgay.getFullDate();
-        ArrayList<ChiTietDV> dataList = chiTietDVDAO.getListChiTietDVDate(tuNgay, denNgay);
+        ArrayList<ChiTietDV> dataList = chiTietDVDAO.getListChiTietDVByDate(tuNgay, denNgay);
         return dataList;
     }
 
@@ -239,13 +249,13 @@ public class ThongKeDichVu_UI extends JFrame implements ActionListener, KeyListe
             HoaDonDV hoaDonDv = item.getHoaDonDV();
             DichVu dv = item.getDichVu();
             KhachHang kh = item.getHoaDonDV().getKhachHang();
-            String date = formatDate(hoaDonDv.getNgayGioDat());
+            String date = formatDate(item.getNgayGioDat());
             Double thanhTien = item.getSoLuong() * item.getDichVu().getDonGia();
             sum += thanhTien;
             String tinhTrang = "";
             if (hoaDonDv.getTinhTrang() == 0)
                 tinhTrang = "Chưa thanh toán";
-            else if(hoaDonDv.getTinhTrang() == 1)
+            else if (hoaDonDv.getTinhTrang() == 1)
                 tinhTrang = "Đã thanh toán";
             modelTable.addRow(new Object[] { hoaDonDv.getMaHDDV(), dv.getMaDV(), dv.getTenDV(), item.getSoLuong(),
                     dv.getDonGia(), thanhTien, date, tinhTrang, kh.getMaKH(), kh.getTenKH() });
@@ -269,5 +279,14 @@ public class ThongKeDichVu_UI extends JFrame implements ActionListener, KeyListe
             lbShowMessages.setIcon(errorIcon);
         }
         lbShowMessages.setText(message);
+    }
+
+    public boolean validData() throws ParseException {
+        Date tuNgay = dpTuNgay.getFullDate();
+        Date denNgay = dpDenNgay.getFullDate();
+        if (denNgay.before(tuNgay)) {
+            return false;
+        }
+        return true;
     }
 }

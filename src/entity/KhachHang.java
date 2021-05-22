@@ -92,7 +92,7 @@ public class KhachHang {
 	}
 
 	public void setLoaiKH(String loaiKH) {
-		if (!(loaiKH.equals("Việt Nam")) || !(loaiKH.equals("Nước ngoài")))
+		if (!(loaiKH.equalsIgnoreCase("Việt Nam")) || !(loaiKH.equalsIgnoreCase("Nước ngoài")))
 			loaiKH = "Việt Nam";
 		this.loaiKH = loaiKH;
 	}
@@ -119,6 +119,12 @@ public class KhachHang {
 		if (maKH != other.maKH)
 			return false;
 		return true;
+	}
+
+	public boolean capNhatSoLanDatPhong(){
+		KhachHangDAO khachHang_dao = new KhachHangDAO();
+		this.soLanDatPhong++;
+		return khachHang_dao.update(this);
 	}
 
 }

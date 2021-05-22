@@ -1,12 +1,24 @@
 package entity;
 
 import java.sql.*;
+import java.util.ArrayList;
+import DAO.*;
 
 public class HoaDonDV {
 	private int maHDDV;
 	private int tinhTrang;
-	private Date ngayGioLap;
+	private Date ngayGioDat;
 	private KhachHang khachHang;
+
+	public HoaDonDV(int maHDDV, Date ngayGioDat, KhachHang khachHang) {
+		this.maHDDV = maHDDV;
+		this.ngayGioDat = ngayGioDat;
+		this.khachHang = khachHang;
+	}
+
+	public HoaDonDV() {
+
+	}
 
 	public int getMaHDDV() {
 		return maHDDV;
@@ -25,11 +37,11 @@ public class HoaDonDV {
 	}
 
 	public Date getNgayGioDat() {
-		return ngayGioLap;
+		return ngayGioDat;
 	}
 
 	public void setNgayGioDat(Date ngayGioDat) {
-		this.ngayGioLap = ngayGioDat;
+		this.ngayGioDat = ngayGioDat;
 	}
 
 	public KhachHang getKhachHang() {
@@ -42,7 +54,7 @@ public class HoaDonDV {
 
 	public HoaDonDV(int maHDDV, KhachHang khachHang,Date ngayGioDat, int tinhTrang ) {
 		this.maHDDV = maHDDV;
-		this.ngayGioLap = ngayGioDat;
+		this.ngayGioDat = ngayGioDat;
 		this.tinhTrang = tinhTrang;
 		this.khachHang = khachHang;
 	}
@@ -68,7 +80,37 @@ public class HoaDonDV {
 			return false;
 		return true;
 	}
+<<<<<<< HEAD
 	public HoaDonDV(ResultSet rs) throws SQLException {
         this(rs.getInt("MaHDDV"), new KhachHang(rs.getInt("MaKH")), rs.getDate("NgayGioLap"), rs.getInt("TinhTrang"));
     }
+=======
+
+	public ArrayList<HoaDonDV> getHDDVByMaKH(int maKH) {
+		HoaDonDVDAO hoaDonDV_dao = new HoaDonDVDAO();
+		return hoaDonDV_dao.getHDDVByMaKH(maKH);
+	}
+
+	public ArrayList<HoaDonDV> getHDDVByMaKHAndDate(int maKH, Date tuNgay, Date denNgay){
+		HoaDonDVDAO hoaDonDV_dao = new HoaDonDVDAO();
+		return hoaDonDV_dao.getHDDVByMaKHAndDate(maKH, tuNgay, denNgay);
+	}
+
+
+	public ArrayList<ChiTietDV> getChiTietDV() {
+		ChiTietDVDAO chiTietDV_dao = new ChiTietDVDAO();
+		return chiTietDV_dao.getChiTietDVByMaHDDV(this.maHDDV);
+	}
+
+	public double tinhTong() {
+		ArrayList<ChiTietDV> dsctdv = getChiTietDV();
+		double tong = 0;
+		for (int i = 0; i < dsctdv.size(); i++) {
+			DichVu dv = dsctdv.get(i).getDichVu();
+			tong += dv.getDonGia() * dsctdv.get(i).getSoLuong();
+		}
+		return tong;
+	}
+
+>>>>>>> 2bdb0bcb6ae820de2da145c79c1fbd191a421418
 }

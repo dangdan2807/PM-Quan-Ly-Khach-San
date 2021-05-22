@@ -1,6 +1,5 @@
 package entity;
 
-import java.sql.ResultSet;
 import java.sql.*;
 
 public class ChiTietDV {
@@ -15,6 +14,21 @@ public class ChiTietDV {
 
     public void setNgayGioDat(Date ngayGioDat) {
         this.ngayGioDat = ngayGioDat;
+    }
+
+    public ChiTietDV(int soLuong, HoaDonDV hoaDonDV, DichVu dichVu) {
+        setSoLuong(soLuong);
+        this.hoaDonDV = hoaDonDV;
+        this.dichVu = dichVu;
+    }
+
+    public ChiTietDV(DichVu dichVu, int soLuong) {
+        
+        
+        
+        this.dichVu = dichVu;
+        setSoLuong(soLuong);
+        
     }
 
     public DichVu getDichVu() {
@@ -51,11 +65,15 @@ public class ChiTietDV {
     }
 
     public ChiTietDV(ResultSet rs) throws SQLException {
-        this(rs.getInt("SoLuong"), rs.getDate("NgayGioDat"),
-                new HoaDonDV(rs.getInt("MaHDDV"), rs.getDate("ngayGioLap"), rs.getInt("tinhTrang"),
-                        new KhachHang(rs.getInt("MaKH"), rs.getString("TenKH"), rs.getString("CMND"),
-                                rs.getDate("NgayHetHan"), rs.getString("LoaiKH"), rs.getInt("SoLanDatPhong"))),
-                new DichVu(rs.getInt("MaDV"), rs.getString("tenDV"), rs.getDouble("donGia")));
+        KhachHang kh = new KhachHang(rs.getInt("MaKH"), rs.getString("TenKH"), rs.getString("CMND"),
+                rs.getDate("NgayHetHan"), rs.getString("LoaiKH"), rs.getInt("SoLanDatPhong"));
+        HoaDonDV hdDV = new HoaDonDV(rs.getInt("MaHDDV"), rs.getDate("ngayGioLap"), rs.getInt("tinhTrang"), kh);
+        DichVu dv = new DichVu(rs.getInt("MaDV"), rs.getString("tenDV"), rs.getDouble("donGia"));
+
+        setSoLuong(rs.getInt("SoLuong"));
+        this.ngayGioDat = rs.getDate("NgayGioDat");
+        this.hoaDonDV = hdDV;
+        this.dichVu = dv;
     }
 
 }

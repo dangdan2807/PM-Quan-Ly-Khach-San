@@ -238,6 +238,7 @@ public class QuanLyDichVu_UI extends JFrame implements ActionListener, MouseList
                 String tenDV = txtTim.getText().trim();
                 if (tenDV.isEmpty()) {
                     modelTable.getDataVector().removeAllElements();
+                    modelTable.fireTableDataChanged();
                     ArrayList<DichVu> ds = dvDAO.getListDichVu();
                     DocDuLieuVaoTable(ds);
                 } else {

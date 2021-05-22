@@ -4,11 +4,12 @@ import java.sql.*;
 import java.util.ArrayList;
 
 import connectDB.ConnectDB;
+import entity.KhachHang;
 import entity.Phong;
 
 public class PhongDAO {
     private static PhongDAO instance = new PhongDAO();
-
+    
     public static PhongDAO getInstance() {
         return instance;
     }
@@ -97,7 +98,7 @@ public class PhongDAO {
         return phong;
     }
 
-    public ArrayList<Phong> getAllListLoaiPhong() {
+    public ArrayList<Phong> getListPhong() {
         ArrayList<Phong> dataList = new ArrayList<Phong>();
         ConnectDB.getInstance();
         Statement stmt = null;
@@ -123,7 +124,7 @@ public class PhongDAO {
         return dataList;
     }
 
-    public ArrayList<Phong> getListLoaiPhongByID(String ID) {
+    public ArrayList<Phong> getListPhongByID(String ID) {
         ArrayList<Phong> dataList = new ArrayList<Phong>();
         PreparedStatement stmt = null;
         ConnectDB.getInstance();
@@ -230,5 +231,110 @@ public class PhongDAO {
             }
         }
         return n > 0;
+    }
+
+    public KhachHang getKHDangSuDungPhong(String maPhong){
+        long ml=System.currentTimeMillis(); 
+        ml = ml/86400000*86400000;
+        Date now = new Date(ml);
+        KhachHang khachHang = null;
+        try{
+            ConnectDB.getInstance();
+            Connection conn = ConnectDB.getConnection();
+
+            String sql = "Select * from HoaDonPhong where MaPhong = ? and NgayGioNhan <= ? and NgayGioTra >= ? and TinhTrang = 1";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setString(1, maPhong);
+            statement.setDate(2, now);
+            statement.setDate(3, now);
+            System.out.println(statement);
+            ResultSet rs = statement.executeQuery();
+
+            if(!rs.next())
+                return null;
+            
+            khachHang = new KhachHang(rs.getInt("MaKH"));
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return khachHang;
+    }
+
+    public KhachHang getKHDaDatPhong(String maPhong){
+        long ml=System.currentTimeMillis(); 
+        ml = ml/86400000*86400000;
+        Date now = new Date(ml);
+        KhachHang khachHang = null;
+        try{
+            ConnectDB.getInstance();
+            Connection conn = ConnectDB.getConnection();
+
+            String sql = "Select * from HoaDonPhong where MaPhong = ? and NgayGioNhan <= ? and NgayGioTra >= ? and TinhTrang = 0";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setString(1, maPhong);
+            statement.setDate(2, now);
+            statement.setDate(3, now);
+            
+            ResultSet rs = statement.executeQuery();
+
+            if(!rs.next())
+                return null;
+            
+            khachHang = new KhachHang(rs.getInt("MaKH"));
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return khachHang;
+    }
+
+    public boolean updateTinhTrang(String maPhong, int tinhTrang) {
+        int n = 0;
+        PreparedStatement stmt = null;
+        ConnectDB.getInstance();
+        Connection con = ConnectDB.getConnection();
+        String query = "update dbo.Phong set tinhTrang = ? Where maPhong = ?";
+        try {
+            stmt = con.prepareStatement(query);
+            stmt.setInt(1, tinhTrang);
+            stmt.setString(2, maPhong);
+            System.out.println(maPhong);
+            System.out.println(tinhTrang);
+            n = stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                stmt.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return n > 0;
+    }
+
+    public boolean check_status_avail(String maPhong) {
+        int n = 0;
+        PreparedStatement stmt = null;
+        ConnectDB.getInstance();
+        Connection con = ConnectDB.getConnection();
+        String query = "select * from dbo.HoaDonPhong Where maPhong = ? and tinhTrang = 0";
+        try {
+            stmt = con.prepareStatement(query);
+            stmt.setString(1, maPhong);
+            ResultSet rs = stmt.executeQuery();
+
+            if(!rs.next()){ // hết hóa đơn đặt phòng này
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                stmt.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
     }
 }

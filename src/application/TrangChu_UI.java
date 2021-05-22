@@ -27,6 +27,8 @@ public class TrangChu_UI extends JFrame implements ActionListener{
     public ImageIcon icon_question = new ImageIcon("data/images/question_16.png");
     public ImageIcon icon_pay = new ImageIcon("data/images/purse.png");
     public ImageIcon icon_order = new ImageIcon("data/images/booking.png");
+    public ImageIcon icon_add = new ImageIcon("data/images/plus.png");
+    public ImageIcon icon_checkin = new ImageIcon("data/images/add.png");
     
 
     public JPanel pnMain;
@@ -39,6 +41,9 @@ public class TrangChu_UI extends JFrame implements ActionListener{
     public JButton[] btnPhong;
     public JButton[] btn_ThanhToan;
     public JButton[] btn_DatPhong;
+    public JButton[] btn_NhanPhong;
+    public JButton[] btn_SuDungDV;
+    public JButton[] btn_XemLichDat;
     public JFrame popup = new JFrame();
     private JLabel lbBooking;
 
@@ -53,8 +58,14 @@ public class TrangChu_UI extends JFrame implements ActionListener{
         loaiPhong_dao = new LoaiPhongDAO();
         dsp = phong_dao.getAllPhong();
         dslp = loaiPhong_dao.getAllLoaiPhong();
-        pnMain = renderGUI();
+        
         // renderData();
+    }
+
+    public void start(){
+        pnMain = renderGUI();
+        renderDSPhong();
+        renderLoaiPhong();
     }
 
     public JPanel renderGUI() {
@@ -95,7 +106,7 @@ public class TrangChu_UI extends JFrame implements ActionListener{
         JPanel lb_sec_booking = new JPanel();
         lb_sec_booking.setBorder(BorderFactory.createEtchedBorder());
         pnThongKe.add(lb_sec_booking);
-        lbBooking = new JLabel("Đã đặt (20)", icon_red_close, JLabel.CENTER);
+        lbBooking = new JLabel("Đã đặt (20)", icon_question, JLabel.CENTER);
         lb_sec_booking.add(lbBooking);
         lbBooking.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
@@ -130,8 +141,7 @@ public class TrangChu_UI extends JFrame implements ActionListener{
         grid_Phong.setHgap(10);
         grid_Phong.setVgap(10);
         pnPhongTrong.setLayout(grid_Phong);
-        renderDSPhong();
-        renderLoaiPhong();
+        
         return pnMain;
     }
 
@@ -148,7 +158,9 @@ public class TrangChu_UI extends JFrame implements ActionListener{
         btnPhong = new JButton[dsp.size()];
         btn_ThanhToan = new JButton[dsp.size()];
         btn_DatPhong = new JButton[dsp.size()];
-
+        btn_NhanPhong = new JButton[dsp.size()];
+        btn_SuDungDV = new JButton[dsp.size()];
+        btn_XemLichDat = new JButton[dsp.size()];
         for(int i=0; i<dsp.size(); i++){
             Phong phong = dsp.get(i);
             int j = i;
@@ -190,8 +202,12 @@ public class TrangChu_UI extends JFrame implements ActionListener{
             btnPhong[i].add(space(0, 5));
             btnPhong[i].add(lbIcon);
 
-            btn_ThanhToan[j] = new JButton("Thanh toán", icon_pay);
+            
             btn_DatPhong[j] = new JButton("Đặt phòng này", icon_order);
+            btn_NhanPhong[j] = new JButton("Nhận phòng", icon_checkin);
+            btn_ThanhToan[j] = new JButton("Trả phòng", icon_pay);
+            btn_SuDungDV[j] = new JButton("Sử dụng dịch vụ", icon_add);
+            btn_XemLichDat[j] = new JButton("Xem lịch đặt", icon_order);
             // sự kiện bấm vào phòng
             btnPhong[i].addActionListener(new ActionListener(){
                 
@@ -202,7 +218,7 @@ public class TrangChu_UI extends JFrame implements ActionListener{
                     popup.dispose();
                     popup = new JFrame();
                     popup.setTitle("Thông tin phòng");
-                    popup.setSize(400, 200);
+                    popup.setSize(400, 270);
                     popup.setResizable(false);
                     popup.setLocationRelativeTo(pnMain);
                     popup.setAlwaysOnTop(true);
@@ -225,23 +241,120 @@ public class TrangChu_UI extends JFrame implements ActionListener{
                     else if(phong.getTinhTrang() == 2)
                         tinhTrang = "Đang ở";
                         
+                    String gia = new QuanLyKhachSan_UI().currencyFormat(phong.getLoaiPhong().getDonGia());
                     pn_p_top.add(new JLabel("<html><p style='padding-left: 10px;'>Mã phòng: "+ phong.getMaPhong() +"</p></html>"));
                     pn_p_top.add(new JLabel("<html><p style='padding-left: 10px;'>Vị trí: "+ phong.getViTri() +"</p></html>"));
                     pn_p_top.add(new JLabel("<html><p style='padding-left: 10px;'>Số giường: "+ phong.getSoGiuong() +"</p></html>"));
                     pn_p_top.add(new JLabel("<html><p style='padding-left: 10px;'>Tình trạng: "+ tinhTrang +"</p></html>"));
                     pn_p_top.add(new JLabel("<html><p style='padding-left: 10px;'>Loại phòng: "+ phong.getLoaiPhong().getTenLoaiPhong() +"</p></html>"));
-                    pn_p_top.add(new JLabel("<html><p style='padding-left: 10px;'>Đơn giá: "+ phong.getLoaiPhong().getDonGia() +"</p></html>"));
+                    pn_p_top.add(new JLabel("<html><p style='padding-left: 10px;'>Đơn giá: "+ gia +"</p></html>"));
 
                     JPanel pn_p_bottom = new JPanel();
                     pn_p_main.add(pn_p_bottom);
                     
-                    if(phong.getTinhTrang() == 2){
+                    if(phong.getTinhTrang() == 2){ // đang ở
+                        // pn_p_bottom.setLayout(new GridLayout(2, 2));
                         pn_p_bottom.add(btn_ThanhToan[j]);
+                        pn_p_bottom.add(btn_SuDungDV[j]);
+                        pn_p_bottom.add(btn_DatPhong[j]);
+                        pn_p_bottom.add(btn_XemLichDat[j]);
                         
-                    }else{
+                    }else if(phong.getTinhTrang() == 1){ // đã đặt
+                        pn_p_bottom.add(btn_DatPhong[j]);
+                        pn_p_bottom.add(btn_NhanPhong[j]);
+                        pn_p_bottom.add(btn_XemLichDat[j]);
+                    }else{// trống
                         pn_p_bottom.add(btn_DatPhong[j]);
                     }
                     popup.setVisible(true);
+
+                    btn_NhanPhong[j].addActionListener(new ActionListener(){
+                        public void actionPerformed(ActionEvent e) {
+                            // hiển thị thông tin khách hàng để đối chiếu
+                            popup.dispose();
+                            HoaDonPhong hdp = phong.getHDPByMaPhongAndDate();
+                            if(hdp == null){
+                                JOptionPane.showMessageDialog(pnMain, "Chưa đến hạn nhận phòng");
+                                return;
+                            }
+                            KhachHang kh = hdp.getKhachHang();
+                            
+
+                            popup = new JFrame();
+                            
+                            popup.setTitle("Thông tin hóa đơn");
+                            popup.setSize(400, 200);
+                            popup.setResizable(false);
+                            popup.setLocationRelativeTo(pnMain);
+                            popup.setAlwaysOnTop(true);
+
+                            JPanel pn_p_main = new JPanel();
+                            popup.add(pn_p_main);
+                            pn_p_main.setLayout(new BoxLayout(pn_p_main, BoxLayout.Y_AXIS));
+
+                            JPanel pn_p_top = new JPanel();
+                            pn_p_main.add(pn_p_top);
+                            pn_p_top.setLayout(new GridLayout(0, 2));
+                            // pn_p_top.setLayout(new BoxLayout(pn_p_top, BoxLayout.Y_AXIS));
+                            pn_p_top.setBorder(BorderFactory.createTitledBorder("Thông tin hóa đơn"));
+                            pn_p_top.add(new JLabel("<html><p style='padding-left: 10px;'>Mã hóa đơn: "+hdp.getMaHD()+"</p></html>"));
+                            pn_p_top.add(new JLabel("<html><p style='padding-left: 10px;'>Mã phòng: "+phong.getMaPhong()+"</p></html>"));
+                            pn_p_top.add(new JLabel("<html><p style='padding-left: 10px;'>Ngày đến: "+hdp.getNgayGioNhan()+"</p></html>"));
+                            pn_p_top.add(new JLabel("<html><p style='padding-left: 10px;'>Ngày đi: "+hdp.getNgayGioTra()+"</p></html>"));
+
+                            pn_p_top.add(new JLabel("<html><p style='padding-left: 10px;'>Mã khách hàng: "+kh.getMaKH()+"</p></html>"));
+                            pn_p_top.add(new JLabel("<html><p style='padding-left: 10px;'>Tên khách hàng: "+kh.getTenKH()+"</p></html>"));
+                            pn_p_top.add(new JLabel("<html><p style='padding-left: 10px;'>Số CMND: "+kh.getCmnd()+"</p></html>"));
+                            pn_p_top.add(new JLabel("<html><p style='padding-left: 10px;'>Ngày hết hạn: "+kh.getNgayHetHan()+"</p></html>"));
+                            pn_p_top.add(new JLabel("<html><p style='padding-left: 10px;'>Loại khách hàng: "+kh.getLoaiKH()+"</p></html>"));
+                            
+
+                            JPanel pn_p_bottom = new JPanel();
+                            pn_p_main.add(pn_p_bottom);
+                            
+                            JButton btn_XacNhan = new JButton("Xác nhận nhận phòng", icon_checkin);
+                            pn_p_bottom.add(btn_XacNhan);
+                            
+                            popup.setVisible(true);
+                            
+                            btn_XacNhan.addActionListener(new ActionListener(){
+                                public void actionPerformed(ActionEvent e) {
+                                    popup.dispose();
+                                    
+                                    // cập nhật thành đã nhận phòng
+                                    if(hdp.updateTinhTrang(1)){
+                                        hdp.setTinhTrang(1);
+                                        // cập nhật tình trạng phòng đang có người ở
+                                        Phong phong = hdp.getPhong();
+                                        phong.updateTinhTrang(2);
+                                        btnPhong[j].setBackground(Color.red);
+                                        JOptionPane.showMessageDialog(pnMain, "Đã nhận phòng");
+
+                                        // cập nhật tình trạng
+                                        dsp.get(j).setTinhTrang(2);
+                                        
+                                    }else{
+                                        JOptionPane.showMessageDialog(pnMain, "Có lỗi xảy ra");
+                                    }
+                                }
+                            });
+                        }
+                        
+                    });
+
+                    btn_XemLichDat[j].addActionListener(new ActionListener(){
+
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            // TODO Auto-generated method stub
+                            // popup.dispose();
+                            DialogLichDatPhong form = new DialogLichDatPhong();
+                            form.setMaPhong(phong.getMaPhong());
+                            form.setModal(true);
+                            form.setVisible(true);
+                        }
+                        
+                    });
                 }
             });
         }
@@ -250,7 +363,7 @@ public class TrangChu_UI extends JFrame implements ActionListener{
         pn_sec_available.repaint();
 
         getCount();
-        lbAvail.setText("Phòng trống (" + countAvail + ")");
+        lbAvail.setText("Phòng trống (" + (countAvail+countBooking) + ")");
         lbBooking.setText("Đã đặt (" + countBooking + ")");
         lbUsing.setText("Đang ở (" + countUsing + ")");
     }

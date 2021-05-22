@@ -33,6 +33,7 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
     ImageIcon checkIcon = new ImageIcon("data/images/check2_16.png");
     ImageIcon errorIcon = new ImageIcon("data/images/cancel_16.png");
     KhachHangDAO khDAO = new KhachHangDAO();
+    ArrayList<KhachHang> dsKH;
 
     public QuanLyKhachHang_UI() {
         try {
@@ -190,7 +191,8 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
         // sự kiện phím enter
         txtTim.addKeyListener(this);
 
-        DocDuLieuVaoTable(khDAO.getListKhachHang());
+        loadListKhachHang();
+        DocDuLieuVaoTable();
     }
 
     public static void main(String[] args) {
@@ -218,7 +220,7 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
                     e2.printStackTrace();
                 }
                 try {
-                    boolean result = khDAO.create(kh);
+                    boolean result = khDAO.insert(kh);
                     int maKH = khDAO.getLatestID();
                     if (result == true) {
                         txtMaKH.setText(String.valueOf(maKH));
@@ -288,16 +290,18 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
                 String tenKH = txtTim.getText().trim();
                 if (tenKH.isEmpty()) {
                     modelTable.getDataVector().removeAllElements();
-                    ArrayList<KhachHang> ds = khDAO.getListKhachHang();
-                    DocDuLieuVaoTable(ds);
+                    modelTable.fireTableDataChanged();
+                    dsKH = khDAO.getListKhachHang();
+                    DocDuLieuVaoTable();
                 } else {
                     try {
                         modelTable.getDataVector().removeAllElements();
-                        ArrayList<KhachHang> ds = khDAO.getListKhachHangByName(tenKH);
-                        if (ds.size() <= 0) {
+                        modelTable.fireTableDataChanged();
+                        dsKH = khDAO.getListKhachHangByName(tenKH);
+                        if (dsKH.size() <= 0) {
                             showMessage("Không tìm thấy khách hàng", ERROR);
                         } else
-                            DocDuLieuVaoTable(ds);
+                            DocDuLieuVaoTable();
                     } catch (Exception e4) {
                         showMessage("Không tìm thấy khách hàng", ERROR);
                     }
@@ -399,6 +403,13 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
         if (!(cmnd.length() > 0 && cmnd.matches("^(\\d{9}|\\d{12})$"))) {
             showMessage("Lỗi: CMND phải có 9 số hoặc CCCD phải có 12 số", txtCMND);
             return false;
+        } else {
+            for (KhachHang item : dsKH) {
+                if (item.getCmnd().equalsIgnoreCase(cmnd)) {
+                    showMessage("Lỗi: CMND hoặc CCCD đã tồn tại", txtCMND);
+                    return false;
+                }
+            }
         }
         if (soLanDat.length() > 0) {
             try {
@@ -436,8 +447,8 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
         return kh;
     }
 
-    private void DocDuLieuVaoTable(ArrayList<KhachHang> dataList) {
-        for (KhachHang item : dataList) {
+    private void DocDuLieuVaoTable() {
+        for (KhachHang item : dsKH) {
             String date = formatDate(item.getNgayHetHan());
             modelTable.addRow(new Object[] { item.getMaKH(), item.getTenKH(), item.getCmnd(), date, item.getLoaiKH(),
                     item.getSoLanDatPhong() });
@@ -447,5 +458,9 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
     private String formatDate(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyy");
         return sdf.format(date);
+    }
+
+    private void loadListKhachHang() {
+        dsKH = khDAO.getListKhachHang();
     }
 }
