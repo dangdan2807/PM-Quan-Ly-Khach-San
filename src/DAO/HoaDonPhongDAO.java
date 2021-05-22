@@ -19,7 +19,7 @@ public class HoaDonPhongDAO {
         PreparedStatement stmt = null;
         Connection con = ConnectDB.getConnection();
         try {
-            String sql = "select * from HoaDonPhong";
+            String sql = "select * from HoaDonPhong order by ngayGioNhan DESC";
             stmt = con.prepareStatement(sql);
 
             ResultSet rs = stmt.executeQuery();
@@ -152,10 +152,7 @@ public class HoaDonPhongDAO {
                     continue;
                 }
                 flag = false;
-                System.out.println(compareDate(hdp.getNgayGioTra(), rs.getDate("NgayGioNhan")));
-                System.out.println(compareDate(hdp.getNgayGioNhan(), rs.getDate("NgayGioTra")));
-                System.out.println(rs.getDate("NgayGioNhan"));
-                System.out.println(rs.getDate("NgayGioTra"));
+                
             }
 
             if (!flag) {
@@ -301,6 +298,34 @@ public class HoaDonPhongDAO {
         }
         return hdp;
         
+    }
+
+    public ArrayList<HoaDonPhong> getListHDPhongByTinhTrang(int tinhTrang) {
+        ArrayList<HoaDonPhong> dataList = new ArrayList<HoaDonPhong>();
+        ConnectDB.getInstance();
+        PreparedStatement stmt = null;
+        try {
+            Connection con = ConnectDB.getConnection();
+            String sql = "select * from HoaDonPhong where tinhtrang = ? order by ngayGioNhan DESC";
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, tinhTrang);
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                int maHD = rs.getInt("MaHD");
+                // int tinhTrang = rs.getInt("TinhTrang");
+                Date ngayGioNhan = rs.getDate("NgayGioNhan");
+                Date ngayGioTra = rs.getDate("NgayGioTra");
+                Phong phong = new Phong(rs.getString("MaPhong"));
+                KhachHang khachHang = new KhachHang(rs.getInt("MaKH"));
+
+                HoaDonPhong hdp = new HoaDonPhong(maHD, tinhTrang, ngayGioNhan, ngayGioTra, phong, khachHang);
+                dataList.add(hdp);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return dataList;
     }
 
     public int getLatestID() {

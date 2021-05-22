@@ -169,6 +169,9 @@ public class ThanhToan_UI extends JFrame{
                     // cập nhật phòng trống
                     hdp.getPhong().updateTinhTrang(0); 
                     btnThanhToan.setEnabled(false);
+
+                    // cập nhật số lần đặt phòng
+                    hdp.getKhachHang().capNhatSoLanDatPhong();
                     // modelDatPhong.setValueAt("Đã trả phòng", idx, 7);
                     JOptionPane.showMessageDialog(pnMain, "Thanh toán thành công");
                 }else{
@@ -192,11 +195,10 @@ public class ThanhToan_UI extends JFrame{
 
     public void renderData(){
 
-        // System.out.println(maHD);
-        // System.out.println(maHDDV);
         KhachHang kh = hdp.getKhachHang();
         Phong phong = hdp.getPhong();
         double tienphong = hdp.tinhTongTien();
+        String gia = new QuanLyKhachSan_UI().currencyFormat(phong.getLoaiPhong().getDonGia());
         modelHD.addRow(new Object[]{"Mã hóa đơn", hdp.getMaHD()});
         modelHD.addRow(new Object[]{"Mã khách hàng", kh.getMaKH()});
         modelHD.addRow(new Object[]{"Tên khách hàng", kh.getTenKH()});
@@ -207,24 +209,23 @@ public class ThanhToan_UI extends JFrame{
         modelHD.addRow(new Object[]{"Ngày đến", hdp.getNgayGioNhan()});
         modelHD.addRow(new Object[]{"Ngày đi", hdp.getNgayGioTra()});
         modelHD.addRow(new Object[]{"Số ngày ở", hdp.tinhSoNgay()});
-        modelHD.addRow(new Object[]{"Đơn giá", phong.getLoaiPhong().getDonGia()});
-        modelHD.addRow(new Object[]{"Số tiền", tienphong});
-        lbTienPhong.setText(String.valueOf(tienphong));
+        modelHD.addRow(new Object[]{"Đơn giá", gia});
+        lbTienPhong.setText(new QuanLyKhachSan_UI().currencyFormat(tienphong));
 
         // for(int i=0; i<)
         if(hddv != null){
             ArrayList<ChiTietDV> dsctdv = hddv.getChiTietDV();
             double tienDv = hddv.tinhTong();
-            lbTienDV.setText(String.valueOf(tienDv));
-            lbTongTien.setText(String.valueOf(tienphong+tienDv));
+            lbTienDV.setText(new QuanLyKhachSan_UI().currencyFormat(tienDv));
+            lbTongTien.setText(new QuanLyKhachSan_UI().currencyFormat(tienphong+tienDv));
             for(int i=0; i<dsctdv.size(); i++){
                 DichVu dv = dsctdv.get(i).getDichVu();
                 
-                modelDV.addRow(new Object[]{dv.getTenDV(), dsctdv.get(i).getSoLuong(), dv.getDonGia()});
+                modelDV.addRow(new Object[]{dv.getTenDV(), dsctdv.get(i).getSoLuong(), new QuanLyKhachSan_UI().currencyFormat(dv.getDonGia())});
             }
         }else{
-            lbTienDV.setText("0");
-            lbTongTien.setText(String.valueOf(tienphong));
+            lbTienDV.setText(new QuanLyKhachSan_UI().currencyFormat(0D));
+            lbTongTien.setText(new QuanLyKhachSan_UI().currencyFormat(tienphong));
         }
         
 

@@ -6,7 +6,9 @@ import javax.swing.event.*;
 import javax.swing.table.DefaultTableModel;
 
 import java.awt.event.*;
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.prefs.NodeChangeEvent;
@@ -460,5 +462,9 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener, ListSel
     }
 
     // public void check
-
+    public String currencyFormat(Double vnd){
+        Locale localeVN = new Locale("vi", "VN");
+        NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
+        return currencyVN.format(vnd);
+    }
 }
