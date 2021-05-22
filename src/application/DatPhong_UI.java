@@ -504,7 +504,7 @@ public class DatPhong_UI extends JFrame implements ActionListener, ListSelection
                 String loaiKH = (String)cboLoaiKH.getSelectedItem();
                 int soLanDatPhong = 0;
                 khachHang = new KhachHang(0, tenKH, cmnd, ngayHetHan, loaiKH, soLanDatPhong);
-                if(!khachHang_dao.create(khachHang)){
+                if(!khachHang_dao.insert(khachHang)){
                     JOptionPane.showMessageDialog(pnMain, "Không thể thêm khách hàng!");
                     return;
                 }

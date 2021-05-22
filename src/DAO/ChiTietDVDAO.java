@@ -14,7 +14,7 @@ public class ChiTietDVDAO {
         return instance;
     }
 
-    public ArrayList<ChiTietDV> getListChiTietDVDate(Date tuNgay, Date denNgay) {
+    public ArrayList<ChiTietDV> getListChiTietDVByDate(Date tuNgay, Date denNgay) {
         ArrayList<ChiTietDV> dataList = new ArrayList<ChiTietDV>();
         ConnectDB.getInstance();
         PreparedStatement stmt = null;

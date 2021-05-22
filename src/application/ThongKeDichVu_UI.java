@@ -214,7 +214,7 @@ public class ThongKeDichVu_UI extends JFrame implements ActionListener, KeyListe
     private ArrayList<ChiTietDV> getListSearchByDate() throws ParseException {
         Date tuNgay = dpTuNgay.getFullDate();
         Date denNgay = dpDenNgay.getFullDate();
-        ArrayList<ChiTietDV> dataList = chiTietDVDAO.getListChiTietDVDate(tuNgay, denNgay);
+        ArrayList<ChiTietDV> dataList = chiTietDVDAO.getListChiTietDVByDate(tuNgay, denNgay);
         return dataList;
     }
 

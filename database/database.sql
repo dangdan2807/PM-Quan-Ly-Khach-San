@@ -150,9 +150,9 @@ VALUES
 	(1, N'P101', 1, '2021-05-16', '2021-05-16'),
 	(2, N'P102', 0, '2021-05-02', '2021-05-07'),
 	(3, N'P103', 2, '2021-05-16', null),
-	(5, N'P201', 0, '2021-05-30', null)
+	(5, N'P201', 0, '2021-05-30', '2021-06-10'),
+	(4, N'P201', 0, '2021-06-15', null)
 GO
-
 
 -- drop database KhachSan
 
@@ -170,7 +170,8 @@ BEGIN
 		JOIN dbo.ChiTietDV ct ON hd.MaHDDV = ct.MaHDDV
 		JOIN dbo.DichVu dv ON ct.MaDV = dv.MaDV
 		JOIN dbo.KhachHang kh ON hd.MaKH = kh.MaKH
-	WHERE hd.ngayGioLap BETWEEN @tuNgay AND @denNgay
+	WHERE ct.NgayGioDat BETWEEN @tuNgay AND @denNgay
+		AND hd.TinhTrang = 1
 END
 GO
 
@@ -188,7 +189,9 @@ BEGIN
 		JOIN dbo.ChiTietDV ct ON hd.MaHDDV = ct.MaHDDV
 		JOIN dbo.DichVu dv ON ct.MaDV = dv.MaDV
 		JOIN dbo.KhachHang kh ON hd.MaKH = kh.MaKH
-	WHERE hd.MaKH = @MaKH AND hd.ngayGioLap BETWEEN @tuNgay AND @denNgay
+	WHERE hd.MaKH = @MaKH 
+		AND hd.ngayGioLap BETWEEN @tuNgay AND @denNgay
+		AND hd.TinhTrang = 1
 END
 GO
 
@@ -208,7 +211,9 @@ BEGIN
 		JOIN dbo.ChiTietDV ct ON hd.MaHDDV = ct.MaHDDV
 		JOIN dbo.DichVu dv ON ct.MaDV = dv.MaDV
 		JOIN dbo.KhachHang kh ON hd.MaKH = kh.MaKH
-	WHERE kh.TenKH like @TenKH AND hd.ngayGioLap BETWEEN @tuNgay AND @denNgay
+	WHERE kh.TenKH like @TenKH 
+		AND hd.ngayGioLap BETWEEN @tuNgay AND @denNgay
+		AND hd.TinhTrang = 1
 END
 GO
 
@@ -228,7 +233,10 @@ BEGIN
 		JOIN dbo.ChiTietDV ct ON hd.MaHDDV = ct.MaHDDV
 		JOIN dbo.DichVu dv ON ct.MaDV = dv.MaDV
 		JOIN dbo.KhachHang kh ON hd.MaKH = kh.MaKH
-	WHERE hd.MaKH = @MaKH AND kh.tenKH LIKE @TenKH AND hd.ngayGioLap BETWEEN @tuNgay AND @denNgay
+	WHERE hd.MaKH = @MaKH 
+		AND kh.tenKH LIKE @TenKH 
+		AND hd.ngayGioLap BETWEEN @tuNgay AND @denNgay
+		AND hd.TinhTrang = 1
 END
 GO
 
@@ -238,15 +246,16 @@ CREATE PROC UDP_SearchHDPhongByDate
 	@denNgay DATETIME
 AS
 BEGIN
-	SELECT hd.MaHD, hd.TinhTrang as TinhTrangHD, hd.NgayGioNhan, hd.NgayGioTra,
-		p.MaPhong, p.SucChua, p.SoGiuong, p.ViTri, p.TinhTrang as TinhTrangP,
-		lp.MaLoaiPhong, lp.TenLoaiPhong, lp.DonGia, 
+	SELECT hd.MaHD, hd.TinhTrang AS TinhTrangHD, hd.NgayGioNhan, hd.NgayGioTra,
+		p.MaPhong, p.SucChua, p.SoGiuong, p.ViTri, p.TinhTrang AS TinhTrangP,
+		lp.MaLoaiPhong, lp.TenLoaiPhong, lp.DonGia,
 		kh.MaKH, kh.TenKH, kh.CMND, kh.NgayHetHan, kh.LoaiKH, kh.SoLanDatPhong
 	FROM dbo.HoaDonPhong hd
 		JOIN dbo.Phong p ON hd.MaPhong = p.MaPhong
 		JOIN dbo.LoaiPhong lp ON lp.MaLoaiPhong = p.MaLoaiPhong
 		JOIN dbo.KhachHang kh ON kh.MaKH = hd.MaKH
-	WHERE hd.NgayGioNhan BETWEEN @tuNgay AND @denNgay
+	WHERE (hd.NgayGioNhan BETWEEN @tuNgay AND @denNgay) 
+		AND (hd.TinhTrang BETWEEN 1 AND 2)
 END
 GO
 
@@ -256,15 +265,17 @@ CREATE PROC UDP_SearchHDPhongByMaKH
 	@denNgay DATETIME
 AS
 BEGIN
-	SELECT hd.MaHD, hd.TinhTrang as TinhTrangHD, hd.NgayGioNhan, hd.NgayGioTra,
-		p.MaPhong, p.SucChua, p.SoGiuong, p.ViTri, p.TinhTrang as TinhTrangP,
-		lp.MaLoaiPhong, lp.TenLoaiPhong, lp.DonGia, 
+	SELECT hd.MaHD, hd.TinhTrang AS TinhTrangHD, hd.NgayGioNhan, hd.NgayGioTra,
+		p.MaPhong, p.SucChua, p.SoGiuong, p.ViTri, p.TinhTrang AS TinhTrangP,
+		lp.MaLoaiPhong, lp.TenLoaiPhong, lp.DonGia,
 		kh.MaKH, kh.TenKH, kh.CMND, kh.NgayHetHan, kh.LoaiKH, kh.SoLanDatPhong
 	FROM dbo.HoaDonPhong hd
 		JOIN dbo.Phong p ON hd.MaPhong = p.MaPhong
 		JOIN dbo.LoaiPhong lp ON lp.MaLoaiPhong = p.MaLoaiPhong
 		JOIN dbo.KhachHang kh ON kh.MaKH = hd.MaKH
-	WHERE hd.MaKH = @MaKH AND hd.NgayGioNhan BETWEEN @tuNgay AND @denNgay
+	WHERE hd.MaKH = @MaKH
+		AND (hd.NgayGioNhan BETWEEN @tuNgay AND @denNgay)
+		AND (hd.TinhTrang BETWEEN 1 AND 2)
 END
 GO
 
@@ -283,7 +294,9 @@ BEGIN
 		JOIN dbo.Phong p ON hd.MaPhong = p.MaPhong
 		JOIN dbo.LoaiPhong lp ON lp.MaLoaiPhong = p.MaLoaiPhong
 		JOIN dbo.KhachHang kh ON kh.MaKH = hd.MaKH
-	WHERE kh.TenKH LIKE @TenKH AND hd.NgayGioNhan BETWEEN @tuNgay AND @denNgay
+	WHERE kh.TenKH LIKE @TenKH
+		AND (hd.NgayGioNhan BETWEEN @tuNgay AND @denNgay)
+		AND (hd.TinhTrang BETWEEN 1 AND 2)
 END
 GO
 
@@ -303,7 +316,10 @@ BEGIN
 		JOIN dbo.Phong p ON hd.MaPhong = p.MaPhong
 		JOIN dbo.LoaiPhong lp ON lp.MaLoaiPhong = p.MaLoaiPhong
 		JOIN dbo.KhachHang kh ON kh.MaKH = hd.MaKH
-	WHERE hd.MaKH = @MaKH AND kh.tenKH LIKE @TenKH AND hd.NgayGioNhan BETWEEN @tuNgay AND @denNgay
+	WHERE hd.MaKH = @MaKH 
+		AND kh.tenKH LIKE @TenKH 
+		AND (hd.NgayGioNhan BETWEEN @tuNgay AND @denNgay)
+		AND (hd.TinhTrang BETWEEN 1 AND 2)
 END
 GO
 
@@ -322,15 +338,17 @@ CREATE PROC UDP_GetListHDPhongReservation
 	@tuNgay DATETIME
 AS
 BEGIN
-	SELECT hd.MaHD, hd.TinhTrang as TinhTrangHD, hd.NgayGioNhan, hd.NgayGioTra,
-		p.MaPhong, p.SucChua, p.SoGiuong, p.ViTri, p.TinhTrang as TinhTrangP,
-		lp.MaLoaiPhong, lp.TenLoaiPhong, lp.DonGia, 
+	SELECT hd.MaHD, hd.TinhTrang AS TinhTrangHD, hd.NgayGioNhan, hd.NgayGioTra,
+		p.MaPhong, p.SucChua, p.SoGiuong, p.ViTri, p.TinhTrang AS TinhTrangP,
+		lp.MaLoaiPhong, lp.TenLoaiPhong, lp.DonGia,
 		kh.MaKH, kh.TenKH, kh.CMND, kh.NgayHetHan, kh.LoaiKH, kh.SoLanDatPhong
 	FROM dbo.HoaDonPhong hd
 		JOIN dbo.Phong p ON hd.MaPhong = p.MaPhong
 		JOIN dbo.LoaiPhong lp ON p.MaLoaiPhong = lp.MaLoaiPhong
 		JOIN dbo.KhachHang kh ON kh.MaKH = hd.MaKH
-	WHERE p.MaPhong = @MaPhong and hd.tinhTrang = 0 and hd.NgayGioNhan > @tuNgay
+	WHERE p.MaPhong = @MaPhong 
+		AND hd.tinhTrang = 0 
+		AND hd.NgayGioNhan > @tuNgay
 END
 GO
 
@@ -340,14 +358,16 @@ CREATE PROC UDP_GetListHDPhongReservationLimit
 	@denNgay DATETIME
 AS
 BEGIN
-	SELECT hd.MaHD, hd.TinhTrang as TinhTrangHD, hd.NgayGioNhan, hd.NgayGioTra,
-		p.MaPhong, p.SucChua, p.SoGiuong, p.ViTri, p.TinhTrang as TinhTrangP,
-		lp.MaLoaiPhong, lp.TenLoaiPhong, lp.DonGia, 
+	SELECT hd.MaHD, hd.TinhTrang AS TinhTrangHD, hd.NgayGioNhan, hd.NgayGioTra,
+		p.MaPhong, p.SucChua, p.SoGiuong, p.ViTri, p.TinhTrang AS TinhTrangP,
+		lp.MaLoaiPhong, lp.TenLoaiPhong, lp.DonGia,
 		kh.MaKH, kh.TenKH, kh.CMND, kh.NgayHetHan, kh.LoaiKH, kh.SoLanDatPhong
 	FROM dbo.HoaDonPhong hd
 		JOIN dbo.Phong p ON hd.MaPhong = p.MaPhong
 		JOIN dbo.LoaiPhong lp ON p.MaLoaiPhong = lp.MaLoaiPhong
 		JOIN dbo.KhachHang kh ON kh.MaKH = hd.MaKH
-	WHERE p.MaPhong = @MaPhong and hd.tinhTrang = 0 and hd.NgayGioNhan BETWEEN @tuNgay AND @denNgay
+	WHERE p.MaPhong = @MaPhong 
+		AND hd.tinhTrang = 0 
+		AND hd.NgayGioNhan BETWEEN @tuNgay AND @denNgay
 END
 GO
