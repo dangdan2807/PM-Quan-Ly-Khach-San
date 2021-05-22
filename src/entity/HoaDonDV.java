@@ -52,7 +52,7 @@ public class HoaDonDV {
 		this.khachHang = khachHang;
 	}
 
-	public HoaDonDV(int maHDDV, KhachHang khachHang,Date ngayGioDat, int tinhTrang ) {
+	public HoaDonDV(int maHDDV, KhachHang khachHang, Date ngayGioDat, int tinhTrang) {
 		this.maHDDV = maHDDV;
 		this.ngayGioDat = ngayGioDat;
 		this.tinhTrang = tinhTrang;
@@ -80,22 +80,20 @@ public class HoaDonDV {
 			return false;
 		return true;
 	}
-<<<<<<< HEAD
+
 	public HoaDonDV(ResultSet rs) throws SQLException {
-        this(rs.getInt("MaHDDV"), new KhachHang(rs.getInt("MaKH")), rs.getDate("NgayGioLap"), rs.getInt("TinhTrang"));
-    }
-=======
+		this(rs.getInt("MaHDDV"), new KhachHang(rs.getInt("MaKH")), rs.getDate("NgayGioLap"), rs.getInt("TinhTrang"));
+	}
 
 	public ArrayList<HoaDonDV> getHDDVByMaKH(int maKH) {
 		HoaDonDVDAO hoaDonDV_dao = new HoaDonDVDAO();
 		return hoaDonDV_dao.getHDDVByMaKH(maKH);
 	}
 
-	public ArrayList<HoaDonDV> getHDDVByMaKHAndDate(int maKH, Date tuNgay, Date denNgay){
+	public ArrayList<HoaDonDV> getHDDVByMaKHAndDate(int maKH, Date tuNgay, Date denNgay) {
 		HoaDonDVDAO hoaDonDV_dao = new HoaDonDVDAO();
 		return hoaDonDV_dao.getHDDVByMaKHAndDate(maKH, tuNgay, denNgay);
 	}
-
 
 	public ArrayList<ChiTietDV> getChiTietDV() {
 		ChiTietDVDAO chiTietDV_dao = new ChiTietDVDAO();
@@ -112,5 +110,4 @@ public class HoaDonDV {
 		return tong;
 	}
 
->>>>>>> 2bdb0bcb6ae820de2da145c79c1fbd191a421418
 }

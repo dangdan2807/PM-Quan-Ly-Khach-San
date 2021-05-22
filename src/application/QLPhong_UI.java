@@ -18,9 +18,9 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
     private JTextField txtMaLPhong, txtTenLPhong, txtDonGia, txtMaPhong, txtViTri, txtTimLP, txtTimP;
     private DefaultTableModel modelTableLP, modelTableP;
     private JTable tableLP, tableP;
-    private JLabel lbShowMessagesDSP, lbShowMessagesDSLP, lbShowMessagesP, lbShowMessagesLP;
+    private JLabel lbShowMessagesP, lbShowMessagesLP;
     private JButton btnThemLP, btnSuaLP, btnXoaLP, btnLamLaiLP, btnThemP, btnSuaP, btnXoaP, btnLamLaiP, btnTimLP,
-            btnTimP, btnXemLich;
+            btnTimP, btnXemLich, btnXemTatCaLP, btnXemTatCaP;
     private SpinnerNumberModel modelSpinSC, modelSpinSG;
     private JSpinner spinSoGiuong, spinSucChua;
     private final int SUCCESS = 1, ERROR = 0;
@@ -54,11 +54,7 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
         pnMain.setLayout(null);
         getContentPane().add(pnMain, BorderLayout.CENTER);
 
-<<<<<<< HEAD
-        JLabel lbTitle = new JLabel("Quản Lý Phòng");
-=======
         JLabel lbTitle = new JLabel("Quản Lý Phòng và Loại Phòng");
->>>>>>> 2bdb0bcb6ae820de2da145c79c1fbd191a421418
         lbTitle.setHorizontalAlignment(SwingConstants.CENTER);
         lbTitle.setFont(new Font("Dialog", Font.BOLD, 20));
         lbTitle.setBounds(0, 0, 984, 30);
@@ -242,9 +238,9 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         pnTableLP.add(scpTableLP, BorderLayout.CENTER);
 
-        lbShowMessagesDSLP = new JLabel("");
-        lbShowMessagesDSLP.setBounds(370, 21, 263, 16);
-        pnTR.add(lbShowMessagesDSLP);
+        btnXemTatCaLP = new JButton("Xem tất cả");
+        btnXemTatCaLP.setBounds(370, 16, 121, 26);
+        pnTR.add(btnXemTatCaLP);
 
         JPanel pnBR = new JPanel();
         pnBR.setBorder(new TitledBorder(null, "Danh sách phòng", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -257,12 +253,12 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
         pnBR.add(lbTimPhong);
 
         txtTimP = new JTextField();
-        txtTimP.setBounds(85, 19, 150, 20);
+        txtTimP.setBounds(110, 19, 150, 20);
         pnBR.add(txtTimP);
         txtTimP.setColumns(10);
 
         btnTimP = new JButton("Tìm", searchIcon);
-        btnTimP.setBounds(240, 16, 98, 26);
+        btnTimP.setBounds(265, 16, 98, 26);
         pnBR.add(btnTimP);
 
         JPanel pnTableP = new JPanel();
@@ -282,9 +278,9 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         pnTableP.add(scpTableP);
 
-        lbShowMessagesDSP = new JLabel("");
-        lbShowMessagesDSP.setBounds(345, 21, 287, 16);
-        pnBR.add(lbShowMessagesDSP);
+        btnXemTatCaP = new JButton("Xem tất cả");
+        btnXemTatCaP.setBounds(375, 16, 121, 26);
+        pnBR.add(btnXemTatCaP);
 
         btnThemLP.addActionListener(this);
         btnThemP.addActionListener(this);
@@ -297,6 +293,8 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
         btnTimLP.addActionListener(this);
         btnTimP.addActionListener(this);
         btnXemLich.addActionListener(this);
+        btnXemTatCaP.addActionListener(this);
+        btnXemTatCaLP.addActionListener(this);
 
         tableLP.addMouseListener(this);
         tableP.addMouseListener(this);
@@ -476,44 +474,22 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
             txtDonGia.setText("");
         } else if (o.equals(btnTimLP)) {
             String tenLP = txtTimLP.getText().trim();
-            if (tenLP.isEmpty()) {
-                modelTableLP.getDataVector().removeAllElements();
-                modelTableLP.fireTableDataChanged();
-                dsLoaiPhong = LPhongDAO.getListLoaiPhong();
-                DocDuLieuVaoTableLPhong();
-            } else {
-                modelTableLP.getDataVector().removeAllElements();
-                modelTableLP.fireTableDataChanged();
-                try {
-                    dsLoaiPhong = LPhongDAO.getListLoaiPhongByName(tenLP);
-                    if (dsLoaiPhong.size() <= 0) {
-                        showMessage("Không tìm thấy", ERROR, lbShowMessagesDSLP);
-                    } else
-                        DocDuLieuVaoTableLPhong();
-                } catch (Exception e4) {
-                    showMessage("Không tìm thấy", ERROR, lbShowMessagesDSLP);
-                }
+            modelTableLP.getDataVector().removeAllElements();
+            modelTableLP.fireTableDataChanged();
+            dsLoaiPhong = LPhongDAO.getListLoaiPhongByName(tenLP);
+            if (dsLoaiPhong.size() <= 0) {
+                showMessage("Không tìm thấy", ERROR, lbShowMessagesLP);
             }
+            DocDuLieuVaoTableLPhong();
         } else if (o.equals(btnTimP)) {
             String maPhong = txtTimP.getText().trim();
-            if (maPhong.isEmpty()) {
-                modelTableP.getDataVector().removeAllElements();
-                modelTableP.fireTableDataChanged();
-                dsPhong = phongDAO.getListPhong();
-                DocDuLieuVaoTablePhong();
-            } else {
-                try {
-                    modelTableP.getDataVector().removeAllElements();
-                    modelTableP.fireTableDataChanged();
-                    dsPhong = phongDAO.getListPhongByID(maPhong);
-                    if (dsPhong.size() <= 0) {
-                        showMessage("Không tìm thấy", ERROR, lbShowMessagesDSP);
-                    } else
-                        DocDuLieuVaoTablePhong();
-                } catch (Exception e4) {
-                    showMessage("Không tìm thấy", ERROR, lbShowMessagesDSP);
-                }
+            modelTableP.getDataVector().removeAllElements();
+            modelTableP.fireTableDataChanged();
+            dsPhong = phongDAO.getListPhongByID(maPhong);
+            if (dsPhong.size() <= 0) {
+                showMessage("Không tìm thấy", ERROR, lbShowMessagesP);
             }
+            DocDuLieuVaoTablePhong();
         } else if (o.equals(btnXemLich)) {
             String maPhong = txtMaPhong.getText().trim();
             if (maPhong.length() > 0) {
@@ -524,6 +500,16 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
             } else {
                 showMessage("Vui lòng chọn một phòng bất kỳ", ERROR, lbShowMessagesP);
             }
+        } else if (o.equals(btnXemTatCaP)) {
+            modelTableP.getDataVector().removeAllElements();
+            modelTableP.fireTableDataChanged();
+            dsPhong = phongDAO.getListPhong();
+            DocDuLieuVaoTablePhong();
+        } else if (o.equals(btnXemTatCaLP)) {
+            modelTableLP.getDataVector().removeAllElements();
+            modelTableLP.fireTableDataChanged();
+            dsLoaiPhong = LPhongDAO.getListLoaiPhong();
+            DocDuLieuVaoTableLPhong();
         }
     }
 

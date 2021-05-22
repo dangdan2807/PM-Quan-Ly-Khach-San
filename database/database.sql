@@ -54,7 +54,6 @@ CREATE TABLE HoaDonDV
 	MaKH INT NOT NULL REFERENCES KhachHang(MaKH),
 	-- 0. chưa thanh toán | 1. đã thanh toán
 	NgayGioLap DATETIME DEFAULT(GETDATE()),
-	TongTien money check(TongTien >=0),
 	TinhTrang INT
 )
 GO
@@ -155,13 +154,6 @@ VALUES
 	(4, N'P201', 0, '2021-06-15', null)
 GO
 
-<<<<<<< HEAD
-insert into HoaDonDV 
-	(MaKH,NgayGioLap,TinhTrang)
-values (1, '2021-05-16',0)
-
-=======
->>>>>>> 2bdb0bcb6ae820de2da145c79c1fbd191a421418
 -- drop database KhachSan
 
 -- Chi tiết hóa đơn DV
@@ -255,9 +247,9 @@ GO
 Create proc UDP_SearchHDDVByID @id int
 as
 begin
-	select MaHDDV, kh.MaKH, hd.NgayGioLap, hd.TinhTrang
-	from HoaDonDV hd INNER JOIN KhachHang kh ON hd.MaKH = kh.MaKH
-	where MaHDDV = @id
+	select hd.MaHDDV, kh.MaKH, hd.NgayGioLap, hd.TinhTrang
+	from dbo.HoaDonDV hd INNER JOIN dbo.KhachHang kh ON hd.MaKH = kh.MaKH
+	where hd.MaHDDV = @id
 end
 go
 
