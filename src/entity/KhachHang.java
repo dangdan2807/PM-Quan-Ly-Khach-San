@@ -121,4 +121,10 @@ public class KhachHang {
 		return true;
 	}
 
+	public boolean capNhatSoLanDatPhong(){
+		KhachHangDAO khachHang_dao = new KhachHangDAO();
+		this.soLanDatPhong++;
+		return khachHang_dao.update(this);
+	}
+
 }

@@ -27,6 +27,7 @@ public class DatPhong_UI extends JFrame implements ActionListener, ListSelection
     public ArrayList<LoaiPhong> dslp;
     public ArrayList<HoaDonPhong> dshdp;
     public ArrayList<KhachHang> dskh;
+    private int maHD = 0;
     
     public JPanel pnMain;
     public String maPhong = "0";
@@ -64,6 +65,7 @@ public class DatPhong_UI extends JFrame implements ActionListener, ListSelection
     public JButton btn_TraPhong = new JButton("Trả phòng");
     private JTextField txtTim;
     private JButton btnTim;
+    private JComboBox cboTinhTrang;
 
     public DatPhong_UI(){
         // khởi tạo
@@ -282,6 +284,30 @@ public class DatPhong_UI extends JFrame implements ActionListener, ListSelection
         btnTim.addActionListener(this);
         pTimKiem.add(btnTim);
 
+        pTimKiem.add(new JLabel("Lọc: "));
+        DefaultComboBoxModel<String> modelTinhTrang = new DefaultComboBoxModel<String>();
+        cboTinhTrang = new JComboBox(modelTinhTrang);
+        modelTinhTrang.addElement("Tất cả");
+        modelTinhTrang.addElement("Đã đặt phòng");
+        modelTinhTrang.addElement("Đã nhận phòng");
+        modelTinhTrang.addElement("Đã trả phòng");
+        pTimKiem.add(cboTinhTrang);
+
+        cboTinhTrang.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int idx = cboTinhTrang.getSelectedIndex();
+                if(idx <= 0){
+                    dshdp = hoaDonPhong_dao.getListHDPhong();
+                }else{
+                    dshdp = hoaDonPhong_dao.getListHDPhongByTinhTrang(idx-1);
+                }
+                renderHoaDon();
+                
+            }
+            
+        });
+
         JPanel pTable = new JPanel();
         pTable.setLayout(new BoxLayout(pTable, BoxLayout.X_AXIS));
         pnMain.add(pTable);
@@ -313,8 +339,10 @@ public class DatPhong_UI extends JFrame implements ActionListener, ListSelection
             int soGiuong = phong.getSoGiuong();
             String viTri = phong.getViTri();
             Double donGia = phong.getLoaiPhong().getDonGia();
+            String gia = new QuanLyKhachSan_UI().currencyFormat(donGia);
+            System.out.println(gia);
             // render data
-            modelAvail.addRow(new Object[]{maPhong, tenLoaiPhong, sucChua, soGiuong, viTri, donGia});
+            modelAvail.addRow(new Object[]{maPhong, tenLoaiPhong, sucChua, soGiuong, viTri, gia});
             modelMaPhong.addElement(String.valueOf(maPhong));
             if(this.maPhong.equals(maPhong)){
                 cboMaPhong.setSelectedIndex(i);
@@ -336,18 +364,20 @@ public class DatPhong_UI extends JFrame implements ActionListener, ListSelection
             int soGiuong = phong.getSoGiuong();
             String viTri = phong.getViTri();
             Double donGia = phong.getLoaiPhong().getDonGia();
+            String gia = new QuanLyKhachSan_UI().currencyFormat(donGia);
             // render data
-            modelAvail.addRow(new Object[]{maPhong, tenLoaiPhong, sucChua, soGiuong, viTri, donGia});
+            modelAvail.addRow(new Object[]{maPhong, tenLoaiPhong, sucChua, soGiuong, viTri, gia});
             modelMaPhong.addElement(String.valueOf(maPhong));
             if(this.maPhong.equals(maPhong)){
                 cboMaPhong.setSelectedIndex(i);
-                tblAvail.addRowSelectionInterval(i, i);
             }
         }
     }
 
     public void renderHoaDon(){
-        modelDatPhong.getDataVector().removeAllElements();
+        // tblDatPhong.removeRowSelectionInterval(0);
+        // modelDatPhong.getDataVector().removeAllElements();
+        modelDatPhong.setRowCount(0);
         for(int i=0; i<dshdp.size(); i++){
             int maHD = dshdp.get(i).getMaHD();
             Date ngayGioNhan = dshdp.get(i).getNgayGioNhan();
@@ -356,6 +386,7 @@ public class DatPhong_UI extends JFrame implements ActionListener, ListSelection
             int maKhachHang = dshdp.get(i).getKhachHang().getMaKH();
             String tenKhachHang = dshdp.get(i).getKhachHang().getTenKH();
             String tinhTrang = "Đã đặt phòng";
+            
             if(dshdp.get(i).getTinhTrang() == 1)
                 tinhTrang = "Đã nhận phòng";
             else if(dshdp.get(i).getTinhTrang() == 2)
@@ -364,6 +395,10 @@ public class DatPhong_UI extends JFrame implements ActionListener, ListSelection
                 new Object[]{maHD, maKhachHang, tenKhachHang, 
                     phong.getMaPhong(), phong.getLoaiPhong().getTenLoaiPhong(), 
                     ngayGioNhan, ngayGioTra, tinhTrang});
+
+            if(this.maHD == maHD){
+                tblDatPhong.addRowSelectionInterval(i, i);
+            }
         }
     }
 
@@ -400,14 +435,27 @@ public class DatPhong_UI extends JFrame implements ActionListener, ListSelection
         if(obj == btnDatPhong){
             System.out.println("Dat phong");
             if(chkIsNotKH.isSelected()){
-                // if(!txtTenKH.getText().matches("^[a-zA-Z ]+$")){
-                //     renderError(txtTenKH, "Tên khách hàng chỉ được chứa chữ cái, khoảng trắng và không được để trống");
-                //     return;
-                // }
+                
                 if(txtTenKH.getText().trim().equals("")){
                     renderError(txtTenKH, "Tên khách hàng không được để trống");
                     return;
                 }
+
+                if(!txtTenKH.getText().matches("^[^0-9]{2,25}$")){
+                    renderError(txtTenKH, "Tên khách hàng không được chứa chữ số, ít nhất là 2 ký tự");
+                    return;
+                }
+
+                if(txtCMND.getText().trim().equals("")){
+                    renderError(txtCMND, "Cmnd không được để trống");
+                    return;
+                }
+
+                if(!txtCMND.getText().matches("^\\d{9,15}$")){
+                    renderError(txtTenKH, "Cmnd chỉ được chứa chữ số, từ 9 đến 15 ký tự");
+                    return;
+                }
+                
             }else{
                 
                 if(cboMaKH.getSelectedIndex() == 0){
@@ -415,7 +463,19 @@ public class DatPhong_UI extends JFrame implements ActionListener, ListSelection
                     return;
                 }
             }
+
+            Date ngayHetHan = new Date(ml);
+            try {
+                ngayHetHan = dpNgayHetHan.getFullDate();
+            } catch (ParseException e1) {
+                e1.printStackTrace();
+            }
             
+            if(!ngayHetHan.toString().equals(now.toString()) && ngayHetHan.before(now)){
+                JOptionPane.showMessageDialog(pnMain, "Giấy tờ đã hết hạn, không thể đặt phòng");
+                return;
+            }
+
             Date tuNgay = new Date(ml), denNgay = new Date(ml);
             
             
@@ -440,12 +500,7 @@ public class DatPhong_UI extends JFrame implements ActionListener, ListSelection
             
                 String tenKH = txtTenKH.getText();
                 String cmnd = txtCMND.getText();
-                Date ngayHetHan = new Date(ml);
-                try {
-                    ngayHetHan = dpNgayHetHan.getFullDate();
-                } catch (ParseException e1) {
-                    e1.printStackTrace();
-                }
+                
                 String loaiKH = (String)cboLoaiKH.getSelectedItem();
                 int soLanDatPhong = 0;
                 khachHang = new KhachHang(0, tenKH, cmnd, ngayHetHan, loaiKH, soLanDatPhong);
@@ -466,11 +521,15 @@ public class DatPhong_UI extends JFrame implements ActionListener, ListSelection
             if(hoaDonPhong_dao.insert(hdp)){
                 JOptionPane.showMessageDialog(pnMain, "Đặt phòng thành công!");
                 hdp.setMaHD(hoaDonPhong_dao.getLatestID());
-                dshdp.add(hdp);
-                modelDatPhong.addRow(
-                new Object[]{hdp.getMaHD(), khachHang.getMaKH(), khachHang.getTenKH(), 
-                    phong.getMaPhong(), phong.getLoaiPhong().getTenLoaiPhong(), 
-                    tuNgay, denNgay, "Đã đặt phòng"});
+                // dshdp.add(hdp);
+                // maHD = hdp.getMaHD();
+                cboTinhTrang.setSelectedIndex(0);
+                
+                
+                // modelDatPhong.addRow(
+                // new Object[]{hdp.getMaHD(), khachHang.getMaKH(), khachHang.getTenKH(), 
+                //     phong.getMaPhong(), phong.getLoaiPhong().getTenLoaiPhong(), 
+                //     tuNgay, denNgay, "Đã đặt phòng"});
             }else{
                 JOptionPane.showMessageDialog(pnMain, "Không thể đặt phòng do trùng giờ đặt");
             }
@@ -528,6 +587,8 @@ public class DatPhong_UI extends JFrame implements ActionListener, ListSelection
             int idx = tblDatPhong.getSelectedRow();
             HoaDonPhong hdp = dshdp.get(idx);
             if(hoaDonPhong_dao.delete(hdp.getMaHD())){
+                System.out.println("cap nhat tinh trang");
+                hdp.getPhong().updateTinhTrang(0);
                 modelDatPhong.removeRow(idx);
                 dshdp.remove(idx);
                 JOptionPane.showMessageDialog(pnMain, "Hủy thành công");

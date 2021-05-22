@@ -218,7 +218,7 @@ public class TrangChu_UI extends JFrame implements ActionListener{
                     popup.dispose();
                     popup = new JFrame();
                     popup.setTitle("Thông tin phòng");
-                    popup.setSize(400, 300);
+                    popup.setSize(400, 270);
                     popup.setResizable(false);
                     popup.setLocationRelativeTo(pnMain);
                     popup.setAlwaysOnTop(true);
@@ -241,17 +241,19 @@ public class TrangChu_UI extends JFrame implements ActionListener{
                     else if(phong.getTinhTrang() == 2)
                         tinhTrang = "Đang ở";
                         
+                    String gia = new QuanLyKhachSan_UI().currencyFormat(phong.getLoaiPhong().getDonGia());
                     pn_p_top.add(new JLabel("<html><p style='padding-left: 10px;'>Mã phòng: "+ phong.getMaPhong() +"</p></html>"));
                     pn_p_top.add(new JLabel("<html><p style='padding-left: 10px;'>Vị trí: "+ phong.getViTri() +"</p></html>"));
                     pn_p_top.add(new JLabel("<html><p style='padding-left: 10px;'>Số giường: "+ phong.getSoGiuong() +"</p></html>"));
                     pn_p_top.add(new JLabel("<html><p style='padding-left: 10px;'>Tình trạng: "+ tinhTrang +"</p></html>"));
                     pn_p_top.add(new JLabel("<html><p style='padding-left: 10px;'>Loại phòng: "+ phong.getLoaiPhong().getTenLoaiPhong() +"</p></html>"));
-                    pn_p_top.add(new JLabel("<html><p style='padding-left: 10px;'>Đơn giá: "+ phong.getLoaiPhong().getDonGia() +"</p></html>"));
+                    pn_p_top.add(new JLabel("<html><p style='padding-left: 10px;'>Đơn giá: "+ gia +"</p></html>"));
 
                     JPanel pn_p_bottom = new JPanel();
                     pn_p_main.add(pn_p_bottom);
                     
                     if(phong.getTinhTrang() == 2){ // đang ở
+                        // pn_p_bottom.setLayout(new GridLayout(2, 2));
                         pn_p_bottom.add(btn_ThanhToan[j]);
                         pn_p_bottom.add(btn_SuDungDV[j]);
                         pn_p_bottom.add(btn_DatPhong[j]);
@@ -280,7 +282,7 @@ public class TrangChu_UI extends JFrame implements ActionListener{
 
                             popup = new JFrame();
                             
-                            popup.setTitle("Thông tin khách hàng");
+                            popup.setTitle("Thông tin hóa đơn");
                             popup.setSize(400, 200);
                             popup.setResizable(false);
                             popup.setLocationRelativeTo(pnMain);
@@ -292,10 +294,14 @@ public class TrangChu_UI extends JFrame implements ActionListener{
 
                             JPanel pn_p_top = new JPanel();
                             pn_p_main.add(pn_p_top);
-                            pn_p_top.setLayout(new GridLayout(3, 2));
+                            pn_p_top.setLayout(new GridLayout(0, 2));
                             // pn_p_top.setLayout(new BoxLayout(pn_p_top, BoxLayout.Y_AXIS));
-                            pn_p_top.setBorder(BorderFactory.createTitledBorder("Thông tin khách hàng"));
-                                
+                            pn_p_top.setBorder(BorderFactory.createTitledBorder("Thông tin hóa đơn"));
+                            pn_p_top.add(new JLabel("<html><p style='padding-left: 10px;'>Mã hóa đơn: "+hdp.getMaHD()+"</p></html>"));
+                            pn_p_top.add(new JLabel("<html><p style='padding-left: 10px;'>Mã phòng: "+phong.getMaPhong()+"</p></html>"));
+                            pn_p_top.add(new JLabel("<html><p style='padding-left: 10px;'>Ngày đến: "+hdp.getNgayGioNhan()+"</p></html>"));
+                            pn_p_top.add(new JLabel("<html><p style='padding-left: 10px;'>Ngày đi: "+hdp.getNgayGioTra()+"</p></html>"));
+
                             pn_p_top.add(new JLabel("<html><p style='padding-left: 10px;'>Mã khách hàng: "+kh.getMaKH()+"</p></html>"));
                             pn_p_top.add(new JLabel("<html><p style='padding-left: 10px;'>Tên khách hàng: "+kh.getTenKH()+"</p></html>"));
                             pn_p_top.add(new JLabel("<html><p style='padding-left: 10px;'>Số CMND: "+kh.getCmnd()+"</p></html>"));
@@ -341,7 +347,7 @@ public class TrangChu_UI extends JFrame implements ActionListener{
                         @Override
                         public void actionPerformed(ActionEvent e) {
                             // TODO Auto-generated method stub
-                            popup.dispose();
+                            // popup.dispose();
                             DialogLichDatPhong form = new DialogLichDatPhong();
                             form.setMaPhong(phong.getMaPhong());
                             form.setModal(true);
