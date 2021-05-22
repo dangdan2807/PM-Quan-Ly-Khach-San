@@ -183,7 +183,6 @@ public class ThanhToan_UI extends JFrame{
         btnIn.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
                 JOptionPane.showMessageDialog(pnMain, "Đã in hóa đơn");
             }
         });

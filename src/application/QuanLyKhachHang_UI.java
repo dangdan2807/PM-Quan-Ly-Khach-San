@@ -21,7 +21,7 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
     private JTable tableShowInfo;
     private kDatePicker dpNgayHetHan;
     private JTextField txtMaKH, txtTenKH, txtCMND, txtSoLanDat, txtTim;
-    private JButton btnTim, btnThem, btnSua, btnXoa, btnLamLai;
+    private JButton btnTim, btnThem, btnSua, btnXoa, btnLamLai, btnXemTatCa;
     private JComboBox<String> cboLoaiKhach;
     private JLabel lbShowMessages;
     private final int SUCCESS = 1, ERROR = 0;
@@ -159,7 +159,7 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
         txtTim.setColumns(10);
 
         btnTim = new JButton("Tìm", searchIcon);
-        btnTim.setBounds(330, 21, 80, 20);
+        btnTim.setBounds(323, 18, 80, 26);
         pbTableKH.add(btnTim);
 
         JPanel pnShowTableKH = new JPanel();
@@ -180,12 +180,17 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         pnShowTableKH.add(scpShowTableKH, BorderLayout.CENTER);
 
+        btnXemTatCa = new JButton("Xem tất cả");
+        btnXemTatCa.setBounds(411, 18, 121, 26);
+        pbTableKH.add(btnXemTatCa);
+
         // Sự kiện Action
         btnLamLai.addActionListener(this);
         btnThem.addActionListener(this);
         btnSua.addActionListener(this);
         btnXoa.addActionListener(this);
         btnTim.addActionListener(this);
+        btnXemTatCa.addActionListener(this);
         // sự kiện chuột
         tableShowInfo.addMouseListener(this);
         // sự kiện phím enter
@@ -203,6 +208,7 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
         if (o.equals(btnLamLai)) {
+            showMessage("", 2);
             txtMaKH.setText("");
             txtTenKH.setText("");
             txtCMND.setText("");
@@ -212,7 +218,8 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
             txtSoLanDat.setText("0");
             lbShowMessages.setText("");
         } else if (o.equals(btnThem)) {
-            if (validData()) {
+            showMessage("", 2);
+            if (validData(1)) {
                 KhachHang kh = null;
                 try {
                     kh = getDataInForm();
@@ -236,7 +243,8 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
                 }
             }
         } else if (o.equals(btnSua)) {
-            if (validData()) {
+            showMessage("", 2);
+            if (validData(2)) {
                 KhachHang kh = null;
                 try {
                     kh = getDataInForm();
@@ -262,6 +270,7 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
                 }
             }
         } else if (o.equals(btnXoa)) {
+            showMessage("", 2);
             KhachHang kh = null;
             try {
                 kh = getDataInForm();
@@ -286,25 +295,23 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
                 showMessage("Xóa thất bại", ERROR);
             }
         } else if (o.equals(btnTim)) {
+            showMessage("", 2);
             if (validDataTim()) {
                 String tenKH = txtTim.getText().trim();
-                if (tenKH.isEmpty()) {
-                    modelTable.getDataVector().removeAllElements();
-                    dsKH = khDAO.getListKhachHang();
-                    DocDuLieuVaoTable();
-                } else {
-                    try {
-                        modelTable.getDataVector().removeAllElements();
-                        dsKH = khDAO.getListKhachHangByName(tenKH);
-                        if (dsKH.size() <= 0) {
-                            showMessage("Không tìm thấy khách hàng", ERROR);
-                        } else
-                            DocDuLieuVaoTable();
-                    } catch (Exception e4) {
-                        showMessage("Không tìm thấy khách hàng", ERROR);
-                    }
+                modelTable.getDataVector().removeAllElements();
+                modelTable.fireTableDataChanged();
+                dsKH = khDAO.getListKhachHangByName(tenKH);
+                if (dsKH.size() <= 0) {
+                    showMessage("Không tìm thấy khách hàng", ERROR);
                 }
+                DocDuLieuVaoTable();
             }
+        } else if (o.equals(btnXemTatCa)) {
+            showMessage("", 2);
+            modelTable.getDataVector().removeAllElements();
+            modelTable.fireTableDataChanged();
+            dsKH = khDAO.getListKhachHang();
+            DocDuLieuVaoTable();
         }
     }
 
@@ -380,21 +387,26 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
         if (type == SUCCESS) {
             lbShowMessages.setForeground(Color.GREEN);
             lbShowMessages.setIcon(checkIcon);
-        } else {
+        } else if (type == ERROR) {
             lbShowMessages.setForeground(Color.RED);
             lbShowMessages.setIcon(errorIcon);
+        } else {
+            lbShowMessages.setIcon(null);
         }
         lbShowMessages.setText(message);
     }
 
-    private boolean validData() {
+    private boolean validData(int type) {
+        // type = 1 -> thêm mới
+        // type != 1 -> cập nhật
         String tenKH = txtTenKH.getText().trim();
         String cmnd = txtCMND.getText().trim();
         String soLanDat = txtSoLanDat.getText().trim();
         if (!(tenKH.length() > 0)) {
             showMessage("Lỗi: Tên không được để trống", txtTenKH);
             return false;
-        } else if (tenKH.matches("\\d+")) {
+        }
+        if (!tenKH.matches("\\d+")) {
             showMessage("Lỗi: Tên không được có số", txtTenKH);
             return false;
         }
@@ -402,12 +414,13 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
             showMessage("Lỗi: CMND phải có 9 số hoặc CCCD phải có 12 số", txtCMND);
             return false;
         } else {
-            for (KhachHang item : dsKH) {
-                if (item.getCmnd().equalsIgnoreCase(cmnd)) {
-                    showMessage("Lỗi: CMND hoặc CCCD đã tồn tại", txtCMND);
-                    return false;
+            if (type == 1)
+                for (KhachHang item : dsKH) {
+                    if (item.getCmnd().equalsIgnoreCase(cmnd)) {
+                        showMessage("Lỗi: CMND hoặc CCCD đã tồn tại", txtCMND);
+                        return false;
+                    }
                 }
-            }
         }
         if (soLanDat.length() > 0) {
             try {
@@ -446,6 +459,8 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
     }
 
     private void DocDuLieuVaoTable() {
+        if (dsKH.size() <= 0)
+            return;
         for (KhachHang item : dsKH) {
             String date = formatDate(item.getNgayHetHan());
             modelTable.addRow(new Object[] { item.getMaKH(), item.getTenKH(), item.getCmnd(), date, item.getLoaiKH(),

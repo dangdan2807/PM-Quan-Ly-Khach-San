@@ -1,8 +1,8 @@
 package application;
 
 import java.sql.*;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+// import java.text.SimpleDateFormat;
+// import java.util.Calendar;
 
 public class testTinh2Ngay {
     public static void main(String[] args) {

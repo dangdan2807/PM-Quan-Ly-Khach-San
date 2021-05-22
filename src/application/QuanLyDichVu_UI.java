@@ -19,7 +19,7 @@ public class QuanLyDichVu_UI extends JFrame implements ActionListener, MouseList
     private JTable table;
     private DefaultTableModel modelTable;
     private JTextField txtTim, txtMaDV, txtTenDV, txtDonGia;
-    private JButton btnTim, btnThem, btnSua, btnXoa, btnLamLai;
+    private JButton btnTim, btnThem, btnSua, btnXoa, btnLamLai, btnXemTatCa;
     private JLabel lbShowMessages;
     private final int SUCCESS = 1, ERROR = 0;
     ImageIcon blueAddIcon = new ImageIcon("data/images/blueAdd_16.png");
@@ -92,19 +92,19 @@ public class QuanLyDichVu_UI extends JFrame implements ActionListener, MouseList
         txtDonGia.setColumns(10);
 
         btnThem = new JButton("Thêm", blueAddIcon);
-        btnThem.setBounds(12, 143, 108, 30);
+        btnThem.setBounds(12, 143, 108, 26);
         pnInfoDV.add(btnThem);
 
         btnSua = new JButton("Sửa", editIcon);
-        btnSua.setBounds(132, 143, 120, 30);
+        btnSua.setBounds(132, 143, 120, 26);
         pnInfoDV.add(btnSua);
 
         btnXoa = new JButton("Xóa", deleteIcon);
-        btnXoa.setBounds(264, 143, 115, 30);
+        btnXoa.setBounds(264, 143, 115, 26);
         pnInfoDV.add(btnXoa);
 
         btnLamLai = new JButton("Làm lại", refreshIcon);
-        btnLamLai.setBounds(132, 185, 120, 30);
+        btnLamLai.setBounds(132, 185, 120, 26);
         pnInfoDV.add(btnLamLai);
 
         lbShowMessages = new JLabel("");
@@ -132,7 +132,7 @@ public class QuanLyDichVu_UI extends JFrame implements ActionListener, MouseList
         txtTim.setColumns(10);
 
         btnTim = new JButton("Tìm", searchIcon);
-        btnTim.setBounds(325, 23, 90, 20);
+        btnTim.setBounds(322, 20, 90, 26);
         pnShowDV.add(btnTim);
 
         JPanel pnTableDV = new JPanel();
@@ -151,12 +151,17 @@ public class QuanLyDichVu_UI extends JFrame implements ActionListener, MouseList
                 JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         pnTableDV.add(scpTableDV, BorderLayout.CENTER);
 
+        btnXemTatCa = new JButton("Xem tất cả");
+        btnXemTatCa.setBounds(426, 20, 121, 26);
+        pnShowDV.add(btnXemTatCa);
+
         // Sự kiện Action
         btnLamLai.addActionListener(this);
         btnThem.addActionListener(this);
         btnSua.addActionListener(this);
         btnXoa.addActionListener(this);
         btnTim.addActionListener(this);
+        btnXemTatCa.addActionListener(this);
         // sự kiện chuột
         table.addMouseListener(this);
         txtTenDV.addMouseListener(this);
@@ -176,11 +181,13 @@ public class QuanLyDichVu_UI extends JFrame implements ActionListener, MouseList
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
         if (o.equals(btnLamLai)) {
+            showMessage("", 2);
             txtMaDV.setText("");
             txtTenDV.setText("");
             txtDonGia.setText("0.0");
             lbShowMessages.setText("");
         } else if (o.equals(btnThem)) {
+            showMessage("", 2);
             if (validData()) {
                 DichVu dv = getDataInTable();
                 try {
@@ -198,6 +205,7 @@ public class QuanLyDichVu_UI extends JFrame implements ActionListener, MouseList
                 }
             }
         } else if (o.equals(btnSua)) {
+            showMessage("", 2);
             if (validData()) {
                 DichVu dv = getDataInTable();
                 int row = table.getSelectedRow();
@@ -215,6 +223,7 @@ public class QuanLyDichVu_UI extends JFrame implements ActionListener, MouseList
                 }
             }
         } else if (o.equals(btnXoa)) {
+            showMessage("", 2);
             DichVu dv = getDataInTable();
             int row = table.getSelectedRow();
             try {
@@ -234,25 +243,23 @@ public class QuanLyDichVu_UI extends JFrame implements ActionListener, MouseList
                 showMessage("Xóa thất bại", ERROR);
             }
         } else if (o.equals(btnTim)) {
+            showMessage("", 2);
             if (validDataTim()) {
                 String tenDV = txtTim.getText().trim();
-                if (tenDV.isEmpty()) {
-                    modelTable.getDataVector().removeAllElements();
-                    ArrayList<DichVu> ds = dvDAO.getListDichVu();
+                modelTable.getDataVector().removeAllElements();
+                modelTable.fireTableDataChanged();
+                ArrayList<DichVu> ds = dvDAO.getListDichVuByName(tenDV);
+                if (ds.size() <= 0) {
+                    showMessage("Không tìm thấy dịch vụ", ERROR);
+                } else
                     DocDuLieuVaoTable(ds);
-                } else {
-                    try {
-                        modelTable.getDataVector().removeAllElements();
-                        ArrayList<DichVu> ds = dvDAO.getListDichVuByName(tenDV);
-                        if (ds.size() <= 0) {
-                            showMessage("Không tìm thấy dịch vụ", ERROR);
-                        } else
-                            DocDuLieuVaoTable(ds);
-                    } catch (Exception e4) {
-                        showMessage("Không tìm thấy dịch vụ", ERROR);
-                    }
-                }
             }
+        } else if (o.equals(btnXemTatCa)) {
+            showMessage("", 2);
+            modelTable.getDataVector().removeAllElements();
+            modelTable.fireTableDataChanged();
+            ArrayList<DichVu> ds = dvDAO.getListDichVu();
+            DocDuLieuVaoTable(ds);
         }
     }
 
@@ -329,9 +336,11 @@ public class QuanLyDichVu_UI extends JFrame implements ActionListener, MouseList
         if (type == SUCCESS) {
             lbShowMessages.setForeground(Color.GREEN);
             lbShowMessages.setIcon(checkIcon);
-        } else {
+        } else if(type == ERROR){
             lbShowMessages.setForeground(Color.RED);
             lbShowMessages.setIcon(errorIcon);
+        } else {
+            lbShowMessages.setIcon(null);
         }
         lbShowMessages.setText(message);
     }
@@ -378,6 +387,8 @@ public class QuanLyDichVu_UI extends JFrame implements ActionListener, MouseList
     }
 
     private void DocDuLieuVaoTable(ArrayList<DichVu> dataList) {
+        if (dataList.size() <= 0)
+            return;
         for (DichVu item : dataList) {
             modelTable.addRow(new Object[] { item.getMaDV(), item.getTenDV(), item.getDonGia() });
         }

@@ -67,7 +67,7 @@ public class ChiTietDV {
     public ChiTietDV(ResultSet rs) throws SQLException {
         KhachHang kh = new KhachHang(rs.getInt("MaKH"), rs.getString("TenKH"), rs.getString("CMND"),
                 rs.getDate("NgayHetHan"), rs.getString("LoaiKH"), rs.getInt("SoLanDatPhong"));
-        HoaDonDV hdDV = new HoaDonDV(rs.getInt("MaHDDV"), rs.getDate("ngayGioLap"), rs.getInt("tinhTrang"), kh);
+        HoaDonDV hdDV = new HoaDonDV(rs.getInt("MaHDDV"), kh, rs.getDate("ngayGioLap"), rs.getInt("tinhTrang"));
         DichVu dv = new DichVu(rs.getInt("MaDV"), rs.getString("tenDV"), rs.getDouble("donGia"));
 
         setSoLuong(rs.getInt("SoLuong"));

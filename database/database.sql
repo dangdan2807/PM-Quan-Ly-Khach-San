@@ -53,8 +53,8 @@ CREATE TABLE HoaDonDV
 	MaHDDV INT IDENTITY PRIMARY KEY,
 	MaKH INT NOT NULL REFERENCES KhachHang(MaKH),
 	-- 0. chưa thanh toán | 1. đã thanh toán
-	TinhTrang INT,
-	NgayGioLap DATETIME DEFAULT(GETDATE())
+	NgayGioLap DATETIME DEFAULT(GETDATE()),
+	TinhTrang INT
 )
 GO
 
@@ -148,7 +148,7 @@ INSERT INTO dbo.HoaDonPhong
 	(MaKH, MaPhong, tinhTrang, NgayGioNhan, NgayGioTra)
 VALUES
 	(1, N'P101', 1, '2021-05-16', '2021-05-16'),
-	(2, N'P102', 0, '2021-05-02', '2021-05-07'),
+	(2, N'P102', 1, '2021-05-02', '2021-05-07'),
 	(3, N'P103', 2, '2021-05-16', null),
 	(5, N'P201', 0, '2021-05-30', '2021-06-10'),
 	(4, N'P201', 0, '2021-06-15', null)
@@ -174,6 +174,8 @@ BEGIN
 		AND hd.TinhTrang = 1
 END
 GO
+
+-- exeC UDP_SearchCTHDByDate '2021-05-01', '2021-05-01'
 
 CREATE PROC UDP_SearchCTHDByMaHK
 	@MaKH INT,
@@ -239,6 +241,19 @@ BEGIN
 		AND hd.TinhTrang = 1
 END
 GO
+
+-- Hoá đơn dịch vụ
+
+Create proc UDP_SearchHDDVByID @id int
+as
+begin
+	select hd.MaHDDV, kh.MaKH, hd.NgayGioLap, hd.TinhTrang
+	from dbo.HoaDonDV hd INNER JOIN dbo.KhachHang kh ON hd.MaKH = kh.MaKH
+	where hd.MaHDDV = @id
+end
+go
+
+--exec UDP_SearchHDDVByID 1
 
 -- Hóa đơn phòng
 CREATE PROC UDP_SearchHDPhongByDate

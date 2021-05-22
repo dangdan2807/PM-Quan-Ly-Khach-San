@@ -13,7 +13,6 @@ import javax.swing.table.*;
 import DAO.HoaDonPhongDAO;
 import connectDB.ConnectDB;
 import entity.*;
-import entity.HoaDonPhong;
 
 public class ThongKeKhachHang_UI extends JFrame implements ActionListener, KeyListener {
     JPanel pnMain;
@@ -23,7 +22,7 @@ public class ThongKeKhachHang_UI extends JFrame implements ActionListener, KeyLi
     private JButton btnThongKe;
     private JTable table;
     private JLabel lbShowMessages;
-    private final int SUCCESS = 1, ERROR = 0;
+    private final int SUCCESS = 1, ERROR = 0, NORMAN = 2;
     ImageIcon analyticsIcon = new ImageIcon("data/images/analytics_16.png");
     ImageIcon checkIcon = new ImageIcon("data/images/check2_16.png");
     ImageIcon errorIcon = new ImageIcon("data/images/cancel_16.png");
@@ -156,6 +155,9 @@ public class ThongKeKhachHang_UI extends JFrame implements ActionListener, KeyLi
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
         if (o.equals(btnThongKe)) {
+            showMessage("", NORMAN);
+            modelTable.getDataVector().removeAllElements();
+            modelTable.fireTableDataChanged();
             String maKH = txtMaKH.getText().trim();
             String tenKH = txtTenKH.getText().trim();
             ArrayList<HoaDonPhong> dataList = null;
@@ -183,10 +185,9 @@ public class ThongKeKhachHang_UI extends JFrame implements ActionListener, KeyLi
             } catch (ParseException e1) {
                 e1.printStackTrace();
             }
-            if (dataList.size() > 0) {
-                modelTable.getDataVector().removeAllElements();
-                DocDuLieuVaoTable(dataList);
-            } else {
+
+            DocDuLieuVaoTable(dataList);
+            if (dataList.size() <= 0) {
                 showMessage("Không tìm thấy danh sách thống kê theo yêu cầu", ERROR);
             }
         }
@@ -248,6 +249,8 @@ public class ThongKeKhachHang_UI extends JFrame implements ActionListener, KeyLi
 
     private void DocDuLieuVaoTable(ArrayList<HoaDonPhong> dataList) {
         Double sum = 0.0;
+        if(dataList.size() <= 0)
+            return;
         for (HoaDonPhong item : dataList) {
             Phong phong = item.getPhong();
             LoaiPhong lPhong = item.getPhong().getLoaiPhong();
@@ -274,9 +277,11 @@ public class ThongKeKhachHang_UI extends JFrame implements ActionListener, KeyLi
         if (type == SUCCESS) {
             lbShowMessages.setForeground(Color.GREEN);
             lbShowMessages.setIcon(checkIcon);
-        } else {
+        } else if(type == ERROR){
             lbShowMessages.setForeground(Color.RED);
             lbShowMessages.setIcon(errorIcon);
+        } else {
+            lbShowMessages.setIcon(null);
         }
         lbShowMessages.setText(message);
     }
