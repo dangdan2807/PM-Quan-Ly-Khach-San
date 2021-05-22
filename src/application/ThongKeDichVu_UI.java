@@ -22,7 +22,7 @@ public class ThongKeDichVu_UI extends JFrame implements ActionListener, KeyListe
     private DefaultTableModel modelTable;
     private JButton btnThongKe;
     private JLabel lbShowMessages;
-    private final int SUCCESS = 1, ERROR = 0;
+    private final int SUCCESS = 1, ERROR = 0, NORMAN = 2;
     ImageIcon analyticsIcon = new ImageIcon("data/images/analytics_16.png");
     ImageIcon checkIcon = new ImageIcon("data/images/check2_16.png");
     ImageIcon errorIcon = new ImageIcon("data/images/cancel_16.png");
@@ -154,6 +154,7 @@ public class ThongKeDichVu_UI extends JFrame implements ActionListener, KeyListe
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
         if (o.equals(btnThongKe)) {
+            showMessage("", NORMAN);
             modelTable.getDataVector().removeAllElements();
             modelTable.fireTableDataChanged();
             String maKH = txtMaKH.getText().trim();
@@ -183,7 +184,7 @@ public class ThongKeDichVu_UI extends JFrame implements ActionListener, KeyListe
                 e1.printStackTrace();
             }
             DocDuLieuVaoTable(dataList);
-            if (dataList.size() < 0) {
+            if (dataList.size() <= 0) {
                 showMessage("Không tìm thấy danh sách thống kê theo yêu cầu", ERROR);
             }
         }
@@ -245,6 +246,8 @@ public class ThongKeDichVu_UI extends JFrame implements ActionListener, KeyListe
 
     private void DocDuLieuVaoTable(ArrayList<ChiTietDV> dataList) {
         Double sum = 0.0;
+        if(dataList.size() <= 0)
+            return;
         for (ChiTietDV item : dataList) {
             HoaDonDV hoaDonDv = item.getHoaDonDV();
             DichVu dv = item.getDichVu();
@@ -274,9 +277,11 @@ public class ThongKeDichVu_UI extends JFrame implements ActionListener, KeyListe
         if (type == SUCCESS) {
             lbShowMessages.setForeground(Color.GREEN);
             lbShowMessages.setIcon(checkIcon);
-        } else {
+        } else if(type == ERROR){
             lbShowMessages.setForeground(Color.RED);
             lbShowMessages.setIcon(errorIcon);
+        } else {
+            lbShowMessages.setIcon(null);
         }
         lbShowMessages.setText(message);
     }

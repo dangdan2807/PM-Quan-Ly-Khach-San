@@ -158,7 +158,7 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
         pnBL.add(cboTinhTrang);
         cboTinhTrang.addItem("Trống");
         cboTinhTrang.addItem("Đã được đặt");
-        cboTinhTrang.addItem("Đã có người");
+        cboTinhTrang.addItem("Đã cho thuê");
 
         JLabel lbViTri = new JLabel("Vị trí: ");
         lbViTri.setBounds(10, 105, 55, 16);
@@ -316,6 +316,7 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
         if (o.equals(btnThemLP)) {
+            showMessage("", 2, lbShowMessagesLP);
             if (validDataLoaiPhong()) {
                 LoaiPhong loaiPhong = null;
                 loaiPhong = getDataInFormLPhong();
@@ -336,19 +337,14 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
                 }
             }
         } else if (o.equals(btnThemP)) {
+            showMessage("", 2, lbShowMessagesP);
             if (validDataPhong()) {
                 Phong phong = null;
                 phong = getDataInFormPhong();
                 try {
                     boolean result = phongDAO.insert(phong);
                     if (result == true) {
-                        String tinhTrang = "";
-                        if (phong.getTinhTrang() == 1)
-                            tinhTrang = "Trống";
-                        else if (phong.getTinhTrang() == 2)
-                            tinhTrang = "Đã được đặt";
-                        else if (phong.getTinhTrang() == 3)
-                            tinhTrang = "Đã có người";
+                        String tinhTrang = convertTinhTrang(phong.getTinhTrang());
                         int maLPhong = phong.getLoaiPhong().getMaLoaiPhong();
                         String tenLPhong = "";
                         for (LoaiPhong i : dsLoaiPhong) {
@@ -368,6 +364,7 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
                 }
             }
         } else if (o.equals(btnXoaLP)) {
+            showMessage("", 2, lbShowMessagesLP);
             LoaiPhong loaiPhong = null;
             loaiPhong = getDataInFormLPhong();
             int row = tableLP.getSelectedRow();
@@ -388,6 +385,7 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
                 showMessage("Xóa thất bại", ERROR, lbShowMessagesLP);
             }
         } else if (o.equals(btnXoaP)) {
+            showMessage("", 2, lbShowMessagesP);
             Phong phong = null;
             phong = getDataInFormPhong();
             int row = tableP.getSelectedRow();
@@ -408,6 +406,7 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
                 showMessage("Xóa thất bại", ERROR, lbShowMessagesP);
             }
         } else if (o.equals(btnSuaLP)) {
+            showMessage("", 2, lbShowMessagesLP);
             if (validDataLoaiPhong()) {
                 LoaiPhong loaiPhong = null;
                 loaiPhong = getDataInFormLPhong();
@@ -426,6 +425,7 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
                 }
             }
         } else if (o.equals(btnSuaP)) {
+            showMessage("", 2, lbShowMessagesP);
             if (validDataPhong()) {
                 Phong phong = null;
                 phong = getDataInFormPhong();
@@ -433,13 +433,7 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
                 try {
                     boolean result = phongDAO.update(phong);
                     if (result == true) {
-                        String tinhTrang = "";
-                        if (phong.getTinhTrang() == 1)
-                            tinhTrang = "Trống";
-                        else if (phong.getTinhTrang() == 2)
-                            tinhTrang = "Đã được đặt";
-                        else if (phong.getTinhTrang() == 3)
-                            tinhTrang = "Đã có người";
+                        String tinhTrang = convertTinhTrang(phong.getTinhTrang());
                         int maLPhong = phong.getLoaiPhong().getMaLoaiPhong();
                         String tenLPhong = "";
                         for (LoaiPhong i : dsLoaiPhong) {
@@ -463,16 +457,19 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
                 }
             }
         } else if (o.equals(btnLamLaiP)) {
+            showMessage("", 2, lbShowMessagesP);
             txtMaPhong.setText("");
             spinSucChua.setValue(1);
             spinSoGiuong.setValue(1);
             txtViTri.setText("");
             cboTinhTrang.setSelectedIndex(0);
         } else if (o.equals(btnLamLaiLP)) {
+            showMessage("", 2, lbShowMessagesLP);
             txtMaLPhong.setText("");
             txtTenLPhong.setText("");
             txtDonGia.setText("");
         } else if (o.equals(btnTimLP)) {
+            showMessage("", 2, lbShowMessagesLP);
             String tenLP = txtTimLP.getText().trim();
             modelTableLP.getDataVector().removeAllElements();
             modelTableLP.fireTableDataChanged();
@@ -482,6 +479,7 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
             }
             DocDuLieuVaoTableLPhong();
         } else if (o.equals(btnTimP)) {
+            showMessage("", 2, lbShowMessagesP);
             String maPhong = txtTimP.getText().trim();
             modelTableP.getDataVector().removeAllElements();
             modelTableP.fireTableDataChanged();
@@ -501,11 +499,13 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
                 showMessage("Vui lòng chọn một phòng bất kỳ", ERROR, lbShowMessagesP);
             }
         } else if (o.equals(btnXemTatCaP)) {
+            showMessage("", 2, lbShowMessagesP);
             modelTableP.getDataVector().removeAllElements();
             modelTableP.fireTableDataChanged();
             dsPhong = phongDAO.getListPhong();
             DocDuLieuVaoTablePhong();
         } else if (o.equals(btnXemTatCaLP)) {
+            showMessage("", 2, lbShowMessagesLP);
             modelTableLP.getDataVector().removeAllElements();
             modelTableLP.fireTableDataChanged();
             dsLoaiPhong = LPhongDAO.getListLoaiPhong();
@@ -590,9 +590,11 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
         if (type == SUCCESS) {
             lbl.setForeground(Color.GREEN);
             lbl.setIcon(checkIcon);
-        } else {
+        } else if (type == ERROR) {
             lbl.setForeground(Color.RED);
             lbl.setIcon(errorIcon);
+        } else {
+            lbl.setIcon(null);
         }
         lbl.setText(message);
     }
@@ -665,13 +667,7 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
 
     private void DocDuLieuVaoTablePhong() {
         for (Phong item : dsPhong) {
-            String tinhTrang = "";
-            if (item.getTinhTrang() == 0)
-                tinhTrang = "Trống";
-            else if (item.getTinhTrang() == 1)
-                tinhTrang = "Đã được đặt";
-            else if (item.getTinhTrang() == 2)
-                tinhTrang = "Đã Cho thuê";
+            String tinhTrang = convertTinhTrang(item.getTinhTrang());
             int maLPhong = item.getLoaiPhong().getMaLoaiPhong();
             String tenLPhong = "";
             for (LoaiPhong i : dsLoaiPhong) {
@@ -700,5 +696,16 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
 
     private void loadListPhong() {
         dsPhong = phongDAO.getListPhong();
+    }
+
+    private String convertTinhTrang(int tinhTrang) {
+        String result = "";
+        if (tinhTrang == 0)
+            result = "Trống";
+        else if (tinhTrang == 1)
+            result = "Đã được đặt";
+        else if (tinhTrang == 2)
+            result = "Đã cho thuê";
+        return result;
     }
 }

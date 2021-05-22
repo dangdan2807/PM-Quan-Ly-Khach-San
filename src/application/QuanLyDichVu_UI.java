@@ -181,11 +181,13 @@ public class QuanLyDichVu_UI extends JFrame implements ActionListener, MouseList
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
         if (o.equals(btnLamLai)) {
+            showMessage("", 2);
             txtMaDV.setText("");
             txtTenDV.setText("");
             txtDonGia.setText("0.0");
             lbShowMessages.setText("");
         } else if (o.equals(btnThem)) {
+            showMessage("", 2);
             if (validData()) {
                 DichVu dv = getDataInTable();
                 try {
@@ -203,6 +205,7 @@ public class QuanLyDichVu_UI extends JFrame implements ActionListener, MouseList
                 }
             }
         } else if (o.equals(btnSua)) {
+            showMessage("", 2);
             if (validData()) {
                 DichVu dv = getDataInTable();
                 int row = table.getSelectedRow();
@@ -220,6 +223,7 @@ public class QuanLyDichVu_UI extends JFrame implements ActionListener, MouseList
                 }
             }
         } else if (o.equals(btnXoa)) {
+            showMessage("", 2);
             DichVu dv = getDataInTable();
             int row = table.getSelectedRow();
             try {
@@ -239,6 +243,7 @@ public class QuanLyDichVu_UI extends JFrame implements ActionListener, MouseList
                 showMessage("Xóa thất bại", ERROR);
             }
         } else if (o.equals(btnTim)) {
+            showMessage("", 2);
             if (validDataTim()) {
                 String tenDV = txtTim.getText().trim();
                 modelTable.getDataVector().removeAllElements();
@@ -250,6 +255,7 @@ public class QuanLyDichVu_UI extends JFrame implements ActionListener, MouseList
                     DocDuLieuVaoTable(ds);
             }
         } else if (o.equals(btnXemTatCa)) {
+            showMessage("", 2);
             modelTable.getDataVector().removeAllElements();
             modelTable.fireTableDataChanged();
             ArrayList<DichVu> ds = dvDAO.getListDichVu();
@@ -330,9 +336,11 @@ public class QuanLyDichVu_UI extends JFrame implements ActionListener, MouseList
         if (type == SUCCESS) {
             lbShowMessages.setForeground(Color.GREEN);
             lbShowMessages.setIcon(checkIcon);
-        } else {
+        } else if(type == ERROR){
             lbShowMessages.setForeground(Color.RED);
             lbShowMessages.setIcon(errorIcon);
+        } else {
+            lbShowMessages.setIcon(null);
         }
         lbShowMessages.setText(message);
     }
@@ -379,6 +387,8 @@ public class QuanLyDichVu_UI extends JFrame implements ActionListener, MouseList
     }
 
     private void DocDuLieuVaoTable(ArrayList<DichVu> dataList) {
+        if (dataList.size() <= 0)
+            return;
         for (DichVu item : dataList) {
             modelTable.addRow(new Object[] { item.getMaDV(), item.getTenDV(), item.getDonGia() });
         }

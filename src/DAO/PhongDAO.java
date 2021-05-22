@@ -313,7 +313,6 @@ public class PhongDAO {
     }
 
     public boolean check_status_avail(String maPhong) {
-        int n = 0;
         PreparedStatement stmt = null;
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();

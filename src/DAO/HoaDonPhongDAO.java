@@ -171,10 +171,8 @@ public class HoaDonPhongDAO {
             // insert thành công
             if (n > 0) {
                 // update tình trạng phòng
-                PhongDAO phong_dao = new PhongDAO();
                 Phong phong = hdp.getPhong();
                 phong.updateTinhTrang(1);// đã đặt
-                // phong_dao.update(phong);
             }
         } catch (SQLException e) {
             e.printStackTrace();

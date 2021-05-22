@@ -346,7 +346,6 @@ public class TrangChu_UI extends JFrame implements ActionListener{
 
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            // TODO Auto-generated method stub
                             // popup.dispose();
                             DialogLichDatPhong form = new DialogLichDatPhong();
                             form.setMaPhong(phong.getMaPhong());
@@ -404,7 +403,6 @@ public class TrangChu_UI extends JFrame implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // TODO Auto-generated method stub
         Object obj = e.getSource();
         if(obj == cboLP){
             int choose = cboLP.getSelectedIndex() - 1;

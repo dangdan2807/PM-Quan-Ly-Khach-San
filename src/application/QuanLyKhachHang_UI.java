@@ -208,6 +208,7 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
         if (o.equals(btnLamLai)) {
+            showMessage("", 2);
             txtMaKH.setText("");
             txtTenKH.setText("");
             txtCMND.setText("");
@@ -217,7 +218,8 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
             txtSoLanDat.setText("0");
             lbShowMessages.setText("");
         } else if (o.equals(btnThem)) {
-            if (validData()) {
+            showMessage("", 2);
+            if (validData(1)) {
                 KhachHang kh = null;
                 try {
                     kh = getDataInForm();
@@ -241,7 +243,8 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
                 }
             }
         } else if (o.equals(btnSua)) {
-            if (validData()) {
+            showMessage("", 2);
+            if (validData(2)) {
                 KhachHang kh = null;
                 try {
                     kh = getDataInForm();
@@ -267,6 +270,7 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
                 }
             }
         } else if (o.equals(btnXoa)) {
+            showMessage("", 2);
             KhachHang kh = null;
             try {
                 kh = getDataInForm();
@@ -291,6 +295,7 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
                 showMessage("Xóa thất bại", ERROR);
             }
         } else if (o.equals(btnTim)) {
+            showMessage("", 2);
             if (validDataTim()) {
                 String tenKH = txtTim.getText().trim();
                 modelTable.getDataVector().removeAllElements();
@@ -302,6 +307,7 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
                 DocDuLieuVaoTable();
             }
         } else if (o.equals(btnXemTatCa)) {
+            showMessage("", 2);
             modelTable.getDataVector().removeAllElements();
             modelTable.fireTableDataChanged();
             dsKH = khDAO.getListKhachHang();
@@ -381,21 +387,26 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
         if (type == SUCCESS) {
             lbShowMessages.setForeground(Color.GREEN);
             lbShowMessages.setIcon(checkIcon);
-        } else {
+        } else if (type == ERROR) {
             lbShowMessages.setForeground(Color.RED);
             lbShowMessages.setIcon(errorIcon);
+        } else {
+            lbShowMessages.setIcon(null);
         }
         lbShowMessages.setText(message);
     }
 
-    private boolean validData() {
+    private boolean validData(int type) {
+        // type = 1 -> thêm mới
+        // type != 1 -> cập nhật
         String tenKH = txtTenKH.getText().trim();
         String cmnd = txtCMND.getText().trim();
         String soLanDat = txtSoLanDat.getText().trim();
         if (!(tenKH.length() > 0)) {
             showMessage("Lỗi: Tên không được để trống", txtTenKH);
             return false;
-        } else if (tenKH.matches("\\d+")) {
+        }
+        if (!tenKH.matches("\\d+")) {
             showMessage("Lỗi: Tên không được có số", txtTenKH);
             return false;
         }
@@ -403,12 +414,13 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
             showMessage("Lỗi: CMND phải có 9 số hoặc CCCD phải có 12 số", txtCMND);
             return false;
         } else {
-            for (KhachHang item : dsKH) {
-                if (item.getCmnd().equalsIgnoreCase(cmnd)) {
-                    showMessage("Lỗi: CMND hoặc CCCD đã tồn tại", txtCMND);
-                    return false;
+            if (type == 1)
+                for (KhachHang item : dsKH) {
+                    if (item.getCmnd().equalsIgnoreCase(cmnd)) {
+                        showMessage("Lỗi: CMND hoặc CCCD đã tồn tại", txtCMND);
+                        return false;
+                    }
                 }
-            }
         }
         if (soLanDat.length() > 0) {
             try {
@@ -447,6 +459,8 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
     }
 
     private void DocDuLieuVaoTable() {
+        if (dsKH.size() <= 0)
+            return;
         for (KhachHang item : dsKH) {
             String date = formatDate(item.getNgayHetHan());
             modelTable.addRow(new Object[] { item.getMaKH(), item.getTenKH(), item.getCmnd(), date, item.getLoaiKH(),

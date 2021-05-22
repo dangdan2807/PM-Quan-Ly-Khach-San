@@ -328,7 +328,6 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener, ListSel
                 }catch(Exception e2){
                     JOptionPane.showMessageDialog(pnMain, "Mã hóa đơn phải là số");
                 }
-                // TODO Auto-generated method stub
                 for(int i=0; i<dshddv.size(); i++){
                     if(dshddv.get(i).getMaHDDV() == maHDDV){
                         tblHDDV.addRowSelectionInterval(i, i);
@@ -457,7 +456,6 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener, ListSel
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
-        // TODO Auto-generated method stub
         
     }
 
