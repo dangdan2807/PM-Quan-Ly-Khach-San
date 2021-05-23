@@ -350,7 +350,7 @@ public class HoaDonDichVu_UI extends JFrame implements ActionListener, MouseList
 			HoaDonDV hd = null;
 			hd = getDataIntoFormHDDV();
 			try {
-				if (hdDVDAO.create(hd)) {
+				if (hdDVDAO.insert(hd)) {
 					hd.setMaHDDV(hdDVDAO.getLatestID());
 					ctDVDAO.updateByID(hdDVDAO.getLatestID());
 					

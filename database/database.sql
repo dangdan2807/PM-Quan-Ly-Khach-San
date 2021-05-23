@@ -396,8 +396,8 @@ BEGIN
 		JOIN dbo.Phong p ON hd.MaPhong = p.MaPhong
 		JOIN dbo.LoaiPhong lp ON p.MaLoaiPhong = lp.MaLoaiPhong
 		JOIN dbo.KhachHang kh ON kh.MaKH = hd.MaKH
-	WHERE p.MaPhong = @MaPhong 
-		AND hd.tinhTrang = 0 
+	WHERE p.MaPhong = @MaPhong
+		AND hd.tinhTrang = 0
 		AND hd.NgayGioNhan BETWEEN @tuNgay AND @denNgay
 END
 GO

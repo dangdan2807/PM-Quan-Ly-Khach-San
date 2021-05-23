@@ -60,7 +60,6 @@ public class LoaiPhongDAO {
         }
         return lp;
     }
-
     
     public ArrayList<LoaiPhong> getListLoaiPhong() {
         ArrayList<LoaiPhong> dataList = new ArrayList<LoaiPhong>();

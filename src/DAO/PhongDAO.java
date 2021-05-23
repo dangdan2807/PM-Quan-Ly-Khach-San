@@ -14,27 +14,6 @@ public class PhongDAO {
         return instance;
     }
 
-    public ArrayList<Phong> getAllPhong(){
-        ArrayList<Phong> dsp = new ArrayList<Phong>();
-        try{
-            ConnectDB.getInstance();
-            Connection conn = ConnectDB.getConnection();
-
-            String sql = "Select * from Phong";
-            Statement statement = conn.createStatement();
-
-            ResultSet rs = statement.executeQuery(sql);
-
-            while(rs.next()){
-                Phong phong = new Phong(rs);
-                dsp.add(phong);
-            }
-        }catch(SQLException e){
-            e.printStackTrace();
-        }
-        return dsp;
-    }
-
     public ArrayList<Phong> getPhongAvail(){
         ArrayList<Phong> dsp = new ArrayList<Phong>();
         try{

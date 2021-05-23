@@ -44,6 +44,7 @@ public class DichVu {
 		setTenDV(tenDV);
 		setDonGia(donGia);
 	}
+
 	public DichVu(String tenDV, double donGia) {
 		setDonGia(donGia);
 		setTenDV(tenDV);

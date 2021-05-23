@@ -59,7 +59,7 @@ public class HoaDonDVDAO {
         return dataList;
     }
 
-    public boolean create(HoaDonDV hd) {
+    public boolean insert(HoaDonDV hd) {
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
         PreparedStatement stmt = null;
