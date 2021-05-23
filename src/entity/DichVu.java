@@ -3,6 +3,9 @@ package entity;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import DAO.DichVuDAO;
+import DAO.HoaDonDVDAO;
+
 public class DichVu {
 	private int maDV;
 	private String tenDV;

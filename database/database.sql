@@ -67,7 +67,10 @@ CREATE TABLE ChiTietDV
 	NgayGioDat DATETIME DEFAULT(GETDATE())
 )
 GO
-
+--delete from ChiTietDV where MaHDDV is NULL
+--insert into dbo.ChiTietDV (MaDV,SoLuong)
+--values(1,10)
+--select * from ChiTietDV
 CREATE TABLE HoaDonPhong
 (
 	MaHD int identity PRIMARY KEY,
@@ -247,12 +250,24 @@ GO
 Create proc UDP_SearchHDDVByID @id int
 as
 begin
-	select hd.MaHDDV, kh.MaKH, hd.NgayGioLap, hd.TinhTrang
+	select hd.MaHDDV, kh.MaKH, hd.NgayGioLap, hd.TinhTrang,
+			ct.MaDV, dv.TenDV,ct.SoLuong, dv.DonGia, ct.NgayGioDat,ct.MaHDDV as MaHDct
 	from dbo.HoaDonDV hd INNER JOIN dbo.KhachHang kh ON hd.MaKH = kh.MaKH
+			inner join dbo.ChiTietDV ct on ct.MaHDDV=hd.MaHDDV
+			inner join dbo.DichVu dv on ct.MaDV = dv.MaDV
 	where hd.MaHDDV = @id
 end
 go
 
+Create proc UDP_SearchDVbyMaHDDV @id int
+as
+begin
+	select ct.MaDV, dv.TenDV,ct.SoLuong, dv.DonGia, ct.NgayGioDat,hd.MaHDDV
+	from dbo.HoaDonDV hd INNER JOIN dbo.KhachHang kh ON hd.MaKH = kh.MaKH
+						inner join dbo.ChiTietDV ct on ct.MaHDDV=hd.MaHDDV
+						inner join dbo.DichVu dv on ct.MaDV = dv.MaDV
+	where hd.MaHDDV = @id
+end
 --exec UDP_SearchHDDVByID 1
 
 -- Hóa đơn phòng

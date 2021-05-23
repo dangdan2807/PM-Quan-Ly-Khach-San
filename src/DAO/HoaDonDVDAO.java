@@ -39,8 +39,8 @@ public class HoaDonDVDAO {
         return dataList;
     }
 
-    public ArrayList<HoaDonDV> getListHDDVbyID(int maHDDV) {
-        ArrayList<HoaDonDV> dataList = new ArrayList<HoaDonDV>();
+    public HoaDonDV getListHDDVbyID(int maHDDV) {
+        HoaDonDV dataList = null;
         ConnectDB.getInstance();
         PreparedStatement stmt = null;
         try {
@@ -50,10 +50,9 @@ public class HoaDonDVDAO {
             stmt.setInt(1, maHDDV);
 
             ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                HoaDonDV hdDV = new HoaDonDV(rs);
-                dataList.add(hdDV);
-            }
+            if(!rs.next())
+            	return null;
+            dataList = new HoaDonDV(rs);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -109,22 +108,23 @@ public class HoaDonDVDAO {
         return n > 0;
     }
 
-    public boolean delete(HoaDonDV hd) {
+    public boolean delete(int id) {
+        int n = 0;
         PreparedStatement stmt = null;
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
-        int n = 0;
+        String query = "delete from dbo.HoaDonDV where maHDDV = ?";
         try {
-            String sql = "delete from dbo.HoaDonV " + "where maMaHDDV = ?";
-            stmt = con.prepareStatement(sql);
-            stmt.setInt(1, hd.getMaHDDV());
+            stmt = con.prepareStatement(query);
+            stmt.setInt(1, id);
+
             n = stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             try {
                 stmt.close();
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -143,11 +143,11 @@ public class HoaDonDVDAO {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 int MaHDDV = rs.getInt("MaHDDV");
-                Date ngayGioDat = rs.getDate("NgayGioDat");
-                KhachHang khachHang = new KhachHang(rs.getInt("MaKH"));
-
+                Date ngayGioDat = rs.getDate("NgayGioLap");
+                KhachHang maKhachHang = new KhachHang(rs.getInt("MaKH"));
+                int tt = rs.getInt("TinhTrang");
                 // HoaDonPhong ctdv = new HoaDonPhong(rs);
-                HoaDonDV hddv = new HoaDonDV(MaHDDV, ngayGioDat, khachHang);
+                HoaDonDV hddv = new HoaDonDV(MaHDDV, maKhachHang, ngayGioDat, tt);
                 dataList.add(hddv);
             }
         } catch (SQLException e) {

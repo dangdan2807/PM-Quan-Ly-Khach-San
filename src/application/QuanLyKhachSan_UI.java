@@ -153,8 +153,8 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener, ListSel
         menuBar.add(menuQLHoaDon);
         itemQLHDPhong = new JMenuItem("Quản lý hóa đơn phòng");
         itemQLHDDichVu = new JMenuItem("Quản lý hóa đơn dịch vụ");
-        menuQLHoaDon.add(itemQLHDPhong);
-        // menuQLHoaDon.add(itemQLHDDichVu);
+        // menuQLHoaDon.add(itemQLHDPhong);
+        menuQLHoaDon.add(itemQLHDDichVu);
 
         // quản lý dịch vụ
         menuQLDichVu = new JMenu("Quản lý dịch vụ");

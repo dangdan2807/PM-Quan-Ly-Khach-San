@@ -142,4 +142,23 @@ public class DichVuDAO {
         }
         return n > 0;
     }
+//    public DichVu getListDVbyIDHD(int maHDDV) {
+//    	DichVu dataList = null;
+//        ConnectDB.getInstance();
+//        PreparedStatement stmt = null;
+//        try {
+//            Connection con = ConnectDB.getConnection();
+//            String sql = "EXEC  UDP_SearchHDDVByID ?";
+//            stmt = con.prepareStatement(sql);
+//            stmt.setInt(1, );
+// //in list DV khi ấn vào bảng HDDV           
+//            ResultSet rs = stmt.executeQuery();
+//            if(!rs.next())
+//            	return null;
+//            dataList = new DichVu(rs);
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return dataList;
+//    }
 }
