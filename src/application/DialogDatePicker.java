@@ -19,11 +19,10 @@ public class DialogDatePicker extends JDialog implements ActionListener, ChangeL
     private JButton btnPre, btnNext, btnCancel, btnSubmit;
     private SpinnerNumberModel spinYearModel;
     private JSpinner spinYear;
-    private int check = 0;
-    private JLabel lbMonth, lbYear, lbThu, lbNgayThang;
+    private int check = 0, viTri = -1;
+    private JLabel lbMonth, lbYear, lbThu, lbNgayThang, lbToDay;
     private String blueColor = "#3f51b5";
     private String whiteColor = "#fafafa";
-    private int viTri = -1;
 
     public DialogDatePicker() {
         setTitle("Chọn ngày");
@@ -155,6 +154,10 @@ public class DialogDatePicker extends JDialog implements ActionListener, ChangeL
         btnCancel.setBorder(null);
         pnSubmit.add(btnCancel);
 
+        lbToDay = new JLabel("Today: ");
+        lbToDay.setBounds(10, 6, 162, 14);
+        pnSubmit.add(lbToDay);
+
         displayDate();
         showToDay();
         getContentPane().add(pnMain);
@@ -227,28 +230,34 @@ public class DialogDatePicker extends JDialog implements ActionListener, ChangeL
 
     // hiện ngày hiện tại
     public void showToDay() {
-        SimpleDateFormat sdfYear = new SimpleDateFormat("yyyy");
-        SimpleDateFormat sdfMonthDay = new SimpleDateFormat("MMM dd");
-        SimpleDateFormat sdfThu = new SimpleDateFormat("E");
         Calendar cal = Calendar.getInstance();
-        lbNgayThang.setText(sdfMonthDay.format(cal.getTime()));
-        lbThu.setText(sdfThu.format(cal.getTime()) + ",");
-        lbYear.setText(sdfYear.format(cal.getTime()));
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd");
+        lbNgayThang.setText(sdf.format(cal.getTime()));
+        sdf = new SimpleDateFormat("E");
+
+        lbThu.setText(sdf.format(cal.getTime()) + ",");
+        sdf = new SimpleDateFormat("yyyy");
+
+        lbYear.setText(sdf.format(cal.getTime()));
+        sdf = new SimpleDateFormat("dd/MM/yyyy");
+        lbToDay.setText("Today: " + sdf.format(cal.getTime()));
     }
 
     // hiện ngày đã chọn
     public void displayShowDate(int day) {
-        SimpleDateFormat sdfYear = new SimpleDateFormat("yyyy");
-        SimpleDateFormat sdfMonthDay = new SimpleDateFormat("MMM dd");
-        SimpleDateFormat sdfThu = new SimpleDateFormat("E");
         Calendar cal = Calendar.getInstance();
         int y = (int) spinYear.getValue();
         if (y != year)
             year = y;
         cal.set(year, month, day);
-        lbNgayThang.setText(sdfMonthDay.format(cal.getTime()));
-        lbThu.setText(sdfThu.format(cal.getTime()) + ",");
-        lbYear.setText(sdfYear.format(cal.getTime()));
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd");
+        lbNgayThang.setText(sdf.format(cal.getTime()));
+
+        sdf = new SimpleDateFormat("E");
+        lbThu.setText(sdf.format(cal.getTime()) + ",");
+
+        sdf = new SimpleDateFormat("yyyy");
+        lbYear.setText(sdf.format(cal.getTime()));
     }
 
     // lấy ngày chọn từ lịch

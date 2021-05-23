@@ -1,25 +1,11 @@
 package application;
 
 import java.sql.*;
-// import java.text.SimpleDateFormat;
-// import java.util.Calendar;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class testTinh2Ngay {
     public static void main(String[] args) {
-        // cách 1
-        // Calendar c1 = Calendar.getInstance();
-        // Calendar c2 = Calendar.getInstance();
-        // Date ngay1 = Date.valueOf("2021-04-15");
-        // Date ngay2 = Date.valueOf("2021-05-17");
-        // c1.setTime(ngay1);
-        // c2.setTime(ngay2);
-        // long noDay = (c2.getTime().getTime() - c1.getTime().getTime()) / (24 * 3600 *
-        // 1000);
-        // long gio = (c2.getTime().getTime() - c1.getTime().getTime()) / (3600 * 1000);
-        // long gioCon = noDay * 24 - gio;
-        // System.out.println(noDay);
-        // System.out.println(gio);
-        // System.out.println(gioCon);
 
         // cách 2
         // Timestamp ts1 = Timestamp.valueOf("2021-05-15 00:00:00");
@@ -44,12 +30,22 @@ public class testTinh2Ngay {
         // System.out.println(gio);
         // System.out.println(gioCon);
 
-        long ml = System.currentTimeMillis();
-        Date now = new Date(ml);
-        System.out.println(now);
+        // long ml = System.currentTimeMillis();
+        // Date now = new Date(ml);
+        // System.out.println(now);
         
-        ml = ml / 86400000 * 86400000;
-        Date now2 = new Date(ml);
-        System.out.println(now2);
+        // ml = ml / 86400000 * 86400000;
+        // Date now2 = new Date(ml);
+        // System.out.println(now2);
+
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        System.out.println(sdf.format(cal.getTime()));
+        sdf = new SimpleDateFormat("yyyy");
+        System.out.println(sdf.format(cal.getTime()));
+        sdf = new SimpleDateFormat("MMM dd");
+        System.out.println(sdf.format(cal.getTime()));
+        sdf = new SimpleDateFormat("E");
+        System.out.println("Today: " + sdf.format(cal.getTime()));
     }
 }
