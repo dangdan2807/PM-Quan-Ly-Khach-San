@@ -67,10 +67,7 @@ CREATE TABLE ChiTietDV
 	NgayGioDat DATETIME DEFAULT(GETDATE())
 )
 GO
---delete from ChiTietDV where MaHDDV is NULL
---insert into dbo.ChiTietDV (MaDV,SoLuong)
---values(1,10)
---select * from ChiTietDV
+
 CREATE TABLE HoaDonPhong
 (
 	MaHD int identity PRIMARY KEY,
@@ -97,14 +94,15 @@ GO
 INSERT INTO dbo.DichVu
 	(tenDV, donGia)
 VALUES
+	(N'Bún bò Huế', 30000), -- Ăn uống
+    (N'Hũ tiếu gõ', 20000), -- Ăn uống
+    (N'Mì 2 trứng', 17000),
 	(N'Gửi xe', 5000),
 	(N'Rửa xe', 30000),
-	(N'Thức ăn tại phòng', 30000),
 	(N'Giặt, ủi là', 20000),
 	(N'Xe đưa đón sân bay', 100000),
 	(N'Cho thuê xe tự lái', 120000),
 	(N'Trông trẻ', 30000),
-	(N'Chăm sóc thú cưng', 50000),
 	(N'Spa', 300000),
 	(N'Đánh golf, tennis', 200000)
 GO
@@ -157,7 +155,10 @@ VALUES
 	(4, N'P201', 0, '2021-06-15', null)
 GO
 
+-- USE master
+-- GO
 -- drop database KhachSan
+-- GO
 
 -- Chi tiết hóa đơn DV
 CREATE PROC UDP_SearchCTHDByDate
@@ -268,6 +269,7 @@ begin
 						inner join dbo.DichVu dv on ct.MaDV = dv.MaDV
 	where hd.MaHDDV = @id
 end
+GO
 --exec UDP_SearchHDDVByID 1
 
 -- Hóa đơn phòng
