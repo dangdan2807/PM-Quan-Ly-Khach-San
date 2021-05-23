@@ -1,8 +1,8 @@
 // Author : Pham Dang Dan
-// Date   : April 23, 2021
+// Date created   : April 23, 2021
+// Last update date: May 23, 2021
 
 package application;
-
 import javax.swing.*;
 import java.awt.event.*;
 import java.text.*;
@@ -17,7 +17,10 @@ public class kDatePicker extends JPanel implements ActionListener {
 
     public kDatePicker() {
         setLayout(null);
-
+        // setSize(200, 200);
+        // setResizable(false);
+        // setLocationRelativeTo(null);
+        // setDefaultCloseOperation(EXIT_ON_CLOSE);
         createGUI();
     }
 
@@ -42,16 +45,19 @@ public class kDatePicker extends JPanel implements ActionListener {
         btn.addActionListener(this);
     }
 
+    public static void main(String[] args) {
+        new kDatePicker().setVisible(true);
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
         if (o.equals(btn)) {
             f.setModal(true);
             f.setVisible(true);
-            String date = f.getPickedDate();
-            txt.setText(date);
-            if (txt.getText().equals("")) {
-                txt.setText(DialogDatePicker.getToDay());
+            String date = f.getValueString();
+            if (!(date.equals(""))) {
+                txt.setText(date);
             }
         }
     }

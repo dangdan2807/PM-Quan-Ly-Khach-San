@@ -16,11 +16,11 @@ public class ChiTietDV {
         this.ngayGioDat = ngayGioDat;
     }
 
-    public ChiTietDV(int soLuong, HoaDonDV hoaDonDV, DichVu dichVu) {
-        setSoLuong(soLuong);
-        this.hoaDonDV = hoaDonDV;
-        this.dichVu = dichVu;
-    }
+    // public ChiTietDV(int soLuong, HoaDonDV hoaDonDV, DichVu dichVu) {
+    //     setSoLuong(soLuong);
+    //     this.hoaDonDV = hoaDonDV;
+    //     this.dichVu = dichVu;
+    // }
 
     public ChiTietDV(DichVu dichVu, int soLuong) {
         
