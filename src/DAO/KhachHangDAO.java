@@ -168,7 +168,7 @@ public class KhachHangDAO {
         return n > 0;
     }
 
-    public boolean delete(KhachHang dv) {
+    public boolean delete(KhachHang kh) {
         PreparedStatement stmt = null;
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
@@ -176,7 +176,7 @@ public class KhachHangDAO {
         try {
             String sql = "delete from dbo.KhachHang " + "where maKH = ?";
             stmt = con.prepareStatement(sql);
-            stmt.setInt(1, dv.getMaKH());
+            stmt.setInt(1, kh.getMaKH());
             n = stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
