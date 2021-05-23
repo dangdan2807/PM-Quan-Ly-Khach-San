@@ -234,10 +234,12 @@ public class ChiTietDVDAO {
         Connection con = ConnectDB.getConnection();
         int n = 0;
         try {
-            String sql = "update dbo.ChiTietDV set maDV = ?, SoLuong = ? ";
+            String sql = "update dbo.ChiTietDV set maDV = ?, SoLuong = ?, NgayGioDat = ?"+ "where maHDDV = ? ";
             stmt = con.prepareStatement(sql);
             stmt.setInt(1, ctdv.getDichVu().getMaDV());
             stmt.setInt(2, ctdv.getSoLuong() );
+            stmt.setDate(3, ctdv.getNgayGioDat());
+            stmt.setInt(4, ctdv.getHoaDonDV().getMaHDDV());
             n = stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

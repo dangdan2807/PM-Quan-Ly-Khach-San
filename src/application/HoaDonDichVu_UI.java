@@ -7,13 +7,10 @@ import java.awt.event.MouseListener;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 
 import DAO.ChiTietDVDAO;
 import DAO.DichVuDAO;
@@ -57,6 +54,7 @@ public class HoaDonDichVu_UI extends JFrame implements ActionListener, MouseList
 	private KhachHangDAO khachHang_dao;
 	private AbstractButton btnSua;
 	private JButton btnTimMaHDDV;
+	private JButton btnXem;
 
 	public HoaDonDichVu_UI() {
 		try {
@@ -234,16 +232,23 @@ public class HoaDonDichVu_UI extends JFrame implements ActionListener, MouseList
 		btnTimMaHDDV.setIcon(new ImageIcon("data\\images\\search_16.png"));
 		btnTimMaHDDV.setBounds(270, 28, 89, 23);
 		panel_1.add(btnTimMaHDDV);
+		
+		btnXem = new JButton("Xem tất cả");
+		btnXem.setIcon(null);
+		btnXem.setBounds(366, 28, 106, 23);
+		panel_1.add(btnXem);
 
 		btnThem.addActionListener(this);
 		btnSua.addActionListener(this);
 		btnXoa.addActionListener(this);
 		btnXacNhan.addActionListener(this);// khi bam xac nhan se xoa cac dong` trong table dv;
 		btnTimMaHDDV.addActionListener(this);
+		btnXem.addActionListener(this);
 		cboDV.addActionListener(this);
 		cboMaKH.addActionListener(this);
 		tableHDDV.addMouseListener(this);
 		tableDV.addMouseListener(this);
+		pnMain.addMouseListener(this);
 
 		loadListHDDV();
 		loadCboMaKH();
@@ -272,6 +277,9 @@ public class HoaDonDichVu_UI extends JFrame implements ActionListener, MouseList
 			int maHD = Integer.parseInt(modelHD.getValueAt(row, 0).toString());
 			dsChiTietDV = ctDVDAO.getChiTietDVByMaHDDV(maHD);
 			docDuLieuVaoTableDV();
+		}else if(o.equals(pnMain)) {
+			modelDV.getDataVector().removeAllElements();
+			modelDV.fireTableDataChanged();
 		}
 
 	}
@@ -303,6 +311,10 @@ public class HoaDonDichVu_UI extends JFrame implements ActionListener, MouseList
 		Date date = new Date(millis);
 		if (o.equals(btnThem)) {
 			if (validDataSo()) {
+				int row = modelDV.getRowCount();
+				for (int i = row - 1; i >= 0; i--) {
+					modelDV.removeRow(i);
+				}
 				ChiTietDV ctdv = null;
 				ctdv = getDataIntoFormDV();
 				try {
@@ -349,11 +361,16 @@ public class HoaDonDichVu_UI extends JFrame implements ActionListener, MouseList
 		} else if (o.equals(btnXacNhan)) {
 			HoaDonDV hd = null;
 			hd = getDataIntoFormHDDV();
+			int row = modelDV.getRowCount();
+			for (int i = row - 1; i >= 0; i--) {
+				modelDV.removeRow(i);
+			}
+
 			try {
 				if (hdDVDAO.insert(hd)) {
 					hd.setMaHDDV(hdDVDAO.getLatestID());
 					ctDVDAO.updateByID(hdDVDAO.getLatestID());
-					
+
 				}
 				String tt = convertTinhTrang(hd.getTinhTrang());
 				modelHD.addRow(
@@ -365,17 +382,24 @@ public class HoaDonDichVu_UI extends JFrame implements ActionListener, MouseList
 			} catch (Exception e2) {
 				JOptionPane.showMessageDialog(this, "Lỗi! Thêm thất bại");
 			}
-		}else if(o.equals(btnSua)) {
-			if(validDataSo()) {
+		} else if (o.equals(btnSua)) {
+			if (validDataSo()) {
 				ChiTietDV ctdv = null;
 				ctdv = getDataIntoFormDV();
+
+				HoaDonDV hd = null;
+				hd = getDataIntoFormHDDV();
+
+				ctdv.setHoaDonDV(hd);
 				int row = tableDV.getSelectedRow();
+
 				try {
-					if(ctDVDAO.update(ctdv)) {
+					boolean result = ctDVDAO.update(ctdv);
+					if (result) {
 						int maDV = 0;
 						String tenDV = ctdv.getDichVu().getTenDV();
 						for (DichVu item : dsDV) {
-							if (item.getTenDV().equals(tenDV)) {
+							if (item.getTenDV().contains(tenDV)) {
 								maDV = item.getMaDV();
 								break;
 							}
@@ -386,12 +410,26 @@ public class HoaDonDichVu_UI extends JFrame implements ActionListener, MouseList
 						modelDV.setValueAt(ctdv.getDichVu().getDonGia(), row, 3);
 						modelDV.setValueAt(ctdv.getNgayGioDat(), row, 4);
 						JOptionPane.showMessageDialog(this, "Cập nhật thành công");
-					}else
+					} else
 						JOptionPane.showMessageDialog(this, "Cập nhật thất bại");
 				} catch (Exception e2) {
 					e2.printStackTrace();
 				}
 			}
+		} else if (o.equals(btnTimMaHDDV)) {
+			int maHD = Integer.parseInt(txtTimMaHDDV.getText().trim());
+			modelHD.getDataVector().removeAllElements();
+			modelHD.fireTableDataChanged();
+			dsHDDV = hdDVDAO.getListHDDVbyMaHD(maHD);
+			if(dsHDDV.size()<=0)
+				JOptionPane.showMessageDialog(this, "Không tìm thấy hoá đơn");
+			docDuLieuVaoTableHDDV();
+			
+		}else if(o.equals(btnXem)) {
+			modelHD.getDataVector().removeAllElements();
+			modelHD.fireTableDataChanged();
+			dsHDDV = hdDVDAO.getAllHDDV();
+			docDuLieuVaoTableHDDV();
 		}
 		else if (o.equals(cboDV))
 

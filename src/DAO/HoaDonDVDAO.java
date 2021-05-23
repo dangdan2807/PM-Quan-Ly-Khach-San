@@ -58,6 +58,27 @@ public class HoaDonDVDAO {
         }
         return dataList;
     }
+    public ArrayList<HoaDonDV> getListHDDVbyMaHD(int maHDDV) {
+        ArrayList<HoaDonDV> dataList = new ArrayList<HoaDonDV>();
+        ConnectDB.getInstance();
+        PreparedStatement stmt = null;
+        try {
+            Connection con = ConnectDB.getConnection();
+            String sql = "EXEC  UDP_SearchHDDVByID ? ";
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, maHDDV);
+
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next()) {
+            	HoaDonDV hd = new HoaDonDV(rs);
+            	dataList.add(hd);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return dataList;
+    }
 
     public boolean insert(HoaDonDV hd) {
         ConnectDB.getInstance();
