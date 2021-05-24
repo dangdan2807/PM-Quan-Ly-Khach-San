@@ -198,6 +198,7 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
 
         loadListKhachHang();
         DocDuLieuVaoTable();
+        reSizeColumnTable();
     }
 
     public static void main(String[] args) {
@@ -478,5 +479,15 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
 
     private void loadListKhachHang() {
         dsKH = khDAO.getListKhachHang();
+    }
+
+    private void reSizeColumnTable() {
+        // table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        tableShowInfo.getColumnModel().getColumn(0).setPreferredWidth(40);
+        tableShowInfo.getColumnModel().getColumn(1).setPreferredWidth(115);
+        tableShowInfo.getColumnModel().getColumn(2).setPreferredWidth(70);
+        tableShowInfo.getColumnModel().getColumn(3).setPreferredWidth(85);
+        tableShowInfo.getColumnModel().getColumn(4).setPreferredWidth(70);
+        tableShowInfo.getColumnModel().getColumn(5).setPreferredWidth(80);
     }
 }

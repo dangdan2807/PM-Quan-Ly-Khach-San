@@ -171,6 +171,7 @@ public class QuanLyDichVu_UI extends JFrame implements ActionListener, MouseList
         txtDonGia.addKeyListener(this);
         txtTim.addKeyListener(this);
         DocDuLieuVaoTable(dvDAO.getListDichVu());
+        reSizeColumnTable();
     }
 
     public static void main(String[] args) {
@@ -395,5 +396,12 @@ public class QuanLyDichVu_UI extends JFrame implements ActionListener, MouseList
         for (DichVu item : dataList) {
             modelTable.addRow(new Object[] { item.getMaDV(), item.getTenDV(), item.getDonGia() });
         }
+    }
+
+    private void reSizeColumnTable() {
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        table.getColumnModel().getColumn(0).setPreferredWidth(83);
+        table.getColumnModel().getColumn(1).setPreferredWidth(350);
+        table.getColumnModel().getColumn(2).setPreferredWidth(120);
     }
 }
