@@ -406,23 +406,14 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
                     showMessage("Lỗi: Bạn cần chọn phòng cần xóa", ERROR, lbShowMessagesP);
                 } else {
                     int select = JOptionPane.NO_OPTION;
-                    Phong phong = null;
-                    phong = getDataInFormPhong();
+                    Phong phong = getDataInFormPhong();
                     String maPhong = phong.getMaPhong();
-                    int soLuongPhong = phongDAO.getCountPhongByMaLoaiPhong(maPhong);
-                    if (soLuongPhong > 0) {
-                        select = JOptionPane.showConfirmDialog(this,
-                                "<html>" + "<p style='text-align: center; font-size: 18px; color:red'>Cảnh báo</p>"
-                                        + "<p style='text-align: center;'>Xóa phòng "
-                                        + "<span style='color: blue'> " + maPhong + "</span>"
-                                        + " sẽ dẫn đến xóa toàn bộ hóa đơn phòng liên quan đến phòng này.</p>"
-                                        + "<p style='text-align: left;'>Hãy suy nghĩ thật kỹ trước khi quyết định.</p>"
-                                        + "</html>",
-                                "Cảnh báo", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
-                    } else {
-                        select = JOptionPane.showConfirmDialog(this, "Bạn có muốn xoá dòng đã chọn ?", "Cảnh báo",
-                                JOptionPane.YES_NO_OPTION);
-                    }
+                    select = JOptionPane.showConfirmDialog(this, "<html>"
+                            + "<p style='text-align: center; font-size: 18px; color:red'>Cảnh báo</p>"
+                            + "<p style='text-align: center;'>Xóa phòng " + "<span style='color: blue'> " + maPhong
+                            + "</span>" + " sẽ dẫn đến xóa toàn bộ hóa đơn phòng có liên quan.</p>"
+                            + "<p style='text-align: left;'>Hãy suy nghĩ thật kỹ trước khi quyết định.</p>" + "</html>",
+                            "Cảnh báo", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
                     if (select == JOptionPane.YES_OPTION) {
                         phongDAO.delete(phong.getMaPhong());
                         modelTableP.removeRow(row);

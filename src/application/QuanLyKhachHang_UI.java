@@ -236,6 +236,8 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
                         modelTable.addRow(new Object[] { maKH, kh.getTenKH(), kh.getCmnd(), date, kh.getLoaiKH(),
                                 kh.getSoLanDatPhong() });
                         showMessage("Thêm khách hàng thành công", SUCCESS);
+                        modelTable.fireTableDataChanged();
+                        loadListKhachHang();
                     } else {
                         showMessage("Lỗi: Thêm khách hàng thất bại", ERROR);
                     }
@@ -263,6 +265,8 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
                         modelTable.setValueAt(kh.getLoaiKH(), row, 4);
                         modelTable.setValueAt(kh.getSoLanDatPhong(), row, 5);
                         showMessage("Cập nhật khách hàng thành công", SUCCESS);
+                        modelTable.fireTableDataChanged();
+                        loadListKhachHang();
                     } else {
                         showMessage("Lỗi: Cập nhật khách hàng thất bại", ERROR);
                     }
@@ -272,23 +276,24 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
             }
         } else if (o.equals(btnXoa)) {
             showMessage("", 2);
-            KhachHang kh = null;
-            try {
-                kh = getDataInForm();
-            } catch (ParseException e1) {
-                e1.printStackTrace();
-            }
             int row = tableShowInfo.getSelectedRow();
             try {
                 if (row == -1) {
                     showMessage("Lỗi: Bạn cần chọn dòng cần xóa", ERROR);
                 } else {
-                    int select;
-                    select = JOptionPane.showConfirmDialog(this, "Bạn có muốn xoá dòng đã chọn ?", "Cảnh báo",
-                            JOptionPane.YES_NO_OPTION);
+                    int select = JOptionPane.NO_OPTION;
+                    KhachHang kh = getDataInForm();
+                    String tenKH = kh.getTenKH();
+                    select = JOptionPane.showConfirmDialog(this, "<html>"
+                            + "<p style='text-align: center; font-size: 18px; color:red'>Cảnh báo</p>"
+                            + "<p style='text-align: center;'>Xóa khách hành " + "<span style='color: blue'> " + tenKH
+                            + "</span>" + " sẽ dẫn đến xóa toàn bộ hóa đơn phòng, hóa đơn dịch vụ có liên quan.</p>"
+                            + "<p style='text-align: left;'>Hãy suy nghĩ thật kỹ trước khi quyết định.</p>" + "</html>",
+                            "Cảnh báo", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
                     if (select == JOptionPane.YES_OPTION) {
                         khDAO.delete(kh);
                         modelTable.removeRow(row);
+                        loadListKhachHang();
                         showMessage("Xóa thành công", SUCCESS);
                     }
                 }

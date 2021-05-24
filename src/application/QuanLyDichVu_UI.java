@@ -198,6 +198,7 @@ public class QuanLyDichVu_UI extends JFrame implements ActionListener, MouseList
                         txtMaDV.setText(String.valueOf(maDV));
                         modelTable.addRow(new Object[] { maDV, dv.getTenDV(), dv.getDonGia() });
                         showMessage("Thêm dịch vụ thành công", SUCCESS);
+                        modelTable.fireTableDataChanged();
                     } else {
                         showMessage("Lỗi: Thêm dịch vụ thất bại", ERROR);
                     }
@@ -216,6 +217,7 @@ public class QuanLyDichVu_UI extends JFrame implements ActionListener, MouseList
                         modelTable.setValueAt(dv.getTenDV(), row, 1);
                         modelTable.setValueAt(dv.getDonGia(), row, 2);
                         showMessage("Cập nhật dịch vụ thành công", SUCCESS);
+                        modelTable.fireTableDataChanged();
                     } else {
                         showMessage("Lỗi: Cập nhật dịch vụ thất bại", ERROR);
                     }
@@ -225,19 +227,25 @@ public class QuanLyDichVu_UI extends JFrame implements ActionListener, MouseList
             }
         } else if (o.equals(btnXoa)) {
             showMessage("", 2);
-            DichVu dv = getDataInTable();
             int row = table.getSelectedRow();
             try {
                 if (row == -1) {
                     showMessage("Lỗi: Bạn cần chọn dòng cần xóa", ERROR);
                 } else {
-                    int select;
-                    select = JOptionPane.showConfirmDialog(this, "Bạn có muốn xoá dòng đã chọn ?", "Cảnh báo",
-                            JOptionPane.YES_NO_OPTION);
+                    DichVu dv = getDataInTable();
+                    int select = JOptionPane.NO_OPTION;
+                    String tenDV = dv.getTenDV();
+                    select = JOptionPane.showConfirmDialog(this, "<html>"
+                            + "<p style='text-align: center; font-size: 18px; color:red'>Cảnh báo</p>"
+                            + "<p style='text-align: center;'>Xóa dịch vụ " + "<span style='color: blue'> " + tenDV
+                            + "</span>" + " sẽ dẫn đến xóa toàn bộ hóa đơn dịch vụ có liên quan.</p>"
+                            + "<p style='text-align: left;'>Hãy suy nghĩ thật kỹ trước khi quyết định.</p>" + "</html>",
+                            "Cảnh báo", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
                     if (select == JOptionPane.YES_OPTION) {
                         dvDAO.delete(dv);
                         modelTable.removeRow(row);
                         showMessage("Xóa thành công", SUCCESS);
+                        modelTable.fireTableDataChanged();
                     }
                 }
             } catch (Exception e3) {

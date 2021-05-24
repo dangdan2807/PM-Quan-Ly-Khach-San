@@ -51,9 +51,9 @@ GO
 CREATE TABLE HoaDonDV
 (
 	MaHDDV INT IDENTITY PRIMARY KEY,
-	MaKH INT NOT NULL REFERENCES KhachHang(MaKH),
-	-- 0. chưa thanh toán | 1. đã thanh toán
+	MaKH INT NOT NULL REFERENCES KhachHang(MaKH) ON DELETE CASCADE,
 	NgayGioLap DATETIME DEFAULT(GETDATE()),
+	-- 0. chưa thanh toán | 1. đã thanh toán
 	TinhTrang INT
 )
 GO
@@ -61,8 +61,8 @@ GO
 
 CREATE TABLE ChiTietDV
 (
-	MaHDDV INT REFERENCES HoaDonDV(MaHDDV),
-	MaDV INT REFERENCES DichVu(MaDV),
+	MaHDDV INT REFERENCES HoaDonDV(MaHDDV) ON DELETE CASCADE,
+	MaDV INT REFERENCES DichVu(MaDV) ON DELETE CASCADE,
 	SoLuong INT CHECK(Soluong >= 1) DEFAULT(1),
 	NgayGioDat DATETIME DEFAULT(GETDATE())
 )
@@ -71,7 +71,7 @@ GO
 CREATE TABLE HoaDonPhong
 (
 	MaHD INT IDENTITY PRIMARY KEY,
-	MaKH INT REFERENCES KhachHang(MaKH),
+	MaKH INT REFERENCES KhachHang(MaKH) ON DELETE CASCADE,
 	MaPhong NVARCHAR(100) REFERENCES Phong(MaPhong) ON DELETE CASCADE,
 	-- 0. đã đặt | 1. đã nhận | 2. đã trả
 	TinhTrang INT,
@@ -110,25 +110,25 @@ VALUES
 	(N'Đánh golf, tennis', 200000)
 GO
 
--- INSERT INTO dbo.HoaDonDV
--- 	(maKH, ngayGioLap, TinhTrang)
--- VALUES
--- 	(1, '2021-05-19', 1),
--- 	(2, '2021-05-15', 1),
--- 	(3, '2021-05-19', 0)
+INSERT INTO dbo.HoaDonDV
+	(maKH, ngayGioLap, TinhTrang)
+VALUES
+	(1, '2021-05-19', 1),
+	(2, '2021-05-15', 1),
+	(3, '2021-05-19', 0)
 
--- INSERT INTO dbo.ChiTietDV
--- 	(MaHDDV, MaDV, SoLuong, NgayGioDat)
--- VALUES
--- 	(1, 1, 1, '2021-05-16'),
--- 	(1, 2, 2, '2021-05-16'),
--- 	(1, 4, 2, '2021-05-16'),
--- 	(2, 4, 1, '2021-05-02'),
--- 	(2, 5, 1, '2021-05-03'),
--- 	(2, 6, 2, '2021-05-05'),
--- 	(3, 8, 2, '2021-05-18'),
--- 	(3, 10, 2, '2021-05-19')
--- GO
+INSERT INTO dbo.ChiTietDV
+	(MaHDDV, MaDV, SoLuong, NgayGioDat)
+VALUES
+	(1, 1, 1, '2021-05-16'),
+	(1, 2, 2, '2021-05-16'),
+	(1, 4, 2, '2021-05-16'),
+	(2, 4, 1, '2021-05-02'),
+	(2, 5, 1, '2021-05-03'),
+	(2, 6, 2, '2021-05-05'),
+	(3, 8, 2, '2021-05-18'),
+	(3, 10, 2, '2021-05-19')
+GO
 
 INSERT INTO dbo.LoaiPhong
 	(TenLoaiPhong, donGia)
@@ -151,15 +151,15 @@ VALUES
 	(N'P303', 1, 1, 0, N'Tầng 2', 1)
 GO
 
--- INSERT INTO dbo.HoaDonPhong
--- 	(MaKH, MaPhong, tinhTrang, NgayGioNhan, NgayGioTra)
--- VALUES
--- 	(1, N'P101', 1, '2021-05-16', '2021-05-16'),
--- 	(2, N'P102', 1, '2021-05-02', '2021-05-07'),
--- 	(3, N'P103', 2, '2021-05-16', NULL),
--- 	(5, N'P201', 0, '2021-05-30', '2021-06-10'),
--- 	(4, N'P201', 0, '2021-06-15', NULL)
--- GO
+INSERT INTO dbo.HoaDonPhong
+	(MaKH, MaPhong, tinhTrang, NgayGioNhan, NgayGioTra)
+VALUES
+	(1, N'P101', 1, '2021-05-16', '2021-05-16'),
+	(2, N'P102', 1, '2021-05-02', '2021-05-07'),
+	(3, N'P103', 2, '2021-05-16', NULL),
+	(5, N'P201', 0, '2021-05-30', '2021-06-10'),
+	(4, N'P201', 0, '2021-06-15', NULL)
+GO
 
 -- Chi tiết hóa đơn DV
 CREATE PROC UDP_SearchCTHDByDate

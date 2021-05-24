@@ -315,25 +315,4 @@ public class PhongDAO {
         }
         return false;
     }
-
-    public int getCountPhongByMaLoaiPhong(String maPhong) {
-        int count = 0;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        String query = "SELECT hdP.MaPhong FROM dbo.HoaDonPhong hdP WHERE hdP.maPhong = ?";
-        ConnectDB.getInstance();
-        Connection con = ConnectDB.getConnection();
-        try {
-            stmt = con.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            stmt.setString(1, maPhong);
-
-            rs = stmt.executeQuery();
-            rs.last();
-            // đến số dòng được trả về
-            count = rs.getRow();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return count;
-    }
 }
