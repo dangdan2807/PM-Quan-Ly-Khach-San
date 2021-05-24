@@ -56,7 +56,7 @@ public class TrangChu_UI extends JFrame implements ActionListener{
         }
         phong_dao = new PhongDAO();
         loaiPhong_dao = new LoaiPhongDAO();
-        dsp = phong_dao.getAllPhong();
+        dsp = phong_dao.getListPhong();
         dslp = loaiPhong_dao.getAllLoaiPhong();
         
         // renderData();
@@ -367,7 +367,7 @@ public class TrangChu_UI extends JFrame implements ActionListener{
 
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            // popup.dispose();
+                            popup.setAlwaysOnTop(false);
                             DialogLichDatPhong form = new DialogLichDatPhong();
                             form.setMaPhong(phong.getMaPhong());
                             form.setModal(true);
@@ -428,7 +428,7 @@ public class TrangChu_UI extends JFrame implements ActionListener{
         if(obj == cboLP){
             int choose = cboLP.getSelectedIndex() - 1;
             if(choose == -1){
-                dsp = phong_dao.getAllPhong();
+                dsp = phong_dao.getListPhong();
                 renderDSPhong();
             }else{
                 dsp = phong_dao.getPhongByMaLoaiPhong(dslp.get(choose).getMaLoaiPhong());

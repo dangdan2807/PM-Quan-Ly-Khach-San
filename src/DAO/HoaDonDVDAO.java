@@ -39,7 +39,26 @@ public class HoaDonDVDAO {
         return dataList;
     }
 
-    public ArrayList<HoaDonDV> getListHDDVbyID(int maHDDV) {
+    public HoaDonDV getListHDDVbyID(int maHDDV) {
+        HoaDonDV dataList = null;
+        ConnectDB.getInstance();
+        PreparedStatement stmt = null;
+        try {
+            Connection con = ConnectDB.getConnection();
+            String sql = "EXEC  UDP_SearchHDDVByID ? ";
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, maHDDV);
+
+            ResultSet rs = stmt.executeQuery();
+            if(!rs.next())
+            	return null;
+            dataList = new HoaDonDV(rs);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return dataList;
+    }
+    public ArrayList<HoaDonDV> getListHDDVbyMaHD(int maHDDV) {
         ArrayList<HoaDonDV> dataList = new ArrayList<HoaDonDV>();
         ConnectDB.getInstance();
         PreparedStatement stmt = null;
@@ -50,17 +69,18 @@ public class HoaDonDVDAO {
             stmt.setInt(1, maHDDV);
 
             ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                HoaDonDV hdDV = new HoaDonDV(rs);
-                dataList.add(hdDV);
+            if(rs.next()) {
+            	HoaDonDV hd = new HoaDonDV(rs);
+            	dataList.add(hd);
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return dataList;
     }
 
-    public boolean create(HoaDonDV hd) {
+    public boolean insert(HoaDonDV hd) {
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
         PreparedStatement stmt = null;
@@ -109,22 +129,23 @@ public class HoaDonDVDAO {
         return n > 0;
     }
 
-    public boolean delete(HoaDonDV hd) {
+    public boolean delete(int id) {
+        int n = 0;
         PreparedStatement stmt = null;
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
-        int n = 0;
+        String query = "delete from dbo.HoaDonDV where maHDDV = ?";
         try {
-            String sql = "delete from dbo.HoaDonV " + "where maMaHDDV = ?";
-            stmt = con.prepareStatement(sql);
-            stmt.setInt(1, hd.getMaHDDV());
+            stmt = con.prepareStatement(query);
+            stmt.setInt(1, id);
+
             n = stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             try {
                 stmt.close();
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -143,11 +164,11 @@ public class HoaDonDVDAO {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 int MaHDDV = rs.getInt("MaHDDV");
-                Date ngayGioDat = rs.getDate("NgayGioDat");
-                KhachHang khachHang = new KhachHang(rs.getInt("MaKH"));
-
+                Date ngayGioDat = rs.getDate("NgayGioLap");
+                KhachHang maKhachHang = new KhachHang(rs.getInt("MaKH"));
+                int tt = rs.getInt("TinhTrang");
                 // HoaDonPhong ctdv = new HoaDonPhong(rs);
-                HoaDonDV hddv = new HoaDonDV(MaHDDV, ngayGioDat, khachHang);
+                HoaDonDV hddv = new HoaDonDV(MaHDDV, maKhachHang, ngayGioDat, tt);
                 dataList.add(hddv);
             }
         } catch (SQLException e) {
@@ -168,7 +189,7 @@ public class HoaDonDVDAO {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 int MaHDDV = rs.getInt("MaHDDV");
-                Date ngayGioDat = rs.getDate("NgayGioDat");
+                Date ngayGioDat = rs.getDate("NgayGioLap");
                 KhachHang khachHang = new KhachHang(rs.getInt("MaKH"));
                 HoaDonDV hddv = new HoaDonDV(MaHDDV, ngayGioDat, khachHang);
                 dataList.add(hddv);
@@ -187,7 +208,7 @@ public class HoaDonDVDAO {
             ConnectDB.getInstance();
             Connection conn = ConnectDB.getConnection();
 
-            String sql = "Select * from HoaDonDV where maKH = ? and NgayGioDat >= ? and NgayGioDat <= ? and TinhTrang = 0 order by MaHDDV DESC";
+            String sql = "Select * from HoaDonDV where maKH = ? and NgayGioLap >= ? and NgayGioLap <= ? and TinhTrang = 0 order by MaHDDV DESC";
             PreparedStatement statement = conn.prepareStatement(sql);
             statement.setInt(1, MaKH);
             statement.setDate(2, tuNgay);
@@ -199,7 +220,7 @@ public class HoaDonDVDAO {
 
             while (rs.next()) {
                 int MaHDDV = rs.getInt("MaHDDV");
-                Date ngayGioDat = rs.getDate("NgayGioDat");
+                Date ngayGioDat = rs.getDate("NgayGioLap");
                 KhachHang khachHang = new KhachHang(rs.getInt("MaKH"));
                 HoaDonDV hddv = new HoaDonDV(MaHDDV, ngayGioDat, khachHang);
                 dataList.add(hddv);
@@ -230,6 +251,32 @@ public class HoaDonDVDAO {
             }
         }
         return n > 0;
+    }
+
+    public boolean updateTinhTrang(int maHDDV, int tinhTrang){
+        
+        int n = 0;
+        PreparedStatement stmt = null;
+        ConnectDB.getInstance();
+        Connection con = ConnectDB.getConnection();
+        String query = "update dbo.HoaDonDV set tinhTrang = ? Where maHDDV = ?";
+        try {
+            stmt = con.prepareStatement(query);
+            stmt.setInt(1, tinhTrang);
+            stmt.setInt(2, maHDDV);
+            n = stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                stmt.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return n > 0;
+    
+    
     }
 
     public int getLatestID() {

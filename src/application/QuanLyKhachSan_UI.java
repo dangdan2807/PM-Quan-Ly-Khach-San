@@ -35,7 +35,6 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener, ListSel
     private HoaDonDichVu_UI pageHDDichVu = new HoaDonDichVu_UI();
     private QLPhong_UI pageQLPhong = new QLPhong_UI();
     private MauDangNhap_UI pageLogin = new MauDangNhap_UI();
-    private HoaDonDichVu_UI pageHDDV = new HoaDonDichVu_UI();
 
     
     ArrayList<HoaDonDV> dshddv = new ArrayList<HoaDonDV>();
@@ -118,12 +117,11 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener, ListSel
             pnMain = pageTKeDichVu.pnMain;
         } else if (indx_nav == 6) { //
             pnMain = pageTKeKhachHang.pnMain;
-        } else if (indx_nav == 7) {
+        } else if (indx_nav == 7) {// quản lý hóa đơn dịch vụ
+            pageHDDichVu.start();
             pnMain = pageHDDichVu.pnMain;
         } else if (indx_nav == 8) {
             pnMain = pageQLPhong.pnMain;
-        } else if (indx_nav == 9) {
-            pnMain = pageHDDV.pnMain;
         }
         
         this.add(pnMain, BorderLayout.CENTER);
@@ -155,8 +153,8 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener, ListSel
         menuBar.add(menuQLHoaDon);
         itemQLHDDV = new JMenuItem("Quản lý hóa đơn dịch vụ");
         itemQLHDDichVu = new JMenuItem("Quản lý hóa đơn dịch vụ");
-        menuQLHoaDon.add(itemQLHDDV);
-        // menuQLHoaDon.add(itemQLHDDichVu);
+        // menuQLHoaDon.add(itemQLHDPhong);
+        menuQLHoaDon.add(itemQLHDDichVu);
 
         // quản lý dịch vụ
         menuQLDichVu = new JMenu("Quản lý dịch vụ");
@@ -270,6 +268,7 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener, ListSel
                             
                             int idx = pageDatPhong.tblDatPhong.getSelectedRow();
                             HoaDonPhong hdp = pageDatPhong.dshdp.get(idx);
+                            System.out.println(hdp.getKhachHang().getTenKH());
                             // Phong phong = hdp.getPhong();
                             dshddv = new HoaDonDV().getHDDVByMaKHAndDate(hdp.getKhachHang().getMaKH(), hdp.getNgayGioNhan(), hdp.getNgayGioTra());
                             // System.out.println(x);
@@ -444,7 +443,7 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener, ListSel
             System.out.println("Hoa don dich vu");
             indx_nav = 7;
             createGUI();
-        } else if (obj == itemQLPhong) {
+        } else if (obj == itemQLPhong){
             System.out.println("Quan ly phong va loai phong");
             indx_nav = 8;
             createGUI();

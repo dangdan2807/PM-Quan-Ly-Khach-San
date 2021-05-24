@@ -171,6 +171,7 @@ public class QuanLyDichVu_UI extends JFrame implements ActionListener, MouseList
         txtDonGia.addKeyListener(this);
         txtTim.addKeyListener(this);
         DocDuLieuVaoTable(dvDAO.getListDichVu());
+        reSizeColumnTable();
     }
 
     public static void main(String[] args) {
@@ -259,7 +260,10 @@ public class QuanLyDichVu_UI extends JFrame implements ActionListener, MouseList
             modelTable.getDataVector().removeAllElements();
             modelTable.fireTableDataChanged();
             ArrayList<DichVu> ds = dvDAO.getListDichVu();
-            DocDuLieuVaoTable(ds);
+            if (ds.size() <= 0) {
+                showMessage("Không tìm thấy dịch vụ", ERROR);
+            } else
+                DocDuLieuVaoTable(ds);
         }
     }
 
@@ -336,10 +340,11 @@ public class QuanLyDichVu_UI extends JFrame implements ActionListener, MouseList
         if (type == SUCCESS) {
             lbShowMessages.setForeground(Color.GREEN);
             lbShowMessages.setIcon(checkIcon);
-        } else if(type == ERROR){
+        } else if (type == ERROR) {
             lbShowMessages.setForeground(Color.RED);
             lbShowMessages.setIcon(errorIcon);
         } else {
+            lbShowMessages.setForeground(Color.BLACK);
             lbShowMessages.setIcon(null);
         }
         lbShowMessages.setText(message);
@@ -387,10 +392,17 @@ public class QuanLyDichVu_UI extends JFrame implements ActionListener, MouseList
     }
 
     private void DocDuLieuVaoTable(ArrayList<DichVu> dataList) {
-        if (dataList.size() <= 0)
+        if (dataList == null || dataList.size() <= 0)
             return;
         for (DichVu item : dataList) {
             modelTable.addRow(new Object[] { item.getMaDV(), item.getTenDV(), item.getDonGia() });
         }
+    }
+
+    private void reSizeColumnTable() {
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        table.getColumnModel().getColumn(0).setPreferredWidth(83);
+        table.getColumnModel().getColumn(1).setPreferredWidth(350);
+        table.getColumnModel().getColumn(2).setPreferredWidth(120);
     }
 }

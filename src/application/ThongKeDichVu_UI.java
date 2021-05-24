@@ -144,6 +144,7 @@ public class ThongKeDichVu_UI extends JFrame implements ActionListener, KeyListe
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        reSizeColumnTable();
     }
 
     public static void main(String[] args) {
@@ -173,6 +174,10 @@ public class ThongKeDichVu_UI extends JFrame implements ActionListener, KeyListe
                     } else if (!(maKH.isEmpty() && tenKH.isEmpty())) {
                         dataList = getListSearchByMaKHAndTenKH();
                     }
+                    if (dataList == null || dataList.isEmpty() || dataList.size() <= 0)
+                        showMessage("Không tìm thấy danh sách thống kê theo yêu cầu", ERROR);
+                    else
+                        DocDuLieuVaoTable(dataList);
                 } else {
                     if (denNgay.before(tuNgay)) {
                         dpDenNgay.setValueToDay();
@@ -182,10 +187,6 @@ public class ThongKeDichVu_UI extends JFrame implements ActionListener, KeyListe
                 }
             } catch (ParseException e1) {
                 e1.printStackTrace();
-            }
-            DocDuLieuVaoTable(dataList);
-            if (dataList.size() <= 0) {
-                showMessage("Không tìm thấy danh sách thống kê theo yêu cầu", ERROR);
             }
         }
     }
@@ -246,8 +247,6 @@ public class ThongKeDichVu_UI extends JFrame implements ActionListener, KeyListe
 
     private void DocDuLieuVaoTable(ArrayList<ChiTietDV> dataList) {
         Double sum = 0.0;
-        if(dataList.size() <= 0)
-            return;
         for (ChiTietDV item : dataList) {
             HoaDonDV hoaDonDv = item.getHoaDonDV();
             DichVu dv = item.getDichVu();
@@ -277,10 +276,11 @@ public class ThongKeDichVu_UI extends JFrame implements ActionListener, KeyListe
         if (type == SUCCESS) {
             lbShowMessages.setForeground(Color.GREEN);
             lbShowMessages.setIcon(checkIcon);
-        } else if(type == ERROR){
+        } else if (type == ERROR) {
             lbShowMessages.setForeground(Color.RED);
             lbShowMessages.setIcon(errorIcon);
         } else {
+            lbShowMessages.setForeground(Color.BLACK);
             lbShowMessages.setIcon(null);
         }
         lbShowMessages.setText(message);
@@ -293,5 +293,19 @@ public class ThongKeDichVu_UI extends JFrame implements ActionListener, KeyListe
             return false;
         }
         return true;
+    }
+
+    private void reSizeColumnTable() {
+        // table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        table.getColumnModel().getColumn(0).setPreferredWidth(50);
+        table.getColumnModel().getColumn(1).setPreferredWidth(65);
+        table.getColumnModel().getColumn(2).setPreferredWidth(110);
+        table.getColumnModel().getColumn(3).setPreferredWidth(85);
+        table.getColumnModel().getColumn(4).setPreferredWidth(70);
+        table.getColumnModel().getColumn(5).setPreferredWidth(95);
+        table.getColumnModel().getColumn(6).setPreferredWidth(80);
+        table.getColumnModel().getColumn(7).setPreferredWidth(120);
+        table.getColumnModel().getColumn(8).setPreferredWidth(70);
+        table.getColumnModel().getColumn(9).setPreferredWidth(204);
     }
 }

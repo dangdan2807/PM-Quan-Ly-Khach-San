@@ -85,6 +85,17 @@ public class HoaDonDV {
 		this(rs.getInt("MaHDDV"), new KhachHang(rs.getInt("MaKH")), rs.getDate("NgayGioLap"), rs.getInt("TinhTrang"));
 	}
 
+	public HoaDonDV(int maHDDV) {
+		HoaDonDVDAO hddvDAO = new HoaDonDVDAO();
+		HoaDonDV hddv = hddvDAO.getListHDDVbyID(maHDDV);
+		this.maHDDV = maHDDV;
+		this.ngayGioDat = hddv.getNgayGioDat();
+		this.tinhTrang = hddv.getTinhTrang();
+		this.khachHang = hddv.getKhachHang();
+	}
+
+
+
 	public ArrayList<HoaDonDV> getHDDVByMaKH(int maKH) {
 		HoaDonDVDAO hoaDonDV_dao = new HoaDonDVDAO();
 		return hoaDonDV_dao.getHDDVByMaKH(maKH);
@@ -110,4 +121,10 @@ public class HoaDonDV {
 		return tong;
 	}
 
+	public boolean updateTinhTrang(int tinhTrang){
+		this.tinhTrang = tinhTrang;
+		HoaDonDVDAO hoaDonDV_dao = new HoaDonDVDAO();
+		return hoaDonDV_dao.updateTinhTrang(this.maHDDV, tinhTrang);
+	}
+	
 }

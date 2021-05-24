@@ -83,7 +83,7 @@ public class DatPhong_UI extends JFrame implements ActionListener, ListSelection
     }
 
     public void start(){
-        dsp = phong_dao.getAllPhong();
+        dsp = phong_dao.getListPhong();
         dsp_avail = phong_dao.getPhongAvail();
         dslp = loaiPhong_dao.getAllLoaiPhong();
         dshdp = hoaDonPhong_dao.getListHDPhong();
@@ -209,7 +209,7 @@ public class DatPhong_UI extends JFrame implements ActionListener, ListSelection
         JPanel p_sec_f_center = new JPanel();
         p_sec_Fields.add(p_sec_f_center);
         // lbNhanPhong.setFont(fontSize(20));
-        chkIsNotKH = new JCheckBox("Chưa là khách hàng");
+        chkIsNotKH = new JCheckBox("Khách hàng mới");
         p_sec_f_center.add(chkIsNotKH);
         // chkIsNhanPhong = new JCheckBox("Nhận phòng ngay");
         // p_sec_f_center.add(chkIsNhanPhong);
@@ -451,8 +451,8 @@ public class DatPhong_UI extends JFrame implements ActionListener, ListSelection
                     return;
                 }
 
-                if(!txtCMND.getText().matches("^\\d{9,15}$")){
-                    renderError(txtTenKH, "Cmnd chỉ được chứa chữ số, từ 9 đến 15 ký tự");
+                if(!txtCMND.getText().matches("^(\\d{9}|\\d{12})$")){
+                    renderError(txtTenKH, "Cmnd chỉ được chứa chữ số, bao gồm 9 hoặc 12 ký tự");
                     return;
                 }
                 
@@ -488,11 +488,11 @@ public class DatPhong_UI extends JFrame implements ActionListener, ListSelection
             }
             
             if(!tuNgay.toString().equals(now.toString()) && tuNgay.before(now)){
-                JOptionPane.showMessageDialog(pnMain, "Ngày đến phải sau hoặc giống ngày hiện tại");
+                JOptionPane.showMessageDialog(pnMain, "Ngày đến phải không được trước ngày hiện tại ngày hiện tại");
                 return;
             }
             if(!tuNgay.toString().equals(denNgay.toString()) && denNgay.before(tuNgay)){
-                JOptionPane.showMessageDialog(pnMain, "Ngày đi phải sau hoặc giống ngày đến");
+                JOptionPane.showMessageDialog(pnMain, "Ngày đi không được trước ngày đến");
                 return;
             }
             KhachHang khachHang = null;

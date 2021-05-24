@@ -94,14 +94,15 @@ GO
 INSERT INTO dbo.DichVu
 	(tenDV, donGia)
 VALUES
+	(N'Bún bò Huế', 30000), -- Ăn uống
+    (N'Hũ tiếu gõ', 20000), -- Ăn uống
+    (N'Mì 2 trứng', 17000),
 	(N'Gửi xe', 5000),
 	(N'Rửa xe', 30000),
-	(N'Thức ăn tại phòng', 30000),
 	(N'Giặt, ủi là', 20000),
 	(N'Xe đưa đón sân bay', 100000),
 	(N'Cho thuê xe tự lái', 120000),
 	(N'Trông trẻ', 30000),
-	(N'Chăm sóc thú cưng', 50000),
 	(N'Spa', 300000),
 	(N'Đánh golf, tennis', 200000)
 GO
@@ -154,7 +155,10 @@ VALUES
 	(4, N'P201', 0, '2021-06-15', null)
 GO
 
+-- USE master
+-- GO
 -- drop database KhachSan
+-- GO
 
 -- Chi tiết hóa đơn DV
 CREATE PROC UDP_SearchCTHDByDate
@@ -247,12 +251,25 @@ GO
 Create proc UDP_SearchHDDVByID @id int
 as
 begin
-	select hd.MaHDDV, kh.MaKH, hd.NgayGioLap, hd.TinhTrang
+	select hd.MaHDDV, kh.MaKH, hd.NgayGioLap, hd.TinhTrang,
+			ct.MaDV, dv.TenDV,ct.SoLuong, dv.DonGia, ct.NgayGioDat,ct.MaHDDV as MaHDct
 	from dbo.HoaDonDV hd INNER JOIN dbo.KhachHang kh ON hd.MaKH = kh.MaKH
+			inner join dbo.ChiTietDV ct on ct.MaHDDV=hd.MaHDDV
+			inner join dbo.DichVu dv on ct.MaDV = dv.MaDV
 	where hd.MaHDDV = @id
 end
 go
 
+Create proc UDP_SearchDVbyMaHDDV @id int
+as
+begin
+	select ct.MaDV, dv.TenDV,ct.SoLuong, dv.DonGia, ct.NgayGioDat,hd.MaHDDV
+	from dbo.HoaDonDV hd INNER JOIN dbo.KhachHang kh ON hd.MaKH = kh.MaKH
+						inner join dbo.ChiTietDV ct on ct.MaHDDV=hd.MaHDDV
+						inner join dbo.DichVu dv on ct.MaDV = dv.MaDV
+	where hd.MaHDDV = @id
+end
+GO
 --exec UDP_SearchHDDVByID 1
 
 -- Hóa đơn phòng
@@ -381,8 +398,8 @@ BEGIN
 		JOIN dbo.Phong p ON hd.MaPhong = p.MaPhong
 		JOIN dbo.LoaiPhong lp ON p.MaLoaiPhong = lp.MaLoaiPhong
 		JOIN dbo.KhachHang kh ON kh.MaKH = hd.MaKH
-	WHERE p.MaPhong = @MaPhong 
-		AND hd.tinhTrang = 0 
+	WHERE p.MaPhong = @MaPhong
+		AND hd.tinhTrang = 0
 		AND hd.NgayGioNhan BETWEEN @tuNgay AND @denNgay
 END
 GO
