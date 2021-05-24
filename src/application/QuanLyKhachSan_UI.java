@@ -35,7 +35,7 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener, ListSel
     private HoaDonDichVu_UI pageHDDichVu = new HoaDonDichVu_UI();
     private QLPhong_UI pageQLPhong = new QLPhong_UI();
     private MauDangNhap_UI pageLogin = new MauDangNhap_UI();
-    // private QuanLy pageQuanLy = new QuanLy();
+    private HoaDonDichVu_UI pageHDDV = new HoaDonDichVu_UI();
 
     
     ArrayList<HoaDonDV> dshddv = new ArrayList<HoaDonDV>();
@@ -45,7 +45,7 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener, ListSel
     // components
     private JMenuBar menuBar;
     private JMenu menuTrangChu, menuDatPhong, menuQLHoaDon, menuQLDichVu, menuQLKhachHang, menuQLNhanVien, menuThongKe;
-    private JMenuItem itemQLHDPhong, itemQLHDDichVu, itemQLPhong, itemQLDichVu;
+    private JMenuItem itemQLHDDV, itemQLHDDichVu, itemQLPhong, itemQLDichVu;
     private JMenuItem itemTrangChu, itemDatPhong, itemQLKhachHang, itemQLNhanVien, itemThongKeDV, itemThongKeKH;
 
     // private JPanel pnContainer;
@@ -122,6 +122,8 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener, ListSel
             pnMain = pageHDDichVu.pnMain;
         } else if (indx_nav == 8) {
             pnMain = pageQLPhong.pnMain;
+        } else if (indx_nav == 9) {
+            pnMain = pageHDDV.pnMain;
         }
         
         this.add(pnMain, BorderLayout.CENTER);
@@ -149,11 +151,11 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener, ListSel
         menuDatPhong.add(itemDatPhong);
 
         // quản lý hóa đơn
-        menuQLHoaDon = new JMenu("Quản lý Hóa Đơn");
+        menuQLHoaDon = new JMenu("Quản lý hóa đơn");
         menuBar.add(menuQLHoaDon);
-        itemQLHDPhong = new JMenuItem("Quản lý hóa đơn phòng");
+        itemQLHDDV = new JMenuItem("Quản lý hóa đơn dịch vụ");
         itemQLHDDichVu = new JMenuItem("Quản lý hóa đơn dịch vụ");
-        menuQLHoaDon.add(itemQLHDPhong);
+        menuQLHoaDon.add(itemQLHDDV);
         // menuQLHoaDon.add(itemQLHDDichVu);
 
         // quản lý dịch vụ
@@ -181,7 +183,7 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener, ListSel
         // thêm sự kiện click
         itemTrangChu.addActionListener(this);
         itemDatPhong.addActionListener(this);
-        itemQLHDPhong.addActionListener(this);
+        itemQLHDDV.addActionListener(this);
         itemQLHDDichVu.addActionListener(this);
         itemQLPhong.addActionListener(this);
         itemQLDichVu.addActionListener(this);
@@ -417,9 +419,9 @@ public class QuanLyKhachSan_UI extends JFrame implements ActionListener, ListSel
             indx_nav = 1;
             pageDatPhong.maPhong = "0";
             createGUI();
-        } else if (obj == itemQLHDPhong) {// hóa đơn phòng
-            System.out.println("-> Hoa don");
-            indx_nav = 2;
+        } else if (obj == itemQLHDDV) {// hóa đơn dich vu
+            System.out.println("-> Hoa don dich vu");
+            indx_nav = 9;
             createGUI();
 
         } else if (obj == itemQLDichVu) {// quan ly dich vu
