@@ -69,6 +69,19 @@ public class HoaDonDichVu_UI extends JFrame implements ActionListener, MouseList
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 
+		
+	}
+
+	public void start(){
+		pnMain = renderGUI();
+		loadListHDDV();
+		loadCboMaKH();
+		loadCboTenDV();
+
+		docDuLieuVaoTableHDDV();
+	}
+
+	public JPanel renderGUI(){
 		pnMain = new JPanel();
 		pnMain.setBounds(0, 0, 584, 411);
 		getContentPane().add(pnMain);
@@ -250,11 +263,8 @@ public class HoaDonDichVu_UI extends JFrame implements ActionListener, MouseList
 		tableDV.addMouseListener(this);
 		pnMain.addMouseListener(this);
 
-		loadListHDDV();
-		loadCboMaKH();
-		loadCboTenDV();
-
-		docDuLieuVaoTableHDDV();
+		return pnMain;
+		
 	}
 
 	public static void main(String[] args) {
@@ -339,7 +349,7 @@ public class HoaDonDichVu_UI extends JFrame implements ActionListener, MouseList
 				if(validDataSo()) {
 					HoaDonDV hdDV =null;
 					hdDV = getDataIntoFormHDDV();
-//					int index = 
+
 					int maHDDV= dsHDDV.get(index).getMaHDDV();
 					hdDV.setMaHDDV(maHDDV);
 					
@@ -356,6 +366,7 @@ public class HoaDonDichVu_UI extends JFrame implements ActionListener, MouseList
 									break;
 								}
 							}
+							
 							modelDV.addRow(new Object[] { maDV, tenDV, ctdv.getSoLuong(), ctdv.getDichVu().getDonGia(),
 									date, maHDDV });
 							ctDVDAO.updateByID(maHDDV);
@@ -390,6 +401,7 @@ public class HoaDonDichVu_UI extends JFrame implements ActionListener, MouseList
 
 					}
 					String tt = convertTinhTrang(hd.getTinhTrang());
+					dsHDDV.add(hd);
 					modelHD.addRow(
 
 							new Object[] { hd.getMaHDDV(), hd.getKhachHang().getMaKH(), hd.getNgayGioDat(), hd.tinhTong(),
@@ -410,6 +422,7 @@ public class HoaDonDichVu_UI extends JFrame implements ActionListener, MouseList
 
 					}
 					String tt = convertTinhTrang(hd.getTinhTrang());
+					dsHDDV.add(hd);
 					modelHD.addRow(
 
 							new Object[] { hd.getMaHDDV(), hd.getKhachHang().getMaKH(), hd.getNgayGioDat(), hd.tinhTong(),

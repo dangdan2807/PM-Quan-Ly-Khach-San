@@ -104,7 +104,7 @@ public class HoaDonDVDAO {
         return n > 0;
     }
 
-    public int update(HoaDonDV hd) {
+    public boolean update(HoaDonDV hd) {
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
         PreparedStatement stmt = null;
@@ -189,7 +189,7 @@ public class HoaDonDVDAO {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 int MaHDDV = rs.getInt("MaHDDV");
-                Date ngayGioDat = rs.getDate("NgayGioDat");
+                Date ngayGioDat = rs.getDate("NgayGioLap");
                 KhachHang khachHang = new KhachHang(rs.getInt("MaKH"));
                 HoaDonDV hddv = new HoaDonDV(MaHDDV, ngayGioDat, khachHang);
                 dataList.add(hddv);
@@ -208,7 +208,7 @@ public class HoaDonDVDAO {
             ConnectDB.getInstance();
             Connection conn = ConnectDB.getConnection();
 
-            String sql = "Select * from HoaDonDV where maKH = ? and NgayGioDat >= ? and NgayGioDat <= ? and TinhTrang = 0 order by MaHDDV DESC";
+            String sql = "Select * from HoaDonDV where maKH = ? and NgayGioLap >= ? and NgayGioLap <= ? and TinhTrang = 0 order by MaHDDV DESC";
             PreparedStatement statement = conn.prepareStatement(sql);
             statement.setInt(1, MaKH);
             statement.setDate(2, tuNgay);
@@ -220,7 +220,7 @@ public class HoaDonDVDAO {
 
             while (rs.next()) {
                 int MaHDDV = rs.getInt("MaHDDV");
-                Date ngayGioDat = rs.getDate("NgayGioDat");
+                Date ngayGioDat = rs.getDate("NgayGioLap");
                 KhachHang khachHang = new KhachHang(rs.getInt("MaKH"));
                 HoaDonDV hddv = new HoaDonDV(MaHDDV, ngayGioDat, khachHang);
                 dataList.add(hddv);
@@ -251,6 +251,32 @@ public class HoaDonDVDAO {
             }
         }
         return n > 0;
+    }
+
+    public boolean updateTinhTrang(int maHDDV, int tinhTrang){
+        
+        int n = 0;
+        PreparedStatement stmt = null;
+        ConnectDB.getInstance();
+        Connection con = ConnectDB.getConnection();
+        String query = "update dbo.HoaDonDV set tinhTrang = ? Where maHDDV = ?";
+        try {
+            stmt = con.prepareStatement(query);
+            stmt.setInt(1, tinhTrang);
+            stmt.setInt(2, maHDDV);
+            n = stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                stmt.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return n > 0;
+    
+    
     }
 
     public int getLatestID() {

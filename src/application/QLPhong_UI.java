@@ -19,8 +19,8 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
     private DefaultTableModel modelTableLP, modelTableP;
     private JTable tableLP, tableP;
     private JLabel lbShowMessagesP, lbShowMessagesLP;
-    private JButton btnThemLP, btnSuaLP, btnXoaLP, btnLamLaiLP, btnThemP, btnSuaP, btnXoaP, btnLamLaiP, btnTimLP,
-            btnTimP, btnXemLich, btnXemTatCaLP, btnXemTatCaP;
+    private JButton btnThemLP, btnSuaLP, btnXoaLP, btnLamLaiLP, btnThemP, btnSuaP, btnLamLaiP, btnTimLP, btnTimP,
+            btnXemLich, btnXemTatCaLP, btnXemTatCaP;
     private SpinnerNumberModel modelSpinSC, modelSpinSG;
     private JSpinner spinSoGiuong, spinSucChua;
     private final int SUCCESS = 1, ERROR = 0;
@@ -177,16 +177,12 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
         btnThemP.setBounds(7, 217, 98, 26);
         pnBL.add(btnThemP);
 
-        btnXoaP = new JButton("Xóa", deleteIcon);
-        btnXoaP.setBounds(117, 217, 98, 26);
-        pnBL.add(btnXoaP);
-
         btnSuaP = new JButton("Sửa", editIcon);
         btnSuaP.setBounds(227, 217, 98, 26);
         pnBL.add(btnSuaP);
 
         btnLamLaiP = new JButton("Làm lại", refreshIcon);
-        btnLamLaiP.setBounds(10, 255, 98, 26);
+        btnLamLaiP.setBounds(117, 217, 98, 26);
         pnBL.add(btnLamLaiP);
 
         JLabel lbLoaiPhong = new JLabel("Loại phòng: ");
@@ -198,7 +194,7 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
         pnBL.add(cboLoaiPhong);
 
         btnXemLich = new JButton("Xem lịch đặt phòng", calendarIcon);
-        btnXemLich.setBounds(117, 255, 208, 26);
+        btnXemLich.setBounds(66, 255, 208, 26);
         pnBL.add(btnXemLich);
 
         JPanel pnTR = new JPanel();
@@ -289,7 +285,6 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
         btnTimLP.addActionListener(this);
         btnXemTatCaLP.addActionListener(this);
         btnThemP.addActionListener(this);
-        btnXoaP.addActionListener(this);
         btnSuaP.addActionListener(this);
         btnLamLaiP.addActionListener(this);
         btnTimP.addActionListener(this);
@@ -383,27 +378,6 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
                 }
             } catch (Exception e3) {
                 showMessage("Xóa thất bại", ERROR, lbShowMessagesLP);
-            }
-        } else if (o.equals(btnXoaP)) {
-            showMessage("", 2, lbShowMessagesP);
-            Phong phong = null;
-            phong = getDataInFormPhong();
-            int row = tableP.getSelectedRow();
-            try {
-                if (row == -1) {
-                    showMessage("Lỗi: Bạn cần chọn dòng cần xóa", ERROR, lbShowMessagesP);
-                } else {
-                    int select;
-                    select = JOptionPane.showConfirmDialog(this, "Bạn có muốn xoá dòng đã chọn ?", "Cảnh báo",
-                            JOptionPane.YES_NO_OPTION);
-                    if (select == JOptionPane.YES_OPTION) {
-                        phongDAO.delete(phong.getMaPhong());
-                        modelTableP.removeRow(row);
-                        showMessage("Xóa thành công", SUCCESS, lbShowMessagesP);
-                    }
-                }
-            } catch (Exception e3) {
-                showMessage("Xóa thất bại", ERROR, lbShowMessagesP);
             }
         } else if (o.equals(btnSuaLP)) {
             showMessage("", 2, lbShowMessagesLP);

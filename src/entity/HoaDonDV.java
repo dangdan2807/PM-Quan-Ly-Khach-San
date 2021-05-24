@@ -94,6 +94,8 @@ public class HoaDonDV {
 		this.khachHang = hddv.getKhachHang();
 	}
 
+
+
 	public ArrayList<HoaDonDV> getHDDVByMaKH(int maKH) {
 		HoaDonDVDAO hoaDonDV_dao = new HoaDonDVDAO();
 		return hoaDonDV_dao.getHDDVByMaKH(maKH);
@@ -117,6 +119,12 @@ public class HoaDonDV {
 			tong += dv.getDonGia() * dsctdv.get(i).getSoLuong();
 		}
 		return tong;
+	}
+
+	public boolean updateTinhTrang(int tinhTrang){
+		this.tinhTrang = tinhTrang;
+		HoaDonDVDAO hoaDonDV_dao = new HoaDonDVDAO();
+		return hoaDonDV_dao.updateTinhTrang(this.maHDDV, tinhTrang);
 	}
 	
 }

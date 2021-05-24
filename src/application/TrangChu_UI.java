@@ -218,7 +218,7 @@ public class TrangChu_UI extends JFrame implements ActionListener{
                     popup.dispose();
                     popup = new JFrame();
                     popup.setTitle("Thông tin phòng");
-                    popup.setSize(400, 270);
+                    popup.setSize(400, 250);
                     popup.setResizable(false);
                     popup.setLocationRelativeTo(pnMain);
                     popup.setAlwaysOnTop(true);
@@ -249,20 +249,52 @@ public class TrangChu_UI extends JFrame implements ActionListener{
                     pn_p_top.add(new JLabel("<html><p style='padding-left: 10px;'>Loại phòng: "+ phong.getLoaiPhong().getTenLoaiPhong() +"</p></html>"));
                     pn_p_top.add(new JLabel("<html><p style='padding-left: 10px;'>Đơn giá: "+ gia +"</p></html>"));
 
+                    JPanel pn_p_c = new JPanel();
+                    pn_p_main.add(pn_p_c);
                     JPanel pn_p_bottom = new JPanel();
-                    pn_p_main.add(pn_p_bottom);
+                    pn_p_c.add(pn_p_bottom);
                     
                     if(phong.getTinhTrang() == 2){ // đang ở
-                        // pn_p_bottom.setLayout(new GridLayout(2, 2));
-                        pn_p_bottom.add(btn_ThanhToan[j]);
-                        pn_p_bottom.add(btn_SuDungDV[j]);
-                        pn_p_bottom.add(btn_DatPhong[j]);
-                        pn_p_bottom.add(btn_XemLichDat[j]);
+                        pn_p_bottom.setLayout(new GridBagLayout());
+                        GridBagConstraints c = new GridBagConstraints();
+                        c.fill = GridBagConstraints.HORIZONTAL;
+                        c.gridx = 0;
+                        c.gridy = 0;
+                        c.insets = new Insets(5, 5, 5, 5);
+
+                        pn_p_bottom.add(btn_ThanhToan[j], c);
+                        c.fill = GridBagConstraints.HORIZONTAL;
+                        c.gridx = 1;
+                        c.gridy = 0;
+                        c.insets = new Insets(5, 5, 5, 5);
+                        pn_p_bottom.add(btn_DatPhong[j], c);
+                        c.fill = GridBagConstraints.HORIZONTAL;
+                        c.gridx = 0;
+                        c.gridy = 1;
+                        c.gridwidth = 2;
+                        c.insets = new Insets(5, 5, 5, 5);
+                        pn_p_bottom.add(btn_XemLichDat[j], c);
                         
                     }else if(phong.getTinhTrang() == 1){ // đã đặt
-                        pn_p_bottom.add(btn_DatPhong[j]);
-                        pn_p_bottom.add(btn_NhanPhong[j]);
-                        pn_p_bottom.add(btn_XemLichDat[j]);
+                        pn_p_bottom.setLayout(new GridBagLayout());
+                        GridBagConstraints c = new GridBagConstraints();
+                        c.fill = GridBagConstraints.HORIZONTAL;
+                        c.gridx = 0;
+                        c.gridy = 0;
+                        c.insets = new Insets(5, 5, 5, 5);
+                        pn_p_bottom.add(btn_DatPhong[j], c);
+                        c.fill = GridBagConstraints.HORIZONTAL;
+                        c.gridx = 1;
+                        c.gridy = 0;
+                        c.insets = new Insets(5, 5, 5, 5);
+                        pn_p_bottom.add(btn_NhanPhong[j], c);
+                        c.fill = GridBagConstraints.HORIZONTAL;
+                        c.gridx = 0;
+                        c.gridy = 1;
+                        c.gridwidth = 2;
+                        c.insets = new Insets(5, 5, 5, 5);
+                        pn_p_bottom.add(btn_XemLichDat[j], c);
+                        
                     }else{// trống
                         pn_p_bottom.add(btn_DatPhong[j]);
                     }
@@ -283,7 +315,7 @@ public class TrangChu_UI extends JFrame implements ActionListener{
                             popup = new JFrame();
                             
                             popup.setTitle("Thông tin hóa đơn");
-                            popup.setSize(400, 200);
+                            popup.setSize(400, 350);
                             popup.setResizable(false);
                             popup.setLocationRelativeTo(pnMain);
                             popup.setAlwaysOnTop(true);
@@ -346,7 +378,7 @@ public class TrangChu_UI extends JFrame implements ActionListener{
 
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            // popup.dispose();
+                            popup.setAlwaysOnTop(false);
                             DialogLichDatPhong form = new DialogLichDatPhong();
                             form.setMaPhong(phong.getMaPhong());
                             form.setModal(true);

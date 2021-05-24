@@ -172,6 +172,10 @@ public class DialogLichDatPhong extends JDialog implements ActionListener {
     }
 
     private void DocDuLieuVaoTable() {
+        if (hdPhong == null || hdPhong.size() <= 0)
+        {
+            return;
+        }
         for (HoaDonPhong item : hdPhong) {
             String tinhTrangP = "";
             Phong phong = item.getPhong();
