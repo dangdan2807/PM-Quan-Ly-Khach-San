@@ -395,6 +395,7 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
             lbShowMessages.setForeground(Color.RED);
             lbShowMessages.setIcon(errorIcon);
         } else {
+            lbShowMessages.setForeground(Color.BLACK);
             lbShowMessages.setIcon(null);
         }
         lbShowMessages.setText(message);

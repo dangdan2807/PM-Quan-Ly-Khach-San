@@ -344,6 +344,7 @@ public class QuanLyDichVu_UI extends JFrame implements ActionListener, MouseList
             lbShowMessages.setForeground(Color.RED);
             lbShowMessages.setIcon(errorIcon);
         } else {
+            lbShowMessages.setForeground(Color.BLACK);
             lbShowMessages.setIcon(null);
         }
         lbShowMessages.setText(message);

@@ -280,6 +280,7 @@ public class ThongKeDichVu_UI extends JFrame implements ActionListener, KeyListe
             lbShowMessages.setForeground(Color.RED);
             lbShowMessages.setIcon(errorIcon);
         } else {
+            lbShowMessages.setForeground(Color.BLACK);
             lbShowMessages.setIcon(null);
         }
         lbShowMessages.setText(message);

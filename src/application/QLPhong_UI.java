@@ -283,18 +283,18 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
         pnBR.add(btnXemTatCaP);
 
         btnThemLP.addActionListener(this);
-        btnThemP.addActionListener(this);
         btnXoaLP.addActionListener(this);
-        btnXoaP.addActionListener(this);
         btnSuaLP.addActionListener(this);
-        btnSuaP.addActionListener(this);
         btnLamLaiLP.addActionListener(this);
-        btnLamLaiP.addActionListener(this);
         btnTimLP.addActionListener(this);
-        btnTimP.addActionListener(this);
-        btnXemLich.addActionListener(this);
-        btnXemTatCaP.addActionListener(this);
         btnXemTatCaLP.addActionListener(this);
+        btnThemP.addActionListener(this);
+        btnXoaP.addActionListener(this);
+        btnSuaP.addActionListener(this);
+        btnLamLaiP.addActionListener(this);
+        btnTimP.addActionListener(this);
+        btnXemTatCaP.addActionListener(this);
+        btnXemLich.addActionListener(this);
 
         tableLP.addMouseListener(this);
         tableP.addMouseListener(this);
@@ -598,6 +598,7 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
             lbl.setForeground(Color.RED);
             lbl.setIcon(errorIcon);
         } else {
+            lbl.setForeground(Color.BLACK);
             lbl.setIcon(null);
         }
         lbl.setText(message);

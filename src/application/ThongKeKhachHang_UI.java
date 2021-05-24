@@ -280,6 +280,7 @@ public class ThongKeKhachHang_UI extends JFrame implements ActionListener, KeyLi
             lbShowMessages.setForeground(Color.RED);
             lbShowMessages.setIcon(errorIcon);
         } else {
+            lbShowMessages.setForeground(Color.BLACK);
             lbShowMessages.setIcon(null);
         }
         lbShowMessages.setText(message);
