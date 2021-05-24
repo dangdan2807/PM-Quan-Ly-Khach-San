@@ -104,7 +104,7 @@ public class HoaDonDVDAO {
         return n > 0;
     }
 
-    public boolean update(HoaDonDV hd) {
+    public int update(HoaDonDV hd) {
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
         PreparedStatement stmt = null;
@@ -134,7 +134,7 @@ public class HoaDonDVDAO {
         PreparedStatement stmt = null;
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
-        String query = "delete from dbo.HoaDonDV where maHDDV = ?";
+        String query = "delete from dbo.HoaDonDV where MaHDDV = ?";
         try {
             stmt = con.prepareStatement(query);
             stmt.setInt(1, id);

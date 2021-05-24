@@ -94,7 +94,6 @@ public class MauDangNhap_UI extends JFrame {
 				buttonPane.setLayout(null);
 				{
 					btnLogin = new JButton("Đăng nhập");
-					
 					btnLogin.setActionCommand("OK");
 					btnLogin.setBounds(102, 11, 100, 39);
 					buttonPane.add(btnLogin);

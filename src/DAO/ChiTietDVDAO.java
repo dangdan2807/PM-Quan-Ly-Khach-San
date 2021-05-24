@@ -207,6 +207,28 @@ public class ChiTietDVDAO {
         }
         return n > 0;
     }
+	public boolean deleteByMaHDDV(int id) {
+        int n = 0;
+        PreparedStatement stmt = null;
+        ConnectDB.getInstance();
+        Connection con = ConnectDB.getConnection();
+        String query = "delete from dbo.ChiTietDV where MaHDDV = ?";
+        try {
+            stmt = con.prepareStatement(query);
+            stmt.setInt(1, id);
+
+            n = stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                stmt.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return n > 0;
+    }
 	public boolean updateByID(int id) {
         PreparedStatement stmt = null;
         ConnectDB.getInstance();
@@ -234,12 +256,12 @@ public class ChiTietDVDAO {
         Connection con = ConnectDB.getConnection();
         int n = 0;
         try {
-            String sql = "update dbo.ChiTietDV set maDV = ?, SoLuong = ?, NgayGioDat = ? where maHDDV = ? ";
+            String sql = "update dbo.ChiTietDV set SoLuong = ?, NgayGioDat = ? where MaHDDV = ? and MaDV = ? ";
             stmt = con.prepareStatement(sql);
-            stmt.setInt(1, ctdv.getDichVu().getMaDV());
-            stmt.setInt(2, ctdv.getSoLuong() );
-            stmt.setDate(3, ctdv.getNgayGioDat());
-            stmt.setInt(4, ctdv.getHoaDonDV().getMaHDDV());
+            stmt.setInt(1, ctdv.getSoLuong() );
+            stmt.setDate(2, ctdv.getNgayGioDat());
+            stmt.setInt(3, ctdv.getHoaDonDV().getMaHDDV());
+            stmt.setInt(4, ctdv.getDichVu().getMaDV());
             n = stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

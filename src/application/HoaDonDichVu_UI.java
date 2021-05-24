@@ -34,7 +34,7 @@ public class HoaDonDichVu_UI extends JFrame implements ActionListener, MouseList
 	private JScrollPane scrollPane;
 	private JScrollPane scrollPane_1;
 	private JTextField txtSoLuong;
-	private JButton btnThem, btnXoa, btnXacNhan;
+	private JButton btnThem, btnXacNhan;
 	private JComboBox<String> cboMaKH;
 	private JComboBox<String> cboDV;
 	private JPanel panel;
@@ -55,6 +55,7 @@ public class HoaDonDichVu_UI extends JFrame implements ActionListener, MouseList
 	private AbstractButton btnSua;
 	private JButton btnTimMaHDDV;
 	private JButton btnXem;
+	private JButton btnBoChon;
 
 	public HoaDonDichVu_UI() {
 		try {
@@ -156,23 +157,18 @@ public class HoaDonDichVu_UI extends JFrame implements ActionListener, MouseList
 		pn.add(txtSoLuong);
 		txtSoLuong.setColumns(10);
 
-		btnXoa = new JButton("Xoá");
-		btnXoa.setIcon(new ImageIcon("data\\images\\trash2_16.png"));
-		btnXoa.setBounds(122, 198, 99, 33);
-		pn.add(btnXoa);
-
 		btnThem = new JButton("Thêm");
 		btnThem.setIcon(new ImageIcon("data\\images\\blueAdd_16.png"));
-		btnThem.setBounds(10, 198, 93, 33);
+		btnThem.setBounds(10, 198, 148, 33);
 		pn.add(btnThem);
 
 		btnSua = new JButton("Sửa");
 		btnSua.setIcon(new ImageIcon("data\\images\\edit2_16.png"));
-		btnSua.setBounds(238, 198, 89, 33);
+		btnSua.setBounds(168, 198, 159, 33);
 		pn.add(btnSua);
 
-		btnXacNhan = new JButton("Xác nhận");
-		btnXacNhan.setBounds(103, 242, 137, 33);
+		btnXacNhan = new JButton("Tạo hoá đơn");
+		btnXacNhan.setBounds(10, 242, 317, 33);
 		pn.add(btnXacNhan);
 		btnXacNhan.setIcon(new ImageIcon("data\\images\\check.png"));
 
@@ -232,18 +228,22 @@ public class HoaDonDichVu_UI extends JFrame implements ActionListener, MouseList
 		btnTimMaHDDV.setIcon(new ImageIcon("data\\images\\search_16.png"));
 		btnTimMaHDDV.setBounds(270, 28, 89, 23);
 		panel_1.add(btnTimMaHDDV);
-		
+
 		btnXem = new JButton("Xem tất cả");
 		btnXem.setIcon(null);
 		btnXem.setBounds(366, 28, 106, 23);
 		panel_1.add(btnXem);
+		
+		btnBoChon = new JButton("Bỏ chọn");
+		btnBoChon.setBounds(482, 28, 89, 23);
+		panel_1.add(btnBoChon);
 
 		btnThem.addActionListener(this);
 		btnSua.addActionListener(this);
-		btnXoa.addActionListener(this);
 		btnXacNhan.addActionListener(this);// khi bam xac nhan se xoa cac dong` trong table dv;
 		btnTimMaHDDV.addActionListener(this);
 		btnXem.addActionListener(this);
+		btnBoChon.addActionListener(this);
 		cboDV.addActionListener(this);
 		cboMaKH.addActionListener(this);
 		tableHDDV.addMouseListener(this);
@@ -276,10 +276,9 @@ public class HoaDonDichVu_UI extends JFrame implements ActionListener, MouseList
 			int row = tableHDDV.getSelectedRow();
 			int maHD = Integer.parseInt(modelHD.getValueAt(row, 0).toString());
 			dsChiTietDV = ctDVDAO.getChiTietDVByMaHDDV(maHD);
+			cboMaKH.setSelectedItem(modelHD.getValueAt(row, 1).toString());
+			cboMaKH.setEnabled(false);
 			docDuLieuVaoTableDV();
-		}else if(o.equals(pnMain)) {
-			modelDV.getDataVector().removeAllElements();
-			modelDV.fireTableDataChanged();
 		}
 
 	}
@@ -309,90 +308,134 @@ public class HoaDonDichVu_UI extends JFrame implements ActionListener, MouseList
 		Object o = e.getSource();
 		long millis = System.currentTimeMillis();
 		Date date = new Date(millis);
+		
 		if (o.equals(btnThem)) {
-			if (validDataSo()) {
-				int row = modelDV.getRowCount();
-				for (int i = row - 1; i >= 0; i--) {
-					modelDV.removeRow(i);
-				}
-				ChiTietDV ctdv = null;
-				ctdv = getDataIntoFormDV();
-				try {
-					boolean result = ctDVDAO.create(ctdv);
-					if (result) {
-						int maDV = 0;
-						String tenDV = ctdv.getDichVu().getTenDV();
-						for (DichVu item : dsDV) {
-							if (item.getTenDV().equals(tenDV)) {
-								maDV = item.getMaDV();
-								break;
+			int index=tableHDDV.getSelectedRow();
+			//chưa chọn HDDV
+			if(index==-1) {
+				if (validDataSo()) {
+					ChiTietDV ctdv = null;
+					ctdv = getDataIntoFormDV();
+					try {
+						boolean result = ctDVDAO.create(ctdv);
+						if (result) {
+							int maDV = 0;
+							String tenDV = ctdv.getDichVu().getTenDV();
+							for (DichVu item : dsDV) {
+								if (item.getTenDV().equals(tenDV)) {
+									maDV = item.getMaDV();
+									break;
+								}
 							}
+							modelDV.addRow(new Object[] { maDV, tenDV, ctdv.getSoLuong(), ctdv.getDichVu().getDonGia(),
+									date, "" });
+							JOptionPane.showMessageDialog(this, "Đã thêm dịch vụ");
 						}
-						modelDV.addRow(new Object[] { maDV, tenDV, ctdv.getSoLuong(), ctdv.getDichVu().getDonGia(),
-								date, "" });
-						JOptionPane.showMessageDialog(this, "Đã thêm dịch vụ");
+					} catch (Exception e2) {
+						JOptionPane.showMessageDialog(this, "Lỗi! Thêm thất bại");
 					}
+				}
+			}else {
+				if(validDataSo()) {
+					HoaDonDV hdDV =null;
+					hdDV = getDataIntoFormHDDV();
+//					int index = 
+					int maHDDV= dsHDDV.get(index).getMaHDDV();
+					hdDV.setMaHDDV(maHDDV);
+					
+					ChiTietDV ctdv = null;
+					ctdv = getDataIntoFormDV();
+					ctdv.setHoaDonDV(hdDV);
+					try {
+						if(ctDVDAO.create(ctdv)) {
+							int maDV = 0;
+							String tenDV = ctdv.getDichVu().getTenDV();
+							for (DichVu item : dsDV) {
+								if (item.getTenDV().equals(tenDV)) {
+									maDV = item.getMaDV();
+									break;
+								}
+							}
+							modelDV.addRow(new Object[] { maDV, tenDV, ctdv.getSoLuong(), ctdv.getDichVu().getDonGia(),
+									date, maHDDV });
+							ctDVDAO.updateByID(maHDDV);
+							JOptionPane.showMessageDialog(this, "Đã thêm dịch vụ");
+						}
+					} catch (Exception e2) {
+						JOptionPane.showMessageDialog(this, "Lỗi! Thêm thất bại");
+					}
+				}
+			}
+			cboMaKH.setEnabled(false);
+
+		}else if(o.equals(btnBoChon)) {
+			int index = tableHDDV.getSelectedRow();
+			tableHDDV.removeRowSelectionInterval(index, index);
+			modelDV.getDataVector().removeAllElements();
+			modelDV.fireTableDataChanged();
+			cboMaKH.setEnabled(true);
+		}
+		else if (o.equals(btnXacNhan)) {
+			int index = tableHDDV.getSelectedRow();
+			if(index==-1) {
+				HoaDonDV hd = null;
+				hd = getDataIntoFormHDDV();
+				modelDV.getDataVector().removeAllElements();
+				modelDV.fireTableDataChanged();
+
+				try {
+					if (hdDVDAO.insert(hd)) {
+						hd.setMaHDDV(hdDVDAO.getLatestID());
+						ctDVDAO.updateByID(hdDVDAO.getLatestID());
+
+					}
+					String tt = convertTinhTrang(hd.getTinhTrang());
+					modelHD.addRow(
+
+							new Object[] { hd.getMaHDDV(), hd.getKhachHang().getMaKH(), hd.getNgayGioDat(), hd.tinhTong(),
+									tt });
+					JOptionPane.showMessageDialog(this, "Đã thêm hoá đơn");
+
 				} catch (Exception e2) {
 					JOptionPane.showMessageDialog(this, "Lỗi! Thêm thất bại");
 				}
-			}
+			}else {
+				HoaDonDV hd = null;
+				hd = getDataIntoFormHDDV();
+				hd.setMaHDDV(dsHDDV.get(index).getMaHDDV());
+				try {
+					if (hdDVDAO.insert(hd)) {
+						hd.setMaHDDV(hdDVDAO.getLatestID());
+						ctDVDAO.updateByID(hdDVDAO.getLatestID());
 
-		} else if (o.equals(btnXoa)) {
-			ChiTietDV ctDV = null;
-			ctDV = getDataIntoFormDV();
-
-			int row = tableDV.getSelectedRow();
-			try {
-				if (row == -1)
-					JOptionPane.showMessageDialog(this, "Chưa chọn dịch vụ cần xoá");
-				else {
-					int select;
-					select = JOptionPane.showConfirmDialog(this, "Bạn có muốn xoá dòng đã chọn ?", "Cảnh báo",
-							JOptionPane.YES_NO_OPTION);
-					if (select == JOptionPane.YES_OPTION) {
-						ctDVDAO.delete(ctDV.getDichVu().getMaDV());
-						modelDV.removeRow(row);
-						JOptionPane.showMessageDialog(this, "Xoá thành công");
 					}
+					String tt = convertTinhTrang(hd.getTinhTrang());
+					modelHD.addRow(
+
+							new Object[] { hd.getMaHDDV(), hd.getKhachHang().getMaKH(), hd.getNgayGioDat(), hd.tinhTong(),
+									tt });
+					JOptionPane.showMessageDialog(this, "Đã thêm hoá đơn");
+
+				} catch (Exception e2) {
+					JOptionPane.showMessageDialog(this, "Lỗi! Thêm thất bại");
 				}
-			} catch (Exception e2) {
-				JOptionPane.showMessageDialog(this, "Xoá thất bại");
+				
 			}
-		} else if (o.equals(btnXacNhan)) {
-			HoaDonDV hd = null;
-			hd = getDataIntoFormHDDV();
-			int row = modelDV.getRowCount();
-			for (int i = row - 1; i >= 0; i--) {
-				modelDV.removeRow(i);
-			}
-
-			try {
-				if (hdDVDAO.insert(hd)) {
-					hd.setMaHDDV(hdDVDAO.getLatestID());
-					ctDVDAO.updateByID(hdDVDAO.getLatestID());
-
-				}
-				String tt = convertTinhTrang(hd.getTinhTrang());
-				modelHD.addRow(
-
-						new Object[] { hd.getMaHDDV(), hd.getKhachHang().getMaKH(), hd.getNgayGioDat(), hd.tinhTong(),
-								tt });
-				JOptionPane.showMessageDialog(this, "Đã thêm hoá đơn");
-
-			} catch (Exception e2) {
-				JOptionPane.showMessageDialog(this, "Lỗi! Thêm thất bại");
-			}
+			
+			modelDV.getDataVector().removeAllElements();
+			modelDV.fireTableDataChanged();
+			cboMaKH.setEnabled(true);
+			
 		} else if (o.equals(btnSua)) {
 			if (validDataSo()) {
 				ChiTietDV ctdv = null;
 				ctdv = getDataIntoFormDV();
-
+				
 				HoaDonDV hd = null;
 				hd = getDataIntoFormHDDV();
-
+				
 				ctdv.setHoaDonDV(hd);
 				int row = tableDV.getSelectedRow();
-
 				try {
 					boolean result = ctDVDAO.update(ctdv);
 					if (result) {
@@ -421,17 +464,16 @@ public class HoaDonDichVu_UI extends JFrame implements ActionListener, MouseList
 			modelHD.getDataVector().removeAllElements();
 			modelHD.fireTableDataChanged();
 			dsHDDV = hdDVDAO.getListHDDVbyMaHD(maHD);
-			if(dsHDDV.size()<=0)
+			if (dsHDDV.size() <= 0)
 				JOptionPane.showMessageDialog(this, "Không tìm thấy hoá đơn");
 			docDuLieuVaoTableHDDV();
-			
-		}else if(o.equals(btnXem)) {
+
+		} else if (o.equals(btnXem)) {
 			modelHD.getDataVector().removeAllElements();
 			modelHD.fireTableDataChanged();
 			dsHDDV = hdDVDAO.getAllHDDV();
 			docDuLieuVaoTableHDDV();
-		}
-		else if (o.equals(cboDV))
+		} else if (o.equals(cboDV))
 
 		{
 			int indx = cboDV.getSelectedIndex() - 1;
@@ -458,7 +500,14 @@ public class HoaDonDichVu_UI extends JFrame implements ActionListener, MouseList
 
 		int maDV = dsDV.get(indx).getMaDV();
 		String tenDV = String.valueOf(cboDV.getSelectedItem());
-		int soLuong = Integer.parseInt(txtSoLuong.getText().trim());
+		int soLuong=0;
+		try {
+			soLuong = Integer.parseInt(txtSoLuong.getText());
+		} catch (NumberFormatException e) {
+			JOptionPane.showMessageDialog(this, "Số lượng phải là số");
+			return null;
+		}
+		
 		double gia = dsDV.get(indx).getDonGia();
 		DichVu dv = new DichVu(maDV, tenDV, gia);
 		long millis = System.currentTimeMillis();
@@ -472,7 +521,7 @@ public class HoaDonDichVu_UI extends JFrame implements ActionListener, MouseList
 
 	public HoaDonDV getDataIntoFormHDDV() {
 		long millis = System.currentTimeMillis();
-		Date date = new Date(millis);
+		Date date = new Date(millis);// getDateNow();
 		KhachHang khachHang = new KhachHang(0, "", "", date, "", 0);
 		int maKH = Integer.parseInt((String) cboMaKH.getSelectedItem());
 		khachHang.setMaKH(maKH);
@@ -509,7 +558,8 @@ public class HoaDonDichVu_UI extends JFrame implements ActionListener, MouseList
 	private void loadCboMaKH() {
 		dsKH = khDAO.getListKhachHang();
 		for (KhachHang kh : dsKH) {
-			cboMaKH.addItem(String.valueOf(kh.getMaKH()));
+			int ma = kh.getMaKH();
+			cboMaKH.addItem(String.valueOf(ma));
 		}
 	}
 
@@ -532,16 +582,17 @@ public class HoaDonDichVu_UI extends JFrame implements ActionListener, MouseList
 		dsHDDV = hdDVDAO.getAllHDDV();
 	}
 
-	boolean validDataSo() {
+	private boolean validDataSo() {
 		String soLuong = txtSoLuong.getText().trim();
+		
 		if (soLuong.length() > 0) {
 			try {
-				Integer x = Integer.parseInt(soLuong);
+				int x = Integer.parseInt(soLuong);
 				if (x <= 0) {
 					JOptionPane.showMessageDialog(this, "Số lượng phải lớn hơn 0");
 					return false;
 				}
-			} catch (Exception e2) {
+			} catch (NumberFormatException e2) {
 				JOptionPane.showMessageDialog(this, "Số lượng phải là số!");
 				return false;
 			}
