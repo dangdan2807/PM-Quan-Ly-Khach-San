@@ -380,9 +380,11 @@ BEGIN
 		JOIN dbo.KhachHang kh ON kh.MaKH = hd.MaKH
 	WHERE p.MaPhong = @MaPhong 
 		AND hd.tinhTrang = 0 
-		AND hd.NgayGioNhan > @tuNgay
+		AND hd.NgayGioNhan >= @tuNgay
 END
 GO
+
+UDP_GetListHDPhongReservation N'P101', '2021-05-24'
 
 CREATE PROC UDP_GetListHDPhongReservationLimit
 	@MaPhong NVARCHAR(100),
