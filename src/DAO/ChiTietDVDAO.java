@@ -234,7 +234,7 @@ public class ChiTietDVDAO {
         Connection con = ConnectDB.getConnection();
         int n = 0;
         try {
-            String sql = "update dbo.ChiTietDV set maDV = ?, SoLuong = ?, NgayGioDat = ?"+ "where maHDDV = ? ";
+            String sql = "update dbo.ChiTietDV set maDV = ?, SoLuong = ?, NgayGioDat = ? where maHDDV = ? ";
             stmt = con.prepareStatement(sql);
             stmt.setInt(1, ctdv.getDichVu().getMaDV());
             stmt.setInt(2, ctdv.getSoLuong() );
