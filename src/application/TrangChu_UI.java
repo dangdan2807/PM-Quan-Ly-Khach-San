@@ -255,14 +255,25 @@ public class TrangChu_UI extends JFrame implements ActionListener{
                     pn_p_c.add(pn_p_bottom);
                     
                     if(phong.getTinhTrang() == 2){ // đang ở
-                        GridLayout grd22 = new GridLayout(2, 2);
-                        grd22.setHgap(10);
-                        grd22.setVgap(10);
-                        pn_p_bottom.setLayout(grd22);
-                        pn_p_bottom.add(btn_ThanhToan[j]);
-                        pn_p_bottom.add(btn_SuDungDV[j]);
-                        pn_p_bottom.add(btn_DatPhong[j]);
-                        pn_p_bottom.add(btn_XemLichDat[j]);
+                        pn_p_bottom.setLayout(new GridBagLayout());
+                        GridBagConstraints c = new GridBagConstraints();
+                        c.fill = GridBagConstraints.HORIZONTAL;
+                        c.gridx = 0;
+                        c.gridy = 0;
+                        c.insets = new Insets(5, 5, 5, 5);
+
+                        pn_p_bottom.add(btn_ThanhToan[j], c);
+                        c.fill = GridBagConstraints.HORIZONTAL;
+                        c.gridx = 1;
+                        c.gridy = 0;
+                        c.insets = new Insets(5, 5, 5, 5);
+                        pn_p_bottom.add(btn_DatPhong[j], c);
+                        c.fill = GridBagConstraints.HORIZONTAL;
+                        c.gridx = 0;
+                        c.gridy = 1;
+                        c.gridwidth = 2;
+                        c.insets = new Insets(5, 5, 5, 5);
+                        pn_p_bottom.add(btn_XemLichDat[j], c);
                         
                     }else if(phong.getTinhTrang() == 1){ // đã đặt
                         pn_p_bottom.setLayout(new GridBagLayout());
