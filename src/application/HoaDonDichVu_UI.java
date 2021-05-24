@@ -68,6 +68,19 @@ public class HoaDonDichVu_UI extends JFrame implements ActionListener, MouseList
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 
+		
+	}
+
+	public void start(){
+		pnMain = renderGUI();
+		loadListHDDV();
+		loadCboMaKH();
+		loadCboTenDV();
+
+		docDuLieuVaoTableHDDV();
+	}
+
+	public JPanel renderGUI(){
 		pnMain = new JPanel();
 		pnMain.setBounds(0, 0, 584, 411);
 		getContentPane().add(pnMain);
@@ -250,11 +263,8 @@ public class HoaDonDichVu_UI extends JFrame implements ActionListener, MouseList
 		tableDV.addMouseListener(this);
 		pnMain.addMouseListener(this);
 
-		loadListHDDV();
-		loadCboMaKH();
-		loadCboTenDV();
-
-		docDuLieuVaoTableHDDV();
+		return pnMain;
+		
 	}
 
 	public static void main(String[] args) {
