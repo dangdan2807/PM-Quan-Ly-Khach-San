@@ -411,7 +411,7 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
             showMessage("Lỗi: Tên không được để trống", txtTenKH);
             return false;
         }
-        if (!tenKH.matches("\\d+")) {
+        if (!tenKH.matches("^[^0-9]+$")) {
             showMessage("Lỗi: Tên không được có số", txtTenKH);
             return false;
         }
@@ -438,6 +438,18 @@ public class QuanLyKhachHang_UI extends JFrame implements ActionListener, MouseL
                 showMessage("Lỗi: Số lần đặt phòng phải là số.", txtSoLanDat);
                 return false;
             }
+        }
+        Date now = null;
+        Date ngayHetHan = null;
+        try {
+            now = dpNgayHetHan.getValueToDay();
+            ngayHetHan = dpNgayHetHan.getFullDate();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        if (!ngayHetHan.toString().equals(now.toString()) && ngayHetHan.before(now)) {
+            showMessage("Lỗi: Giấy tờ đã hết hạn", ERROR);
+            return false;
         }
         return true;
     }

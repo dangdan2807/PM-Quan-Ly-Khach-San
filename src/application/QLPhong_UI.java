@@ -19,8 +19,8 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
     private DefaultTableModel modelTableLP, modelTableP;
     private JTable tableLP, tableP;
     private JLabel lbShowMessagesP, lbShowMessagesLP;
-    private JButton btnThemLP, btnSuaLP, btnXoaLP, btnLamLaiLP, btnThemP, btnSuaP, btnLamLaiP, btnTimLP, btnTimP,
-            btnXemLich, btnXemTatCaLP, btnXemTatCaP;
+    private JButton btnThemLP, btnSuaLP, btnXoaLP, btnXoaP, btnLamLaiLP, btnThemP, btnSuaP, btnLamLaiP, btnTimLP,
+            btnTimP, btnXemLich, btnXemTatCaLP, btnXemTatCaP;
     private SpinnerNumberModel modelSpinSC, modelSpinSG;
     private JSpinner spinSoGiuong, spinSucChua;
     private final int SUCCESS = 1, ERROR = 0;
@@ -154,11 +154,12 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
         pnBL.add(lbTinhTrang);
 
         cboTinhTrang = new JComboBox<String>();
+        cboTinhTrang.setEnabled(false);
         cboTinhTrang.setBounds(90, 131, 235, 20);
-        pnBL.add(cboTinhTrang);
         cboTinhTrang.addItem("Trống");
         cboTinhTrang.addItem("Đã được đặt");
         cboTinhTrang.addItem("Đã cho thuê");
+        pnBL.add(cboTinhTrang);
 
         JLabel lbViTri = new JLabel("Vị trí: ");
         lbViTri.setBounds(10, 105, 55, 16);
@@ -182,7 +183,7 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
         pnBL.add(btnSuaP);
 
         btnLamLaiP = new JButton("Làm lại", refreshIcon);
-        btnLamLaiP.setBounds(117, 217, 98, 26);
+        btnLamLaiP.setBounds(7, 255, 98, 26);
         pnBL.add(btnLamLaiP);
 
         JLabel lbLoaiPhong = new JLabel("Loại phòng: ");
@@ -194,8 +195,12 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
         pnBL.add(cboLoaiPhong);
 
         btnXemLich = new JButton("Xem lịch đặt phòng", calendarIcon);
-        btnXemLich.setBounds(66, 255, 208, 26);
+        btnXemLich.setBounds(117, 255, 208, 26);
         pnBL.add(btnXemLich);
+
+        btnXoaP = new JButton("Xóa", deleteIcon);
+        btnXoaP.setBounds(114, 217, 101, 26);
+        pnBL.add(btnXoaP);
 
         JPanel pnTR = new JPanel();
         pnTR.setBorder(
@@ -285,6 +290,7 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
         btnTimLP.addActionListener(this);
         btnXemTatCaLP.addActionListener(this);
         btnThemP.addActionListener(this);
+        btnXoaP.addActionListener(this);
         btnSuaP.addActionListener(this);
         btnLamLaiP.addActionListener(this);
         btnTimP.addActionListener(this);
@@ -323,6 +329,7 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
                         modelTableLP
                                 .addRow(new Object[] { maLPhong, loaiPhong.getTenLoaiPhong(), loaiPhong.getDonGia() });
                         cboLoaiPhong.addItem(loaiPhong.getTenLoaiPhong());
+                        dsLoaiPhong.add(loaiPhong);
                         showMessage("Thêm thành công", SUCCESS, lbShowMessagesLP);
                     } else {
                         showMessage("Lỗi: Thêm thất bại", ERROR, lbShowMessagesLP);
@@ -350,6 +357,7 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
                         }
                         modelTableP.addRow(new Object[] { phong.getMaPhong(), phong.getSucChua(), phong.getSoGiuong(),
                                 phong.getViTri(), tinhTrang, tenLPhong });
+                        dsPhong.add(phong);
                         showMessage("Thêm thành công", SUCCESS, lbShowMessagesP);
                     } else {
                         showMessage("Lỗi: Thêm thất bại", ERROR, lbShowMessagesP);
@@ -360,26 +368,74 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
             }
         } else if (o.equals(btnXoaLP)) {
             showMessage("", 2, lbShowMessagesLP);
-            LoaiPhong loaiPhong = null;
-            loaiPhong = getDataInFormLPhong();
             int row = tableLP.getSelectedRow();
             try {
                 if (row == -1) {
-                    showMessage("Lỗi: Bạn cần chọn dòng cần xóa", ERROR, lbShowMessagesLP);
+                    showMessage("Lỗi: Bạn cần chọn loại phòng cần xóa", ERROR, lbShowMessagesLP);
                 } else {
-                    int select;
-                    select = JOptionPane.showConfirmDialog(this, "Bạn có muốn xoá dòng đã chọn ?", "Cảnh báo",
-                            JOptionPane.YES_NO_OPTION);
-                    if (select == JOptionPane.YES_OPTION) {
-                        LPhongDAO.delete(loaiPhong.getMaLoaiPhong());
-                        modelTableLP.removeRow(row);
-                        showMessage("Xóa thành công", SUCCESS, lbShowMessagesLP);
+                    LoaiPhong loaiPhong = null;
+                    loaiPhong = getDataInFormLPhong();
+                    int maLoaiPhong = loaiPhong.getMaLoaiPhong();
+                    int soLuongPhong = LPhongDAO.getCountPhongByMaLoaiPhong(maLoaiPhong);
+                    if (soLuongPhong > 0) {
+                        JOptionPane.showMessageDialog(this,
+                                "Vẫn còn phòng thuộc loại phòng này. Vui lòng chuyển các phòng thuộc loại phòng '"
+                                        + loaiPhong.getTenLoaiPhong() + "' sang loại phòng khác trước khi xóa",
+                                "Cảnh báo", JOptionPane.YES_NO_OPTION);
+                    } else {
+                        int select;
+                        select = JOptionPane.showConfirmDialog(this, "Bạn có muốn xoá dòng đã chọn ?", "Cảnh báo",
+                                JOptionPane.YES_NO_OPTION);
+                        if (select == JOptionPane.YES_OPTION) {
+                            LPhongDAO.delete(loaiPhong.getMaLoaiPhong());
+                            modelTableLP.removeRow(row);
+                            showMessage("Xóa thành công", SUCCESS, lbShowMessagesLP);
+                            cboLoaiPhong.removeAllItems();
+                            loadCboLoaiPhong();
+                        }
                     }
                 }
             } catch (Exception e3) {
                 showMessage("Xóa thất bại", ERROR, lbShowMessagesLP);
             }
-        } else if (o.equals(btnSuaLP)) {
+        } else if (o.equals(btnXoaP)) {
+            showMessage("", 2, lbShowMessagesP);
+            int row = tableP.getSelectedRow();
+            try {
+                if (row == -1) {
+                    showMessage("Lỗi: Bạn cần chọn phòng cần xóa", ERROR, lbShowMessagesP);
+                } else {
+                    int select = JOptionPane.NO_OPTION;
+                    Phong phong = null;
+                    phong = getDataInFormPhong();
+                    String maPhong = phong.getMaPhong();
+                    int soLuongPhong = phongDAO.getCountPhongByMaLoaiPhong(maPhong);
+                    if (soLuongPhong > 0) {
+                        select = JOptionPane.showConfirmDialog(this,
+                                "<html>" + "<p style='text-align: center; font-size: 18px; color:red'>Cảnh báo</p>"
+                                        + "<p style='text-align: center;'>Xóa phòng "
+                                        + "<span style='color: blue'> " + maPhong + "</span>"
+                                        + " sẽ dẫn đến xóa toàn bộ hóa đơn phòng liên quan đến phòng này.</p>"
+                                        + "<p style='text-align: left;'>Hãy suy nghĩ thật kỹ trước khi quyết định.</p>"
+                                        + "</html>",
+                                "Cảnh báo", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        select = JOptionPane.showConfirmDialog(this, "Bạn có muốn xoá dòng đã chọn ?", "Cảnh báo",
+                                JOptionPane.YES_NO_OPTION);
+                    }
+                    if (select == JOptionPane.YES_OPTION) {
+                        phongDAO.delete(phong.getMaPhong());
+                        modelTableP.removeRow(row);
+                        showMessage("Xóa thành công", SUCCESS, lbShowMessagesP);
+                        getListPhong();
+                    }
+                }
+            } catch (Exception e3) {
+                showMessage("Xóa thất bại", ERROR, lbShowMessagesLP);
+            }
+        } else if (o.equals(btnSuaLP))
+
+        {
             showMessage("", 2, lbShowMessagesLP);
             if (validDataLoaiPhong()) {
                 LoaiPhong loaiPhong = null;
@@ -390,6 +446,9 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
                     if (result == true) {
                         modelTableLP.setValueAt(loaiPhong.getTenLoaiPhong(), row, 1);
                         modelTableLP.setValueAt(loaiPhong.getDonGia(), row, 2);
+                        cboLoaiPhong.removeAllItems();
+                        loadCboLoaiPhong();
+                        modelTableLP.fireTableDataChanged();
                         showMessage("Cập nhật thành công", SUCCESS, lbShowMessagesLP);
                     } else {
                         showMessage("Lỗi: Cập nhật thất bại", ERROR, lbShowMessagesLP);
@@ -421,7 +480,8 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
                         modelTableP.setValueAt(phong.getViTri(), row, 3);
                         modelTableP.setValueAt(tinhTrang, row, 4);
                         modelTableP.setValueAt(tenLPhong, row, 5);
-
+                        getListPhong();
+                        modelTableP.fireTableDataChanged();
                         showMessage("Cập nhật thành công", SUCCESS, lbShowMessagesP);
                     } else {
                         showMessage("Lỗi: Cập nhật thất bại", ERROR, lbShowMessagesP);
@@ -478,7 +538,7 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
             if (dsPhong == null || dsPhong.size() <= 0)
                 showMessage("Không có bất kỳ phòng nào", ERROR, lbShowMessagesP);
             modelTableP.getDataVector().removeAllElements();
-            dsPhong = phongDAO.getListPhong();
+            getListPhong();
             DocDuLieuVaoTablePhong();
         } else if (o.equals(btnXemTatCaLP)) {
             dsLoaiPhong = LPhongDAO.getListLoaiPhong();
@@ -487,6 +547,7 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
                 showMessage("Không có bất kỳ phòng nào", ERROR, lbShowMessagesLP);
             modelTableLP.getDataVector().removeAllElements();
             modelTableLP.fireTableDataChanged();
+            loadCboLoaiPhong();
             DocDuLieuVaoTableLPhong();
         }
     }

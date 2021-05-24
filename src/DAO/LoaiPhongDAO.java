@@ -200,4 +200,25 @@ public class LoaiPhongDAO {
         }
         return n > 0;
     }
+
+    public int getCountPhongByMaLoaiPhong(int maLoaiPhong) {
+        int count = 0;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        String query = "SELECT MaLoaiPhong FROM dbo.Phong p where p.maLoaiPhong = ?";
+        ConnectDB.getInstance();
+        Connection con = ConnectDB.getConnection();
+        try {
+            stmt = con.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            stmt.setInt(1, maLoaiPhong);
+
+            rs = stmt.executeQuery();
+            rs.last();
+            // đến số dòng được trả về
+            count = rs.getRow();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
 }

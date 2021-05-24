@@ -9,14 +9,14 @@ import entity.Phong;
 
 public class PhongDAO {
     private static PhongDAO instance = new PhongDAO();
-    
+
     public static PhongDAO getInstance() {
         return instance;
     }
 
-    public ArrayList<Phong> getPhongAvail(){
+    public ArrayList<Phong> getPhongAvail() {
         ArrayList<Phong> dsp = new ArrayList<Phong>();
-        try{
+        try {
             ConnectDB.getInstance();
             Connection conn = ConnectDB.getConnection();
 
@@ -25,19 +25,19 @@ public class PhongDAO {
 
             ResultSet rs = statement.executeQuery(sql);
 
-            while(rs.next()){
+            while (rs.next()) {
                 Phong phong = new Phong(rs);
                 dsp.add(phong);
             }
-        }catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return dsp;
     }
 
-    public ArrayList<Phong> getPhongByMaLoaiPhong(int maLoaiPhong){
+    public ArrayList<Phong> getPhongByMaLoaiPhong(int maLoaiPhong) {
         ArrayList<Phong> dsp = new ArrayList<Phong>();
-        try{
+        try {
             ConnectDB.getInstance();
             Connection conn = ConnectDB.getConnection();
 
@@ -46,19 +46,19 @@ public class PhongDAO {
             statement.setInt(1, maLoaiPhong);
             ResultSet rs = statement.executeQuery();
 
-            while(rs.next()){
+            while (rs.next()) {
                 Phong phong = new Phong(rs);
                 dsp.add(phong);
             }
-        }catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return dsp;
     }
 
-    public Phong getPhongByMaPhong(String maPhong){
+    public Phong getPhongByMaPhong(String maPhong) {
         Phong phong = null;
-        try{
+        try {
             ConnectDB.getInstance();
             Connection conn = ConnectDB.getConnection();
 
@@ -67,11 +67,11 @@ public class PhongDAO {
             statement.setString(1, maPhong);
             ResultSet rs = statement.executeQuery();
 
-            if(!rs.next())
+            if (!rs.next())
                 return null;
-            
+
             phong = new Phong(rs);
-        }catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return phong;
@@ -212,12 +212,12 @@ public class PhongDAO {
         return n > 0;
     }
 
-    public KhachHang getKHDangSuDungPhong(String maPhong){
-        long ml=System.currentTimeMillis(); 
-        ml = ml/86400000*86400000;
+    public KhachHang getKHDangSuDungPhong(String maPhong) {
+        long ml = System.currentTimeMillis();
+        ml = ml / 86400000 * 86400000;
         Date now = new Date(ml);
         KhachHang khachHang = null;
-        try{
+        try {
             ConnectDB.getInstance();
             Connection conn = ConnectDB.getConnection();
 
@@ -229,22 +229,22 @@ public class PhongDAO {
             System.out.println(statement);
             ResultSet rs = statement.executeQuery();
 
-            if(!rs.next())
+            if (!rs.next())
                 return null;
-            
+
             khachHang = new KhachHang(rs.getInt("MaKH"));
-        }catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return khachHang;
     }
 
-    public KhachHang getKHDaDatPhong(String maPhong){
-        long ml=System.currentTimeMillis(); 
-        ml = ml/86400000*86400000;
+    public KhachHang getKHDaDatPhong(String maPhong) {
+        long ml = System.currentTimeMillis();
+        ml = ml / 86400000 * 86400000;
         Date now = new Date(ml);
         KhachHang khachHang = null;
-        try{
+        try {
             ConnectDB.getInstance();
             Connection conn = ConnectDB.getConnection();
 
@@ -253,14 +253,14 @@ public class PhongDAO {
             statement.setString(1, maPhong);
             statement.setDate(2, now);
             statement.setDate(3, now);
-            
+
             ResultSet rs = statement.executeQuery();
 
-            if(!rs.next())
+            if (!rs.next())
                 return null;
-            
+
             khachHang = new KhachHang(rs.getInt("MaKH"));
-        }catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return khachHang;
@@ -301,7 +301,7 @@ public class PhongDAO {
             stmt.setString(1, maPhong);
             ResultSet rs = stmt.executeQuery();
 
-            if(!rs.next()){ // hết hóa đơn đặt phòng này
+            if (!rs.next()) { // hết hóa đơn đặt phòng này
                 return true;
             }
         } catch (SQLException e) {
@@ -314,5 +314,26 @@ public class PhongDAO {
             }
         }
         return false;
+    }
+
+    public int getCountPhongByMaLoaiPhong(String maPhong) {
+        int count = 0;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        String query = "SELECT hdP.MaPhong FROM dbo.HoaDonPhong hdP WHERE hdP.maPhong = ?";
+        ConnectDB.getInstance();
+        Connection con = ConnectDB.getConnection();
+        try {
+            stmt = con.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            stmt.setString(1, maPhong);
+
+            rs = stmt.executeQuery();
+            rs.last();
+            // đến số dòng được trả về
+            count = rs.getRow();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return count;
     }
 }
