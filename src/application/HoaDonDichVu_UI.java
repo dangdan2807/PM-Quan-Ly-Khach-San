@@ -52,7 +52,7 @@ public class HoaDonDichVu_UI extends JFrame implements ActionListener, MouseList
 	private JTextField txtGia;
 	private JTextField txtTen;
 	private KhachHangDAO khachHang_dao;
-	private AbstractButton btnSua;
+//	private JButton btnSua;
 	private JButton btnTimMaHDDV;
 	private JButton btnXem;
 	private JButton btnBoChon;
@@ -172,13 +172,13 @@ public class HoaDonDichVu_UI extends JFrame implements ActionListener, MouseList
 
 		btnThem = new JButton("Thêm");
 		btnThem.setIcon(new ImageIcon("data\\images\\blueAdd_16.png"));
-		btnThem.setBounds(10, 198, 148, 33);
+		btnThem.setBounds(10, 198, 317, 33);
 		pn.add(btnThem);
 
-		btnSua = new JButton("Sửa");
-		btnSua.setIcon(new ImageIcon("data\\images\\edit2_16.png"));
-		btnSua.setBounds(168, 198, 159, 33);
-		pn.add(btnSua);
+//		btnSua = new JButton("Sửa");
+//		btnSua.setIcon(new ImageIcon("data\\images\\edit2_16.png"));
+//		btnSua.setBounds(168, 198, 159, 33);
+//		pn.add(btnSua);
 
 		btnXacNhan = new JButton("Tạo hoá đơn");
 		btnXacNhan.setBounds(10, 242, 317, 33);
@@ -252,8 +252,8 @@ public class HoaDonDichVu_UI extends JFrame implements ActionListener, MouseList
 		panel_1.add(btnBoChon);
 
 		btnThem.addActionListener(this);
-		btnSua.addActionListener(this);
-		btnXacNhan.addActionListener(this);// khi bam xac nhan se xoa cac dong` trong table dv;
+//		btnSua.addActionListener(this);
+		btnXacNhan.addActionListener(this);
 		btnTimMaHDDV.addActionListener(this);
 		btnXem.addActionListener(this);
 		btnBoChon.addActionListener(this);
@@ -369,7 +369,7 @@ public class HoaDonDichVu_UI extends JFrame implements ActionListener, MouseList
 							
 							modelDV.addRow(new Object[] { maDV, tenDV, ctdv.getSoLuong(), ctdv.getDichVu().getDonGia(),
 									date, maHDDV });
-							ctDVDAO.updateByID(maHDDV);
+							ctDVDAO.updateMaHDDV(maHDDV);
 							JOptionPane.showMessageDialog(this, "Đã thêm dịch vụ");
 						}
 					} catch (Exception e2) {
@@ -385,6 +385,9 @@ public class HoaDonDichVu_UI extends JFrame implements ActionListener, MouseList
 			modelDV.getDataVector().removeAllElements();
 			modelDV.fireTableDataChanged();
 			cboMaKH.setEnabled(true);
+			cboMaKH.setSelectedIndex(0);
+			cboDV.setSelectedIndex(0);
+			txtSoLuong.setText("");
 		}
 		else if (o.equals(btnXacNhan)) {
 			int index = tableHDDV.getSelectedRow();
@@ -397,7 +400,7 @@ public class HoaDonDichVu_UI extends JFrame implements ActionListener, MouseList
 				try {
 					if (hdDVDAO.insert(hd)) {
 						hd.setMaHDDV(hdDVDAO.getLatestID());
-						ctDVDAO.updateByID(hdDVDAO.getLatestID());
+						ctDVDAO.updateMaHDDV(hdDVDAO.getLatestID());
 
 					}
 					String tt = convertTinhTrang(hd.getTinhTrang());
@@ -418,7 +421,7 @@ public class HoaDonDichVu_UI extends JFrame implements ActionListener, MouseList
 				try {
 					if (hdDVDAO.insert(hd)) {
 						hd.setMaHDDV(hdDVDAO.getLatestID());
-						ctDVDAO.updateByID(hdDVDAO.getLatestID());
+						ctDVDAO.updateMaHDDV(hdDVDAO.getLatestID());
 
 					}
 					String tt = convertTinhTrang(hd.getTinhTrang());
@@ -439,40 +442,45 @@ public class HoaDonDichVu_UI extends JFrame implements ActionListener, MouseList
 			modelDV.fireTableDataChanged();
 			cboMaKH.setEnabled(true);
 			
-		} else if (o.equals(btnSua)) {
-			if (validDataSo()) {
-				ChiTietDV ctdv = null;
-				ctdv = getDataIntoFormDV();
-				
-				HoaDonDV hd = null;
-				hd = getDataIntoFormHDDV();
-				
-				ctdv.setHoaDonDV(hd);
-				int row = tableDV.getSelectedRow();
-				try {
-					boolean result = ctDVDAO.update(ctdv);
-					if (result) {
-						int maDV = 0;
-						String tenDV = ctdv.getDichVu().getTenDV();
-						for (DichVu item : dsDV) {
-							if (item.getTenDV().contains(tenDV)) {
-								maDV = item.getMaDV();
-								break;
-							}
-						}
-						modelDV.setValueAt(maDV, row, 0);
-						modelDV.setValueAt(tenDV, row, 1);
-						modelDV.setValueAt(ctdv.getSoLuong(), row, 2);
-						modelDV.setValueAt(ctdv.getDichVu().getDonGia(), row, 3);
-						modelDV.setValueAt(ctdv.getNgayGioDat(), row, 4);
-						JOptionPane.showMessageDialog(this, "Cập nhật thành công");
-					} else
-						JOptionPane.showMessageDialog(this, "Cập nhật thất bại");
-				} catch (Exception e2) {
-					e2.printStackTrace();
-				}
-			}
-		} else if (o.equals(btnTimMaHDDV)) {
+		} 
+//		else if (o.equals(btnSua)) {
+//			int rowHDDV=tableHDDV.getSelectedRow();
+//			if (validDataSo()) {
+//				ChiTietDV ctdv = null;
+//				ctdv = getDataIntoFormDV();
+//				
+//				HoaDonDV hd = null;
+//				hd = getDataIntoFormHDDV();
+//				int maHDDV= dsHDDV.get(rowHDDV).getMaHDDV();
+//				hd.setMaHDDV(maHDDV);
+//				
+//				ctdv.setHoaDonDV(hd);
+//				int rowDV = tableDV.getSelectedRow();
+//				try {
+//					boolean result = ctDVDAO.update(ctdv);
+//					if (result) {
+//						int maDV = 0;
+//						String tenDV = ctdv.getDichVu().getTenDV();
+//						for (DichVu item : dsDV) {
+//							if (item.getTenDV().contains(tenDV)) {
+//								maDV = item.getMaDV();
+//								break;
+//							}
+//						}
+//						modelDV.setValueAt(maDV, rowDV, 0);
+//						modelDV.setValueAt(tenDV, rowDV, 1);
+//						modelDV.setValueAt(ctdv.getSoLuong(), rowDV, 2);
+//						modelDV.setValueAt(ctdv.getDichVu().getDonGia(), rowDV, 3);
+//						modelDV.setValueAt(ctdv.getNgayGioDat(), rowDV, 4);
+//						JOptionPane.showMessageDialog(this, "Cập nhật thành công");
+//					} else
+//						JOptionPane.showMessageDialog(this, "Cập nhật thất bại");
+//				} catch (Exception e2) {
+//					e2.printStackTrace();
+//				}
+//			}
+//		} 
+		else if (o.equals(btnTimMaHDDV)) {
 			int maHD = Integer.parseInt(txtTimMaHDDV.getText().trim());
 			modelHD.getDataVector().removeAllElements();
 			modelHD.fireTableDataChanged();

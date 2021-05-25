@@ -229,7 +229,7 @@ public class ChiTietDVDAO {
         }
         return n > 0;
     }
-	public boolean updateByID(int id) {
+	public boolean updateMaHDDV(int id) {
         PreparedStatement stmt = null;
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
@@ -255,13 +255,15 @@ public class ChiTietDVDAO {
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
         int n = 0;
+        String sql = "update dbo.ChiTietDV set SoLuong = ?, NgayGioDat = ?, MaDV = ? where MaHDDV = ? and MaDV = ? ";
         try {
-            String sql = "update dbo.ChiTietDV set SoLuong = ?, NgayGioDat = ? where MaHDDV = ? and MaDV = ? ";
+            
             stmt = con.prepareStatement(sql);
             stmt.setInt(1, ctdv.getSoLuong() );
             stmt.setDate(2, ctdv.getNgayGioDat());
-            stmt.setInt(3, ctdv.getHoaDonDV().getMaHDDV());
-            stmt.setInt(4, ctdv.getDichVu().getMaDV());
+            stmt.setInt(3, ctdv.getDichVu().getMaDV());
+            stmt.setInt(4, ctdv.getHoaDonDV().getMaHDDV());
+            stmt.setInt(5, ctdv.getDichVu().getMaDV());
             n = stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
