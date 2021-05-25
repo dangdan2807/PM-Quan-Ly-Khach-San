@@ -168,7 +168,9 @@ public class ThanhToan_UI extends JFrame{
                     
                     // cập nhật phòng trống
                     hdp.getPhong().updateTinhTrang(0);
-                    hddv.updateTinhTrang(1); 
+                    // cập nhật tình trạng hóa đơn dịch vụ
+                    if(hddv != null)
+                        hddv.updateTinhTrang(1); 
                     btnThanhToan.setEnabled(false);
 
                     // cập nhật số lần đặt phòng
