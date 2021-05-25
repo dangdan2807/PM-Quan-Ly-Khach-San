@@ -246,6 +246,7 @@ public class ThongKeDichVu_UI extends JFrame implements ActionListener, KeyListe
     }
 
     private void DocDuLieuVaoTable(ArrayList<ChiTietDV> dataList) {
+        DecimalFormat df = new DecimalFormat("#,###.##");
         Double sum = 0.0;
         for (ChiTietDV item : dataList) {
             HoaDonDV hoaDonDv = item.getHoaDonDV();
@@ -253,16 +254,20 @@ public class ThongKeDichVu_UI extends JFrame implements ActionListener, KeyListe
             KhachHang kh = item.getHoaDonDV().getKhachHang();
             String date = formatDate(item.getNgayGioDat());
             Double thanhTien = item.getSoLuong() * item.getDichVu().getDonGia();
+            String tien = df.format(thanhTien);
             sum += thanhTien;
             String tinhTrang = "";
             if (hoaDonDv.getTinhTrang() == 0)
                 tinhTrang = "Chưa thanh toán";
             else if (hoaDonDv.getTinhTrang() == 1)
                 tinhTrang = "Đã thanh toán";
+
+            String donGia = df.format(dv.getDonGia());
             modelTable.addRow(new Object[] { hoaDonDv.getMaHDDV(), dv.getMaDV(), dv.getTenDV(), item.getSoLuong(),
-                    dv.getDonGia(), thanhTien, date, tinhTrang, kh.getMaKH(), kh.getTenKH() });
+                    donGia, tien, date, tinhTrang, kh.getMaKH(), kh.getTenKH() });
         }
-        txtThanhTien.setText(sum.toString());
+        String thanhTien = df.format(sum);
+        txtThanhTien.setText(thanhTien);
     }
 
     private String formatDate(Date date) {

@@ -3,6 +3,7 @@ package application;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
+import java.text.DecimalFormat;
 import java.util.*;
 
 import javax.swing.*;
@@ -196,7 +197,9 @@ public class QuanLyDichVu_UI extends JFrame implements ActionListener, MouseList
                     int maDV = dvDAO.getLatestID();
                     if (result == true) {
                         txtMaDV.setText(String.valueOf(maDV));
-                        modelTable.addRow(new Object[] { maDV, dv.getTenDV(), dv.getDonGia() });
+                        DecimalFormat df = new DecimalFormat("#,###.##");
+                        String donGia = df.format(dv.getDonGia());
+                        modelTable.addRow(new Object[] { maDV, dv.getTenDV(), donGia });
                         showMessage("Thêm dịch vụ thành công", SUCCESS);
                         modelTable.fireTableDataChanged();
                     } else {
@@ -214,8 +217,10 @@ public class QuanLyDichVu_UI extends JFrame implements ActionListener, MouseList
                 try {
                     boolean result = dvDAO.update(dv);
                     if (result == true) {
+                        DecimalFormat df = new DecimalFormat("#,###.##");
+                        String donGia = df.format(dv.getDonGia());
                         modelTable.setValueAt(dv.getTenDV(), row, 1);
-                        modelTable.setValueAt(dv.getDonGia(), row, 2);
+                        modelTable.setValueAt(donGia, row, 2);
                         showMessage("Cập nhật dịch vụ thành công", SUCCESS);
                         modelTable.fireTableDataChanged();
                     } else {
@@ -282,7 +287,8 @@ public class QuanLyDichVu_UI extends JFrame implements ActionListener, MouseList
             int row = table.getSelectedRow();
             txtMaDV.setText(modelTable.getValueAt(row, 0).toString());
             txtTenDV.setText(modelTable.getValueAt(row, 1).toString());
-            txtDonGia.setText(modelTable.getValueAt(row, 2).toString());
+            String donGia = modelTable.getValueAt(row, 2).toString().replace(",", "");
+            txtDonGia.setText(donGia);
         } else if (o.equals(txtTenDV)) {
             txtTenDV.selectAll();
         } else if (o.equals(txtDonGia)) {
@@ -402,8 +408,10 @@ public class QuanLyDichVu_UI extends JFrame implements ActionListener, MouseList
     private void DocDuLieuVaoTable(ArrayList<DichVu> dataList) {
         if (dataList == null || dataList.size() <= 0)
             return;
+        DecimalFormat df = new DecimalFormat("#,###.##");
         for (DichVu item : dataList) {
-            modelTable.addRow(new Object[] { item.getMaDV(), item.getTenDV(), item.getDonGia() });
+            String donGia = df.format(item.getDonGia());
+            modelTable.addRow(new Object[] { item.getMaDV(), item.getTenDV(), donGia });
         }
     }
 

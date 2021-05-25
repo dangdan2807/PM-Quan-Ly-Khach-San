@@ -250,6 +250,7 @@ public class ThongKeKhachHang_UI extends JFrame implements ActionListener, KeyLi
 
     private void DocDuLieuVaoTable(ArrayList<HoaDonPhong> dataList) {
         Double sum = 0.0;
+        DecimalFormat df = new DecimalFormat("#,###.##");
         for (HoaDonPhong item : dataList) {
             Phong phong = item.getPhong();
             LoaiPhong lPhong = item.getPhong().getLoaiPhong();
@@ -258,11 +259,15 @@ public class ThongKeKhachHang_UI extends JFrame implements ActionListener, KeyLi
             String ngayGioTra = formatDate(item.getNgayGioTra());
             int soNgay = (int) tinhSoNgay(item.getNgayGioNhan(), item.getNgayGioTra());
             Double thanhTien = lPhong.getDonGia() * soNgay;
+            String tien = df.format(thanhTien);
             sum += thanhTien;
-            modelTable.addRow(new Object[] { item.getMaHD(), phong.getMaPhong(), lPhong.getTenLoaiPhong(),
-                    lPhong.getDonGia(), ngayGioNhan, ngayGioTra, soNgay, thanhTien, kh.getMaKH(), kh.getTenKH() });
+
+            String donGia = df.format(lPhong.getDonGia());
+            modelTable.addRow(new Object[] { item.getMaHD(), phong.getMaPhong(), lPhong.getTenLoaiPhong(), donGia,
+                    ngayGioNhan, ngayGioTra, soNgay, tien, kh.getMaKH(), kh.getTenKH() });
         }
-        txtThanhTien.setText(sum.toString());
+        String thanhTien = df.format(sum);
+        txtThanhTien.setText(thanhTien);
     }
 
     private String formatDate(Date date) {

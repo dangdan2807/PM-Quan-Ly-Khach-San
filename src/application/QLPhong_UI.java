@@ -3,6 +3,7 @@ package application;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import javax.swing.*;
@@ -326,8 +327,10 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
                     int maLPhong = LPhongDAO.getLatestID();
                     if (result == true) {
                         txtMaLPhong.setText(String.valueOf(maLPhong));
+                        DecimalFormat df = new DecimalFormat("#,###.##");
+                        String donGia = df.format(loaiPhong.getDonGia());
                         modelTableLP
-                                .addRow(new Object[] { maLPhong, loaiPhong.getTenLoaiPhong(), loaiPhong.getDonGia() });
+                                .addRow(new Object[] { maLPhong, loaiPhong.getTenLoaiPhong(), donGia });
                         cboLoaiPhong.addItem(loaiPhong.getTenLoaiPhong());
                         dsLoaiPhong.add(loaiPhong);
                         showMessage("Thêm thành công", SUCCESS, lbShowMessagesLP);
@@ -408,11 +411,12 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
                     int select = JOptionPane.NO_OPTION;
                     Phong phong = getDataInFormPhong();
                     String maPhong = phong.getMaPhong();
-                    select = JOptionPane.showConfirmDialog(this, "<html>"
-                            + "<p style='text-align: center; font-size: 18px; color:red'>Cảnh báo</p>"
-                            + "<p style='text-align: center;'>Xóa phòng " + "<span style='color: blue'> " + maPhong
-                            + "</span>" + " sẽ dẫn đến xóa toàn bộ hóa đơn phòng có liên quan.</p>"
-                            + "<p style='text-align: left;'>Hãy suy nghĩ thật kỹ trước khi quyết định.</p>" + "</html>",
+                    select = JOptionPane.showConfirmDialog(this,
+                            "<html>" + "<p style='text-align: center; font-size: 18px; color:red'>Cảnh báo</p>"
+                                    + "<p style='text-align: center;'>Xóa phòng " + "<span style='color: blue'> "
+                                    + maPhong + "</span>" + " sẽ dẫn đến xóa toàn bộ hóa đơn phòng có liên quan.</p>"
+                                    + "<p style='text-align: left;'>Hãy suy nghĩ thật kỹ trước khi quyết định.</p>"
+                                    + "</html>",
                             "Cảnh báo", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
                     if (select == JOptionPane.YES_OPTION) {
                         phongDAO.delete(phong.getMaPhong());
@@ -424,9 +428,7 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
             } catch (Exception e3) {
                 showMessage("Xóa thất bại", ERROR, lbShowMessagesLP);
             }
-        } else if (o.equals(btnSuaLP))
-
-        {
+        } else if (o.equals(btnSuaLP)) {
             showMessage("", 2, lbShowMessagesLP);
             if (validDataLoaiPhong()) {
                 LoaiPhong loaiPhong = null;
@@ -435,8 +437,9 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
                 try {
                     boolean result = LPhongDAO.update(loaiPhong);
                     if (result == true) {
+                        DecimalFormat df = new DecimalFormat("#,###.##");
                         modelTableLP.setValueAt(loaiPhong.getTenLoaiPhong(), row, 1);
-                        modelTableLP.setValueAt(loaiPhong.getDonGia(), row, 2);
+                        modelTableLP.setValueAt(df.format(loaiPhong.getDonGia()), row, 2);
                         cboLoaiPhong.removeAllItems();
                         loadCboLoaiPhong();
                         modelTableLP.fireTableDataChanged();
@@ -558,7 +561,8 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
             int row = tableLP.getSelectedRow();
             txtMaLPhong.setText(modelTableLP.getValueAt(row, 0).toString());
             txtTenLPhong.setText(modelTableLP.getValueAt(row, 1).toString());
-            txtDonGia.setText(modelTableLP.getValueAt(row, 2).toString());
+            String gia = modelTableLP.getValueAt(row, 2).toString().replace(",", "");
+            txtDonGia.setText(gia);
         }
     }
 
@@ -632,7 +636,7 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
 
     private boolean validDataLoaiPhong() {
         String tenLP = txtTenLPhong.getText().trim();
-        String donGia = txtDonGia.getText().trim();
+        String donGia = txtDonGia.getText().trim().replace(",", "");
 
         if (!(tenLP.length() > 0)) {
             showMessage("Lỗi: Tên không được để trống", txtTenLPhong, lbShowMessagesLP);
@@ -673,7 +677,8 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
     public LoaiPhong getDataInFormLPhong() {
         int maLPhong = Integer.parseInt(txtMaLPhong.getText().trim());
         String tenLPhong = txtTenLPhong.getText().trim();
-        Double donGia = Double.parseDouble(txtDonGia.getText().trim());
+        String gia = txtDonGia.getText().trim().replace(",", "");
+        Double donGia = Double.parseDouble(gia);
         LoaiPhong loaiPhong = new LoaiPhong(maLPhong, tenLPhong, donGia);
         return loaiPhong;
     }
@@ -715,8 +720,10 @@ public class QLPhong_UI extends JFrame implements ActionListener, MouseListener,
     }
 
     private void DocDuLieuVaoTableLPhong() {
+        DecimalFormat df = new DecimalFormat("#,###.##");
         for (LoaiPhong item : dsLoaiPhong) {
-            modelTableLP.addRow(new Object[] { item.getMaLoaiPhong(), item.getTenLoaiPhong(), item.getDonGia() });
+            String donGia = df.format(item.getDonGia());
+            modelTableLP.addRow(new Object[] { item.getMaLoaiPhong(), item.getTenLoaiPhong(), donGia });
         }
     }
 
